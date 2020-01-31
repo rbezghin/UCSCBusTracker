@@ -15,12 +15,15 @@ import Foundation
 class ViewController: UIViewController, MGLMapViewDelegate {
     
     var mapView: MGLMapView!
+    var source: MGLSource!
+    var timer: Timer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         //mapView = MGLMapView(frame: view.frame)
         mapView = MGLMapView(frame: view.frame, styleURL: URL(string: "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"))
         mapView.delegate = self
+        mapView.setCenter(CLLocationCoordinate2D(latitude: 36.99, longitude: -122.05), zoomLevel: 12, animated: false)
         view.addSubview(mapView)
         receiveDataFromDB()
         
@@ -59,6 +62,18 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     //add traking data here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         
+        // create a source of data
+        var coordinates = CLLocationCoordinate2D(latitude: 36.99, longitude: -122.05)
+        let point = MGLPolygonFeature(coordinates: &coordinates, count: 1)
+        let source = MGLShapeSource(identifier: "bus", shape: point, options: nil)
+        mapView.style?.addSource(source)
+        // add it to MGLstyle
+        
+        
+        let busLayer = MGLSymbolStyleLayer(identifier: "bus", source: source)
+        busLayer.iconImageName = NSExpression(forConstantValue: "bus_icon")
+        busLayer.iconHaloColor = NSExpression(forConstantValue: UIColor.white)
+        style.addLayer(busLayer)
     }
     
     //stop timer if view dissapeared
