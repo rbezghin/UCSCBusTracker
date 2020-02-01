@@ -17,6 +17,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     var mapView: MGLMapView!
     var source: MGLSource!
     var timer: Timer!
+    var busArray: [BusModel]!
+    var coordinates = [CLLocationCoordinate2D]()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,21 +62,55 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
 
     
-    //add traking data here
+    //add bus traking  here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         
-        // create a source of data
-        var coordinates = CLLocationCoordinate2D(latitude: 36.99, longitude: -122.05)
-        let point = MGLPolygonFeature(coordinates: &coordinates, count: 1)
-        let source = MGLShapeSource(identifier: "bus", shape: point, options: nil)
-        mapView.style?.addSource(source)
-        // add it to MGLstyle
-        
-        
-        let busLayer = MGLSymbolStyleLayer(identifier: "bus", source: source)
-        busLayer.iconImageName = NSExpression(forConstantValue: "bus_icon")
-        busLayer.iconHaloColor = NSExpression(forConstantValue: UIColor.white)
-        style.addLayer(busLayer)
+        coordinates = [CLLocationCoordinate2D(latitude: 36.99, longitude: -122.05), CLLocationCoordinate2D(latitude: 36.99, longitude: -121.05)]
+        var pointAnnotations = [MGLPointAnnotation]()
+        for coordinate in coordinates {
+            let point = MGLPointAnnotation()
+            point.coordinate = coordinate
+            point.title = "\(coordinate.latitude), \(coordinate.longitude)"
+            pointAnnotations.append(point)
+        }
+        mapView.addAnnotations(pointAnnotations)
+
+    }
+    
+    //adds an image to bus points
+    //TODO: resize image
+    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        guard  let image = UIImage(named: "bus_icon") else {return nil}
+        //resizing image
+        let size = CGSize(width: 20, height: 20)
+        var newImage: UIImage
+        let renderer = UIGraphicsImageRenderer(size: size)
+        newImage = renderer.image { (context) in
+             image.draw(in: CGRect(origin: .zero, size: size))
+        }
+        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "bus_icon")
+        return annotationImage
+    }
+    
+    //not needed rn kek
+    func createGeoJSON(id: Int, busType: String, latitude: Float, longitude: Float) -> [String : Any] {
+        let geoJson = [
+        "type" : "FeatureCollection",
+        "features" :
+            [
+                [
+                    "type" : "Feature",
+                    "geometry" : [
+                        "type": "Point",
+                        "coordinates": [36.99, -122.05]
+                    ],
+                    "properties" : [
+                        "name" : "\(busType)"
+                    ]
+                ]
+            ]
+        ] as [String : Any]
+        return geoJson
     }
     
     //stop timer if view dissapeared
