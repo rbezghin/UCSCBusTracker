@@ -12,7 +12,7 @@ import Foundation
 //import MapboxNavigation
 //import MapboxDirections
 
-class ViewController: UIViewController, MGLMapViewDelegate {
+class MapVC: UIViewController, MGLMapViewDelegate {
     
     var mapView: MGLMapView!
     var source: MGLSource!
@@ -23,6 +23,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         //mapView = MGLMapView(frame: view.frame)
         mapView = MGLMapView(frame: view.frame, styleURL: URL(string: "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"))
         mapView.delegate = self
