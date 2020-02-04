@@ -14,7 +14,7 @@
 		807B7B6D23DFE5B300609EC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 807B7B6C23DFE5B300609EC8 /* Assets.xcassets */; };
 		807B7B7023DFE5B300609EC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807B7B6E23DFE5B300609EC8 /* LaunchScreen.storyboard */; };
 		80B7347323E51F07002A63E9 /* BusModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347223E51F07002A63E9 /* BusModel.swift */; };
-		80B7347523E63FDB002A63E9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347423E63FDB002A63E9 /* TabBarController.swift */; };
+		80B7347523E63FDB002A63E9 /* TabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347423E63FDB002A63E9 /* TabBarVC.swift */; };
 		80B7347723E644C1002A63E9 /* ScheduleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347623E644C1002A63E9 /* ScheduleVC.swift */; };
 		8900AE8897E7D99CE5D40B2C /* Pods_UCSCBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C044C36B46CBC05BAB8DAEE /* Pods_UCSCBus.framework */; };
 /* End PBXBuildFile section */
@@ -30,7 +30,7 @@
 		807B7B6F23DFE5B300609EC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		807B7B7123DFE5B300609EC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80B7347223E51F07002A63E9 /* BusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusModel.swift; sourceTree = "<group>"; };
-		80B7347423E63FDB002A63E9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		80B7347423E63FDB002A63E9 /* TabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarVC.swift; sourceTree = "<group>"; };
 		80B7347623E644C1002A63E9 /* ScheduleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleVC.swift; sourceTree = "<group>"; };
 		82D70E8625EDFB6A63E064EB /* Pods-UCSCBus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UCSCBus.debug.xcconfig"; path = "Target Support Files/Pods-UCSCBus/Pods-UCSCBus.debug.xcconfig"; sourceTree = "<group>"; };
 		9C044C36B46CBC05BAB8DAEE /* Pods_UCSCBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UCSCBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,7 +71,7 @@
 			children = (
 				807B7B6323DFE5B200609EC8 /* AppDelegate.swift */,
 				807B7B6523DFE5B200609EC8 /* SceneDelegate.swift */,
-				80B7347423E63FDB002A63E9 /* TabBarController.swift */,
+				80B7347423E63FDB002A63E9 /* TabBarVC.swift */,
 				807B7B6723DFE5B200609EC8 /* MapVC.swift */,
 				80B7347623E644C1002A63E9 /* ScheduleVC.swift */,
 				80B7347223E51F07002A63E9 /* BusModel.swift */,
@@ -218,7 +218,7 @@
 				807B7B6823DFE5B200609EC8 /* MapVC.swift in Sources */,
 				807B7B6423DFE5B200609EC8 /* AppDelegate.swift in Sources */,
 				80B7347323E51F07002A63E9 /* BusModel.swift in Sources */,
-				80B7347523E63FDB002A63E9 /* TabBarController.swift in Sources */,
+				80B7347523E63FDB002A63E9 /* TabBarVC.swift in Sources */,
 				807B7B6623DFE5B200609EC8 /* SceneDelegate.swift in Sources */,
 				80B7347723E644C1002A63E9 /* ScheduleVC.swift in Sources */,
 			);

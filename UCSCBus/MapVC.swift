@@ -19,62 +19,113 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     var timer: Timer!
     var busArray: [BusModel]!
     var coordinates = [CLLocationCoordinate2D]()
+    let urlString = "https://www.kerryveenstra.com/location/get/v1/"
+    let busIconImage: UIImage = {
+        let image = UIImage(named: "bus_icon")
+        let size = CGSize(width: 20, height: 20)
+        var newImage: UIImage
+        let renderer = UIGraphicsImageRenderer(size: size)
+        newImage = renderer.image { (context) in
+            image?.draw(in: CGRect(origin: .zero, size: size))
+        }
+        return newImage
+    }()
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+     // longitude -122.055105 latitude 36.99746
         //mapView = MGLMapView(frame: view.frame)
         mapView = MGLMapView(frame: view.frame, styleURL: URL(string: "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"))
         mapView.delegate = self
-        mapView.setCenter(CLLocationCoordinate2D(latitude: 36.99, longitude: -122.05), zoomLevel: 12, animated: false)
+        mapView.setCenter(CLLocationCoordinate2D(latitude: 36.99746, longitude: -122.055105), zoomLevel: 12, animated: false)
         view.addSubview(mapView)
-        receiveDataFromDB()
-        
     }
     
     //
-    func receiveDataFromDB(){
-        if let url = URL(string: "https://www.kerryveenstra.com/location/get/v1/"){
+    func receiveDataFromDB(completion: @escaping (([MGLPointFeature]) -> Void)){
+        if let url = URL(string: urlString){
             let session = URLSession(configuration: URLSessionConfiguration.default)
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil {
-                    print(error?.localizedDescription)
+                    print( "Error in task \(String(describing: error)) ")
                     return
                 }
                 //data was successfully received and can be parsed
                 guard let data = data else{return}
-                self.parseDataFromDB(data: data)
+                DispatchQueue.main.async {
+                    completion(self.parseDataFromDB(data: data))
+                }
             }
             task.resume()
         }
     }
     
     //processing data received from database
-    func parseDataFromDB(data: Data){
+    func parseDataFromDB(data: Data)->[MGLPointFeature]{
+        print("Parsing Data")
+        var features = [MGLPointFeature]()
         do{
             let jsonData = try JSONSerialization.jsonObject(with: data, options: [])
-            guard let jsonArray = jsonData as? [[String: Any]] else{return}
+            guard let jsonArray = jsonData as? [[String: Any]] else{return features}
             //At this point data is safely converted to an array of busses + their location
             print(jsonArray)
+            coordinates.removeAll()
+            for item in jsonArray{
+                let coordinate = CLLocationCoordinate2D(latitude: item["lat"] as! Double, longitude: item["lon"] as! Double)
+                let title = item["type"] as! String
+                let id = item["id"] as! String
+                print("Coordinate is \(coordinate)")
+                coordinates.append(coordinate)
+                let feature = MGLPointFeature()
+                feature.coordinate = coordinate
+                //feature.coordinate = CLLocationCoordinate2D(latitude: 36.99, longitude: -122.05)
+                feature.identifier = id
+                features.append(feature)
+                feature.attributes = [
+                "name": title
+                ]
+            }
         }catch let error {
             print(error.localizedDescription)
         }
+        return features
     }
 
     
     //add bus traking  here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        
-        coordinates = [CLLocationCoordinate2D(latitude: 36.99, longitude: -122.05), CLLocationCoordinate2D(latitude: 36.99, longitude: -121.05)]
-        var pointAnnotations = [MGLPointAnnotation]()
-        for coordinate in coordinates {
-            let point = MGLPointAnnotation()
-            point.coordinate = coordinate
-            point.title = "\(coordinate.latitude), \(coordinate.longitude)"
-            pointAnnotations.append(point)
+        receiveDataFromDB() { [weak self] (features) in
+            self?.updateAnnotations(features: features)
         }
-        mapView.addAnnotations(pointAnnotations)
+    }
+    
+    func updateAnnotations(features: [MGLPointFeature]){
+        print("Adding points")
+        print(features)
+        guard let style = mapView.style else { return }
+        style.setImage(busIconImage, forName: "bus_image")
+        let source = MGLShapeSource(identifier: "bus_source", features: features, options: nil)
+        style.addSource(source)
+        
+//        let busLayer = MGLSymbolStyleLayer(identifier: "bus_layer", source: source)
+//        busLayer.iconImageName = NSExpression(forConstantValue: "bus_image")
+//        style.addLayer(busLayer)
+        
+        let color = UIColor(red: 0.08, green: 0.44, blue: 0.96, alpha: 1.0)
+        let circles = MGLCircleStyleLayer(identifier: "circles", source: source)
+        circles.circleColor = NSExpression(forConstantValue: color)
+
+        // The circles should increase in opacity from 0.5 to 1 based on zoom level.
+        circles.circleOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [2: 0.5, 7: 1])
+        circles.circleRadius = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [2: 3, 7: 4 ])
+        style.addLayer(circles)
+
+//        let busLayer = MGLSymbolStyleLayer(identifier: "bus_location", source: source)
+//        busLayer.iconImageName = NSExpression(forConstantValue: "bus_image")
+//        busLayer.iconHaloColor = NSExpression(forConstantValue: UIColor.white)
+//       style.addLayer(busLayer)
+        
 
     }
     
