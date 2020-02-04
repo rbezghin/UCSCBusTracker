@@ -19,7 +19,9 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     var timer: Timer!
     var busArray: [BusModel]!
     var coordinates = [CLLocationCoordinate2D]()
+    var coordinatesWereSet = false
     let urlString = "https://www.kerryveenstra.com/location/get/v1/"
+    
     let busIconImage: UIImage = {
         let image = UIImage(named: "bus_icon")
         let size = CGSize(width: 20, height: 20)
@@ -30,8 +32,6 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         }
         return newImage
     }()
-    
-
     override func viewDidLoad() {
         super.viewDidLoad()
      // longitude -122.055105 latitude 36.99746
@@ -41,7 +41,14 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         mapView.setCenter(CLLocationCoordinate2D(latitude: 36.99746, longitude: -122.055105), zoomLevel: 12, animated: false)
         view.addSubview(mapView)
     }
-    
+    //add bus traking  here
+    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
+            self.receiveDataFromDB() { [weak self] (features) in
+                self?.updateAnnotations(features: features)
+            }
+        }
+    }
     //
     func receiveDataFromDB(completion: @escaping (([MGLPointFeature]) -> Void)){
         if let url = URL(string: urlString){
@@ -60,7 +67,6 @@ class MapVC: UIViewController, MGLMapViewDelegate {
             task.resume()
         }
     }
-    
     //processing data received from database
     func parseDataFromDB(data: Data)->[MGLPointFeature]{
         print("Parsing Data")
@@ -92,26 +98,28 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         return features
     }
 
-    
-    //add bus traking  here
-    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        receiveDataFromDB() { [weak self] (features) in
-            self?.updateAnnotations(features: features)
-        }
-    }
-    
     func updateAnnotations(features: [MGLPointFeature]){
         print("Adding points")
         print(features)
+        
+        let source: MGLShapeSource
         guard let style = mapView.style else { return }
-        style.setImage(busIconImage, forName: "bus_image")
-        let source = MGLShapeSource(identifier: "bus_source", features: features, options: nil)
-        style.addSource(source)
         
-//        let busLayer = MGLSymbolStyleLayer(identifier: "bus_layer", source: source)
-//        busLayer.iconImageName = NSExpression(forConstantValue: "bus_image")
-//        style.addLayer(busLayer)
-        
+        if let existingSource = style.source(withIdentifier: "bus_source") {
+            
+            if let styleLayer = style.layer(withIdentifier: "circles") {
+                style.removeLayer(styleLayer)
+            }
+            style.removeSource(existingSource)
+            source = MGLShapeSource(identifier: "bus_source", features: features, options: nil)
+            style.addSource(source)
+            
+        }
+        else{
+            source = MGLShapeSource(identifier: "bus_source", features: features, options: nil)
+            style.addSource(source)
+
+        }
         let color = UIColor(red: 0.08, green: 0.44, blue: 0.96, alpha: 1.0)
         let circles = MGLCircleStyleLayer(identifier: "circles", source: source)
         circles.circleColor = NSExpression(forConstantValue: color)
@@ -120,14 +128,22 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         circles.circleOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [2: 0.5, 7: 1])
         circles.circleRadius = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [2: 3, 7: 4 ])
         style.addLayer(circles)
+            //CUSTOM BUS ICON
+//           style.setImage(busIconImage, forName: "bus_image")
+//            let source = MGLShapeSource(identifier: "bus_source", features: features, options: nil)
+//            style.addSource(source)
+            
+    //         CUSTOM BUS ICON
+    //        let busLayer = MGLSymbolStyleLayer(identifier: "bus_layer", source: source)
+    //        busLayer.iconImageName = NSExpression(forConstantValue: "bus_image")
+    //        style.addLayer(busLayer)
+            
 
-//        let busLayer = MGLSymbolStyleLayer(identifier: "bus_location", source: source)
-//        busLayer.iconImageName = NSExpression(forConstantValue: "bus_image")
-//        busLayer.iconHaloColor = NSExpression(forConstantValue: UIColor.white)
-//       style.addLayer(busLayer)
+    
         
-
     }
+    
+    
     
     //adds an image to bus points
     //TODO: resize image
@@ -169,7 +185,5 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         
     }
-
-
 }
 
