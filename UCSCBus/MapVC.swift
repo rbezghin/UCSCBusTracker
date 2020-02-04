@@ -91,14 +91,48 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         }
         return features
     }
-
     
-    //add bus traking  here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        receiveDataFromDB() { [weak self] (features) in
-            self?.updateAnnotations(features: features)
+       receiveDataFromDB() { [weak self] (features) in
+           self?.updateAnnotations(features: features)
+       }
+        
+        // Adding bus stops as annotations
+        let stop1 = MGLPointAnnotation()
+        stop1.coordinate = CLLocationCoordinate2D(latitude: 37.000, longitude: -122.058) // TODO - make more accurate
+        stop1.title = "nineten" // TODO - Use official bus stop names
+        mapView.addAnnotation(stop1)
+
+        let stop2 = MGLPointAnnotation()
+        stop2.coordinate = CLLocationCoordinate2D(latitude: 37.000, longitude: -122.062)
+        stop2.title = "baskin"
+        mapView.addAnnotation(stop2)
+    }
+        
+    func mapView(_ mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {
+        // Hide the callout view.
+        mapView.deselectAnnotation(annotation, animated: false)
+     
+        // Show an alert containing the bus stop ETA table
+        if annotation.title == "nineten" {
+            let alert = UIAlertController(title: annotation.title!!, message: "ETAs here", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else if annotation.title == "baskin" {
+            let alert = UIAlertController(title: annotation.title!!, message: "ETAs here", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
+
+    func mapView(_ mapView: MGLMapView, rightCalloutAccessoryViewFor     annotation: MGLAnnotation) -> UIView? {
+        return UIButton(type: .detailDisclosure)
+    }
+
+    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+            return true
+        }
     
     func updateAnnotations(features: [MGLPointFeature]){
         print("Adding points")
