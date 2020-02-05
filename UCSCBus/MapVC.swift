@@ -99,13 +99,13 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         
         // Adding bus stops as annotations
         let stop1 = MGLPointAnnotation()
-        stop1.coordinate = CLLocationCoordinate2D(latitude: 37.000, longitude: -122.058) // TODO - make more accurate
-        stop1.title = "nineten" // TODO - Use official bus stop names
+        stop1.coordinate = CLLocationCoordinate2D(latitude: 36.999937, longitude: -122.058317)
+        stop1.title = "College 9 & 10 (Outer)"
         mapView.addAnnotation(stop1)
 
         let stop2 = MGLPointAnnotation()
-        stop2.coordinate = CLLocationCoordinate2D(latitude: 37.000, longitude: -122.062)
-        stop2.title = "baskin"
+        stop2.coordinate = CLLocationCoordinate2D(latitude: 36.999770, longitude: -122.058310)
+        stop2.title = "College 9 & 10 (Inner)"
         mapView.addAnnotation(stop2)
     }
         
@@ -114,14 +114,14 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         mapView.deselectAnnotation(annotation, animated: false)
      
         // Show an alert containing the bus stop ETA table
-        if annotation.title == "nineten" {
-            let alert = UIAlertController(title: annotation.title!!, message: "ETAs here", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "ok", style: .default, handler: nil))
+        if annotation.title == "College 9 & 10 (Outer)" {
+            let alert = UIAlertController(title: annotation.title!!, message: "Upper Campus - 5 min\nLoop - 7 min", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
-        else if annotation.title == "baskin" {
-            let alert = UIAlertController(title: annotation.title!!, message: "ETAs here", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        else if annotation.title == "College 9 & 10 (Inner)" {
+            let alert = UIAlertController(title: annotation.title!!, message: "Upper Campus - 3 min\nLoop - 8 min", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -166,7 +166,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     //adds an image to bus points
     //TODO: resize image
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        guard  let image = UIImage(named: "blank_icon") else {return nil}
+        guard  let image = UIImage(named: "stop_icon") else {return nil}
         //resizing image
         let size = CGSize(width: 20, height: 20)
         var newImage: UIImage
@@ -174,7 +174,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         newImage = renderer.image { (context) in
              image.draw(in: CGRect(origin: .zero, size: size))
         }
-        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "blank_icon")
+        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "stop_icon")
         return annotationImage
     }
     
