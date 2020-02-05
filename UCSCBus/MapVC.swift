@@ -166,7 +166,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     //adds an image to bus points
     //TODO: resize image
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        guard  let image = UIImage(named: "bus_icon") else {return nil}
+        guard  let image = UIImage(named: "blank_icon") else {return nil}
         //resizing image
         let size = CGSize(width: 20, height: 20)
         var newImage: UIImage
@@ -174,7 +174,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         newImage = renderer.image { (context) in
              image.draw(in: CGRect(origin: .zero, size: size))
         }
-        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "bus_icon")
+        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "blank_icon")
         return annotationImage
     }
     
