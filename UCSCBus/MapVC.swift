@@ -92,21 +92,57 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         return features
     }
     
-    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-       receiveDataFromDB() { [weak self] (features) in
-           self?.updateAnnotations(features: features)
-       }
-        
-        // Adding bus stops as annotations
-        let stop1 = MGLPointAnnotation()
-        stop1.coordinate = CLLocationCoordinate2D(latitude: 36.999937, longitude: -122.058317)
-        stop1.title = "College 9 & 10 (Outer)"
-        mapView.addAnnotation(stop1)
+    
+    func csv(data: String) -> [[String]] {
+        var result: [[String]] = []
+        let rows = data.components(separatedBy: "\n")
+        for row in rows {
+            let columns = row.components(separatedBy: ",")
+            result.append(columns)
+        }
+        return result
+    }
+    
+    func readDataFromCSV(fileName:String, fileType: String)-> String!{
+            guard let filepath = Bundle.main.path(forResource: fileName, ofType: fileType)
+                else {
+                    return nil
+            }
+            do {
+                var contents = try String(contentsOfFile: filepath, encoding: .utf8)
+                contents = cleanRows(file: contents)
+                return contents
+            } catch {
+                return nil
+            }
+        }
 
-        let stop2 = MGLPointAnnotation()
-        stop2.coordinate = CLLocationCoordinate2D(latitude: 36.999770, longitude: -122.058310)
-        stop2.title = "College 9 & 10 (Inner)"
-        mapView.addAnnotation(stop2)
+    func cleanRows(file:String)->String{
+        var cleanFile = file
+        cleanFile = cleanFile.replacingOccurrences(of: "\r", with: "\n")
+        cleanFile = cleanFile.replacingOccurrences(of: "\n\n", with: "\n")
+        return cleanFile
+    }
+    
+    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        receiveDataFromDB() { [weak self] (features) in
+           self?.updateAnnotations(features: features)
+        }
+        
+        // TODO - Update CSV file with all bus stops
+        var data = readDataFromCSV(fileName: "bus_stop_data", fileType: ".csv")
+        data = cleanRows(file: data!)
+        let csvRows = csv(data: data!)
+        
+        let stop0 = MGLPointAnnotation(), stop1 = MGLPointAnnotation()
+        let stops: [MGLPointAnnotation] = [stop0, stop1] // Update this array with total number of stops
+        
+        // Create annotated points using bus stop names and coordinates from CSV file
+        for item in 0...csvRows.count-2 {
+            stops[item].coordinate = CLLocationCoordinate2D(latitude: Double(csvRows[item][1])!, longitude: Double(csvRows[item][2])!)
+            stops[item].title = csvRows[item][0]
+            mapView.addAnnotation(stops[item])
+        }
     }
         
     func mapView(_ mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {

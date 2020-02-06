@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */ = {isa = PBXBuildFile; fileRef = 462FFF2923EBE441003848F4 /* bus_stop_data.csv */; };
 		807B7B6423DFE5B200609EC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6323DFE5B200609EC8 /* AppDelegate.swift */; };
 		807B7B6623DFE5B200609EC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6523DFE5B200609EC8 /* SceneDelegate.swift */; };
 		807B7B6823DFE5B200609EC8 /* MapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6723DFE5B200609EC8 /* MapVC.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		462FFF2923EBE441003848F4 /* bus_stop_data.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bus_stop_data.csv; sourceTree = "<group>"; };
 		52C637F015DDA807ECB8C442 /* Pods-UCSCBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UCSCBus.release.xcconfig"; path = "Target Support Files/Pods-UCSCBus/Pods-UCSCBus.release.xcconfig"; sourceTree = "<group>"; };
 		807B7B6023DFE5B200609EC8 /* UCSCBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UCSCBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		807B7B6323DFE5B200609EC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 		807B7B6223DFE5B200609EC8 /* UCSCBus */ = {
 			isa = PBXGroup;
 			children = (
+				462FFF2923EBE441003848F4 /* bus_stop_data.csv */,
 				807B7B6323DFE5B200609EC8 /* AppDelegate.swift */,
 				807B7B6523DFE5B200609EC8 /* SceneDelegate.swift */,
 				80B7347423E63FDB002A63E9 /* TabBarVC.swift */,
@@ -163,6 +166,7 @@
 				807B7B7023DFE5B300609EC8 /* LaunchScreen.storyboard in Resources */,
 				807B7B6D23DFE5B300609EC8 /* Assets.xcassets in Resources */,
 				807B7B6B23DFE5B200609EC8 /* Main.storyboard in Resources */,
+				462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
