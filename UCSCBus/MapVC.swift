@@ -129,15 +129,19 @@ class MapVC: UIViewController, MGLMapViewDelegate {
            self?.updateAnnotations(features: features)
         }
         
-        // TODO - Update CSV file with all bus stops
+        // Read and process CSV file contents
         var data = readDataFromCSV(fileName: "bus_stop_data", fileType: ".csv")
         data = cleanRows(file: data!)
         let csvRows = csv(data: data!)
         
-        let stop0 = MGLPointAnnotation(), stop1 = MGLPointAnnotation()
-        let stops: [MGLPointAnnotation] = [stop0, stop1] // Update this array with total number of stops
+        // Initialize annotated points and store into array
+        var stops = [MGLPointAnnotation]()
+        for _ in 0...csvRows.count-2 {
+            let stop = MGLPointAnnotation()
+            stops.append(stop)
+        }
         
-        // Create annotated points using bus stop names and coordinates from CSV file
+        // Define annotated points using bus stop names and coordinates from CSV file
         for item in 0...csvRows.count-2 {
             stops[item].coordinate = CLLocationCoordinate2D(latitude: Double(csvRows[item][1])!, longitude: Double(csvRows[item][2])!)
             stops[item].title = csvRows[item][0]
