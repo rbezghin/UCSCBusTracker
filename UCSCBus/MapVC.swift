@@ -41,7 +41,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         mapView.setCenter(CLLocationCoordinate2D(latitude: 36.99746, longitude: -122.055105), zoomLevel: 13, animated: false)
         view.addSubview(mapView)
     }
-    //add bus traking  here
+    //add bus tracking here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         guard let url = URL(string: urlString) else {return}
         let session = URLSession(configuration: URLSessionConfiguration.default)
@@ -50,6 +50,25 @@ class MapVC: UIViewController, MGLMapViewDelegate {
             self.performTask(withSession: session, withURL: url) { [weak self] (features) in
                 self?.updateBusLocationFeatures(features: features)
             }
+        }
+      
+        // Read and process CSV file contents
+        var data = readDataFromCSV(fileName: "bus_stop_data", fileType: ".csv")
+        data = cleanRows(file: data!)
+        let csvRows = csv(data: data!)
+        
+        // Initialize annotated points and store into array
+        var stops = [MGLPointAnnotation]()
+        for _ in 0...csvRows.count-2 {
+            let stop = MGLPointAnnotation()
+            stops.append(stop)
+        }
+        
+        // Define annotated points using bus stop names and coordinates from CSV file
+        for item in 0...csvRows.count-2 {
+            stops[item].coordinate = CLLocationCoordinate2D(latitude: Double(csvRows[item][1])!, longitude: Double(csvRows[item][2])!)
+            stops[item].title = csvRows[item][0]
+            mapView.addAnnotation(stops[item])
         }
     }
     //
@@ -96,6 +115,38 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         }
         return features
     }
+    
+    func csv(data: String) -> [[String]] {
+        var result: [[String]] = []
+        let rows = data.components(separatedBy: "\n")
+        for row in rows {
+            let columns = row.components(separatedBy: ",")
+            result.append(columns)
+        }
+        return result
+    }
+    
+    func readDataFromCSV(fileName:String, fileType: String)-> String!{
+            guard let filepath = Bundle.main.path(forResource: fileName, ofType: fileType)
+                else {
+                    return nil
+            }
+            do {
+                var contents = try String(contentsOfFile: filepath, encoding: .utf8)
+                contents = cleanRows(file: contents)
+                return contents
+            } catch {
+                return nil
+            }
+        }
+
+    func cleanRows(file:String)->String{
+        var cleanFile = file
+        cleanFile = cleanFile.replacingOccurrences(of: "\r", with: "\n")
+        cleanFile = cleanFile.replacingOccurrences(of: "\n\n", with: "\n")
+        return cleanFile
+    }
+  
     func updateFeatures(newFeature: MGLPointFeature){
         //check if  feature is in features
         for feature in featuresToDisplay{
@@ -107,7 +158,32 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         //if not add it
         featuresToDisplay.append(newFeature)
     }
+        
+    func mapView(_ mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {
+        // Hide the callout view.
+        mapView.deselectAnnotation(annotation, animated: false)
+     
+        // Show an alert containing the bus stop ETA table
+        if annotation.title == "College 9 & 10 (Outer)" {
+            let alert = UIAlertController(title: annotation.title!!, message: "Upper Campus - 5 min\nLoop - 7 min", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else if annotation.title == "College 9 & 10 (Inner)" {
+            let alert = UIAlertController(title: annotation.title!!, message: "Upper Campus - 3 min\nLoop - 8 min", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
 
+    func mapView(_ mapView: MGLMapView, rightCalloutAccessoryViewFor     annotation: MGLAnnotation) -> UIView? {
+        return UIButton(type: .detailDisclosure)
+    }
+
+    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+            return true
+        }
+    
     func updateBusLocationFeatures(features: [MGLPointFeature]){
         print("Adding points")
         print(featuresToDisplay)
@@ -153,7 +229,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     //adds an image to bus points
     //TODO: resize image
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        guard  let image = UIImage(named: "bus_icon") else {return nil}
+        guard  let image = UIImage(named: "stop_icon") else {return nil}
         //resizing image
         let size = CGSize(width: 20, height: 20)
         var newImage: UIImage
@@ -161,7 +237,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         newImage = renderer.image { (context) in
              image.draw(in: CGRect(origin: .zero, size: size))
         }
-        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "bus_icon")
+        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "stop_icon")
         return annotationImage
     }
     
