@@ -13,22 +13,39 @@ class TabBarVC: UITabBarController {
     private let mapViewController = MapVC()
     private let scheduleViewController = ScheduleVC()
     private let someotherViewController = ScheduleVC()
-    private let busIconImage: UIImage = {
-        let image = UIImage(named: "bus_icon")
-        let size = CGSize(width: 20, height: 20)
-        var newImage: UIImage
-        let renderer = UIGraphicsImageRenderer(size: size)
-        newImage = renderer.image { (context) in
-            image?.draw(in: CGRect(origin: .zero, size: size))
-        }
-        return newImage
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        mapViewController.tabBarItem = UITabBarItem(title: "Map", image: busIconImage, tag: 0)
-        scheduleViewController.tabBarItem = UITabBarItem(title: "Schedule", image: busIconImage, tag: 1)
-        someotherViewController.tabBarItem = UITabBarItem(title: "More", image: busIconImage, tag: 3)
+        
+        let busImage = createImage(named: "bus_icon")
+        let scheduleImage = createImage(named: "schedule_icon")
+        let menuImage = createImage(named: "menu_icon")
+        
+        mapViewController.tabBarItem = UITabBarItem(title: "Map", image: busImage, tag: 0)
+        scheduleViewController.tabBarItem = UITabBarItem(title: "Schedule", image: scheduleImage, tag: 1)
+        someotherViewController.tabBarItem = UITabBarItem(title: "More", image: menuImage, tag: 3)
         viewControllers = [mapViewController, scheduleViewController, someotherViewController]
     }
+    
+    func createImage(named: String) -> UIImage? {
+        guard  let image = UIImage(named: named) else {return nil}
+        //resizing image
+        var size = CGSize()
+        if(named == "schedule_icon"){
+            size = CGSize(width: 30, height: 30)
+        }else{
+            size = CGSize(width: 20, height: 20)
+        }
+        
+        var newImage: UIImage
+        let renderer = UIGraphicsImageRenderer(size: size)
+        newImage = renderer.image { (context) in
+             image.draw(in: CGRect(origin: .zero, size: size))
+        }
+        return newImage
+    }
+    
+
+
+
 }
