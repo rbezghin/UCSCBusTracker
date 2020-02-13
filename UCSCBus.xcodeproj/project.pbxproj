@@ -17,12 +17,10 @@
 		80B7347323E51F07002A63E9 /* BusModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347223E51F07002A63E9 /* BusModel.swift */; };
 		80B7347523E63FDB002A63E9 /* TabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347423E63FDB002A63E9 /* TabBarVC.swift */; };
 		80B7347723E644C1002A63E9 /* ScheduleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347623E644C1002A63E9 /* ScheduleVC.swift */; };
-		8900AE8897E7D99CE5D40B2C /* Pods_UCSCBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C044C36B46CBC05BAB8DAEE /* Pods_UCSCBus.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		462FFF2923EBE441003848F4 /* bus_stop_data.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bus_stop_data.csv; sourceTree = "<group>"; };
-		52C637F015DDA807ECB8C442 /* Pods-UCSCBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UCSCBus.release.xcconfig"; path = "Target Support Files/Pods-UCSCBus/Pods-UCSCBus.release.xcconfig"; sourceTree = "<group>"; };
 		807B7B6023DFE5B200609EC8 /* UCSCBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UCSCBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		807B7B6323DFE5B200609EC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		807B7B6523DFE5B200609EC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -34,8 +32,6 @@
 		80B7347223E51F07002A63E9 /* BusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusModel.swift; sourceTree = "<group>"; };
 		80B7347423E63FDB002A63E9 /* TabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarVC.swift; sourceTree = "<group>"; };
 		80B7347623E644C1002A63E9 /* ScheduleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleVC.swift; sourceTree = "<group>"; };
-		82D70E8625EDFB6A63E064EB /* Pods-UCSCBus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UCSCBus.debug.xcconfig"; path = "Target Support Files/Pods-UCSCBus/Pods-UCSCBus.debug.xcconfig"; sourceTree = "<group>"; };
-		9C044C36B46CBC05BAB8DAEE /* Pods_UCSCBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UCSCBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,7 +39,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8900AE8897E7D99CE5D40B2C /* Pods_UCSCBus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,7 +51,6 @@
 				807B7B6223DFE5B200609EC8 /* UCSCBus */,
 				807B7B6123DFE5B200609EC8 /* Products */,
 				9D441DA3EA0C4BAF7F3143BD /* Pods */,
-				8D3EC6A51B02BE84F3FD22A3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -86,19 +80,9 @@
 			path = UCSCBus;
 			sourceTree = "<group>";
 		};
-		8D3EC6A51B02BE84F3FD22A3 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				9C044C36B46CBC05BAB8DAEE /* Pods_UCSCBus.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		9D441DA3EA0C4BAF7F3143BD /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				82D70E8625EDFB6A63E064EB /* Pods-UCSCBus.debug.xcconfig */,
-				52C637F015DDA807ECB8C442 /* Pods-UCSCBus.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -110,11 +94,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 807B7B7423DFE5B300609EC8 /* Build configuration list for PBXNativeTarget "UCSCBus" */;
 			buildPhases = (
-				C19D75663F95C38DF1AB7C2F /* [CP] Check Pods Manifest.lock */,
 				807B7B5C23DFE5B200609EC8 /* Sources */,
 				807B7B5D23DFE5B200609EC8 /* Frameworks */,
 				807B7B5E23DFE5B200609EC8 /* Resources */,
-				238099C807F1C18B6B4E0574 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -171,48 +153,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		238099C807F1C18B6B4E0574 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UCSCBus/Pods-UCSCBus-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-UCSCBus/Pods-UCSCBus-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UCSCBus/Pods-UCSCBus-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C19D75663F95C38DF1AB7C2F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-UCSCBus-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		807B7B5C23DFE5B200609EC8 /* Sources */ = {
@@ -366,17 +306,16 @@
 		};
 		807B7B7523DFE5B300609EC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 82D70E8625EDFB6A63E064EB /* Pods-UCSCBus.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7GU7D64P7X;
+				DEVELOPMENT_TEAM = 2U3HN2D38E;
 				INFOPLIST_FILE = UCSCBus/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.nate.UCSCBus;
+				PRODUCT_BUNDLE_IDENTIFIER = CSE115B;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -385,17 +324,16 @@
 		};
 		807B7B7623DFE5B300609EC8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 52C637F015DDA807ECB8C442 /* Pods-UCSCBus.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7GU7D64P7X;
+				DEVELOPMENT_TEAM = 2U3HN2D38E;
 				INFOPLIST_FILE = UCSCBus/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.nate.UCSCBus;
+				PRODUCT_BUNDLE_IDENTIFIER = CSE115B;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -40,6 +40,10 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         //maybe set to current user location
         mapView.setCenter(CLLocationCoordinate2D(latitude: 36.99746, longitude: -122.055105), zoomLevel: 13, animated: false)
         view.addSubview(mapView)
+      
+      
+      //sets the map so that it displays user location
+      mapView.showsUserLocation = true
     }
     //add bus tracking here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
