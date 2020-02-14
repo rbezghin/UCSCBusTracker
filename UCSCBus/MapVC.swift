@@ -36,18 +36,11 @@ class MapVC: UIViewController, MGLMapViewDelegate {
 
         mapView = MGLMapView(frame: view.frame, styleURL: URL(string: "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"))
         mapView.delegate = self
-        
-        //maybe set to current user location
-        mapView.setCenter(CLLocationCoordinate2D(latitude: 36.99746, longitude: -122.055105), zoomLevel: 13, animated: false)
-        view.addSubview(mapView)
-      
-      
-      //sets the map so that it displays user location
-      mapView.showsUserLocation = true
-        
+        mapView.showsUserLocation = true
+        view.addSubview(mapView)   
     }
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
-        mapView.setCenter((mapView.userLocation?.coordinate)!, animated: false)
+        mapView.setCenter((mapView.userLocation?.coordinate)!, zoomLevel: 14, animated: false)
     }
     //add bus tracking here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
