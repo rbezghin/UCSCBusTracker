@@ -20,6 +20,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     var featuresToDisplay = [MGLPointFeature]()
     let urlString = "https://www.kerryveenstra.com/location/get/v1/"
     
+    
     let busIconImage: UIImage = {
         let image = UIImage(named: "bus_icon")
         let size = CGSize(width: 20, height: 20)
@@ -32,8 +33,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-     // longitude -122.055105 latitude 36.99746
-        //mapView = MGLMapView(frame: view.frame)
+
         mapView = MGLMapView(frame: view.frame, styleURL: URL(string: "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"))
         mapView.delegate = self
         
@@ -44,6 +44,10 @@ class MapVC: UIViewController, MGLMapViewDelegate {
       
       //sets the map so that it displays user location
       mapView.showsUserLocation = true
+        
+    }
+    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
+        mapView.setCenter((mapView.userLocation?.coordinate)!, animated: false)
     }
     //add bus tracking here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
@@ -233,7 +237,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     //adds an image to bus points
     //TODO: resize image
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        guard  let image = UIImage(named: "stop_icon") else {return nil}
+        guard  let image = UIImage(named: "bus_stop") else {return nil}
         //resizing image
         let size = CGSize(width: 20, height: 20)
         var newImage: UIImage
