@@ -18,8 +18,9 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     var source: MGLSource!
     var coordinates = [CLLocationCoordinate2D]() //are used to store locations of features
     var featuresToDisplay = [MGLPointFeature]()
-    let urlString = "https://www.kerryveenstra.com/location/get/v1/"
-    
+    //let urlString = "https://www.kerryveenstra.com/location/get/v1/"
+    let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
+                   //https://ucsc-bts3.soe.ucsc.edu/bus_table.php
     
     let busIconImage: UIImage = {
         let image = UIImage(named: "bus_icon")
@@ -89,28 +90,57 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     }
     //processing data received from database
     func parseDataFromDB(data: Data)->[MGLPointFeature]{
-        print("Parsing Data")
+        //print("Parsing Data")
         var features = featuresToDisplay
         do{
             let jsonData = try JSONSerialization.jsonObject(with: data, options: [])
-            guard let jsonArray = jsonData as? [[String: Any]] else{return features}
-            //At this point data is safely converted to an array of busses + their location
-            print(jsonArray)
-            coordinates.removeAll()
-            for item in jsonArray{
-                let coordinate = CLLocationCoordinate2D(latitude: item["lat"] as! Double, longitude: item["lon"] as! Double)
-                let title = item["type"] as! String
-                let id = item["id"] as! String
-                print("Coordinate is \(coordinate)")
-                coordinates.append(coordinate)
-                let feature = MGLPointFeature()
-                feature.coordinate = coordinate
-                feature.identifier = id
-                feature.attributes = ["name": title]
-                //check if this feature is in the features and replace by a new one
-                updateFeatures(newFeature: feature)
-                features.append(feature)
+            guard let jsonArray = jsonData as? [String: Any] else{
+                print("JsonSerialization Failed")
+                return features}
+            //print(jsonArray)
+            if let busTableRows = jsonArray["rows"] as? NSArray{
+                //print(busTableRows)
+                for busData in busTableRows{
+                    
+                    if let busDictionary = busData as? NSDictionary{
+                        //print(busDictionary)
+                        let lonString = busDictionary["lon"] as! String
+                        let latString = busDictionary["lat"] as! String
+                        let lon = Double(lonString)!
+                        let lat = Double(latString)!
+                        
+                        
+                        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                        let title = busDictionary["type"] as! String
+                        let id = busDictionary["id"] as! String
+                        coordinates.append(coordinate)
+                        let feature = MGLPointFeature()
+                        feature.coordinate = coordinate
+                        feature.identifier = id
+                        feature.attributes = ["name": title]
+                        //check if this feature is in the features and replace by a new one
+                        updateFeatures(newFeature: feature)
+                        //features.append(feature)
+                    }
+                }
+               
             }
+            
+//            for item in jsonArray{
+//                print(item)
+//                let coordinate = CLLocationCoordinate2D(latitude: item["lat"] as! Double, longitude: item["lon"] as! Double)
+//                let title = item["type"] as! String
+//                let id = item["id"] as! String
+//                print("Coordinate is \(coordinate)")
+//                coordinates.append(coordinate)
+//                let feature = MGLPointFeature()
+//                feature.coordinate = coordinate
+//                feature.identifier = id
+//                feature.attributes = ["name": title]
+//                //check if this feature is in the features and replace by a new one
+//                updateFeatures(newFeature: feature)
+//                features.append(feature)
+//            }
         }catch let error {
             print(error.localizedDescription)
         }
@@ -152,11 +182,13 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         //check if  feature is in features
         for feature in featuresToDisplay{
             if feature.identifier as! String == newFeature.identifier as! String{
+                //print("Updating existing feature")
                 feature.coordinate = newFeature.coordinate
                 return
             }
         }
         //if not add it
+        //print("Adding new feature")
         featuresToDisplay.append(newFeature)
     }
         
@@ -186,9 +218,9 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         }
     
     func updateBusLocationFeatures(features: [MGLPointFeature]){
-        print("Adding points")
-        print(featuresToDisplay)
-        //FIXING dissapearing busses issue
+        //print("Adding points")
+        //print(featuresToDisplay)
+        //TODO: dissapearing busses issue
         let source: MGLShapeSource
         guard let style = mapView.style else { return }
         
@@ -241,31 +273,6 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "stop_icon")
         return annotationImage
     }
-    
-    //not needed rn kek
-    func createGeoJSON(id: Int, busType: String, latitude: Float, longitude: Float) -> [String : Any] {
-        let geoJson = [
-        "type" : "FeatureCollection",
-        "features" :
-            [
-                [
-                    "type" : "Feature",
-                    "geometry" : [
-                        "type": "Point",
-                        "coordinates": [36.99, -122.05]
-                    ],
-                    "properties" : [
-                        "name" : "\(busType)"
-                    ]
-                ]
-            ]
-        ] as [String : Any]
-        return geoJson
-    }
-    
-    //stop timer if view dissapeared
-    override func viewWillDisappear(_ animated: Bool) {
-        
-    }
+
 }
 
