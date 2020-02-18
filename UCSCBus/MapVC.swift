@@ -42,11 +42,16 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     }
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
         mapView.setCenter((mapView.userLocation?.coordinate)!, zoomLevel: 14, animated: false)
+
     }
     //add bus tracking here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         guard let url = URL(string: urlString) else {return}
-        let session = URLSession(configuration: URLSessionConfiguration.default)
+        
+        let config = URLSessionConfiguration.default
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
+        config.urlCache = nil
+        let session = URLSession(configuration: config)
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
             self.performTask(withSession: session, withURL: url) { [weak self] (features) in
