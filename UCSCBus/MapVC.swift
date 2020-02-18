@@ -196,7 +196,13 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         // Hide the callout view.
         mapView.deselectAnnotation(annotation, animated: false)
      
-        // Show an alert containing the bus stop ETA table
+        let schedule = ScheduleVC()
+        schedule.name = annotation.title!!
+        self.present(schedule, animated: true, completion: nil)
+        
+        
+        /* ALERT POPUP VERSION (use in case we can't figure out better option)
+         
         if annotation.title == "College 9 & 10 (Outer)" {
             let alert = UIAlertController(title: annotation.title!!, message: "Upper Campus - 5 min\nLoop - 7 min", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
@@ -207,6 +213,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
             alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+        */
     }
 
     func mapView(_ mapView: MGLMapView, rightCalloutAccessoryViewFor     annotation: MGLAnnotation) -> UIView? {
