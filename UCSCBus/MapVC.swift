@@ -14,16 +14,15 @@ import Foundation
 
 class MapVC: UIViewController, MGLMapViewDelegate {
     
+    var map = MapModel()
     var mapView: MGLMapView!
-    var source: MGLSource!
-    //var coordinates = [CLLocationCoordinate2D]() //are used to store locations of features
     var featuresToDisplay = [MGLPointFeature]()
-    //let urlString = "https://www.kerryveenstra.com/location/get/v1/"
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
-                   //https://ucsc-bts3.soe.ucsc.edu/bus_table.php
+    let busIconName = "bus_shuttle_icon"
+    let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"
     
-    let busIconImage: UIImage = {
-        let image = UIImage(named: "bus_shuttle_icon")
+    lazy var busIconImage: UIImage = {
+        let image = UIImage(named: busIconName)
         let size = CGSize(width: 20, height: 20)
         var newImage: UIImage
         let renderer = UIGraphicsImageRenderer(size: size)
@@ -35,7 +34,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        mapView = MGLMapView(frame: view.frame, styleURL: URL(string: "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"))
+        mapView = MGLMapView(frame: view.frame, styleURL: URL(string: mapBoxStyleURLString))
         mapView.delegate = self
         mapView.showsUserLocation = true
         view.addSubview(mapView)   
@@ -58,6 +57,26 @@ class MapVC: UIViewController, MGLMapViewDelegate {
                 self?.updateBusLocationFeatures()
             }
         }
+        var lon = -122.0582
+        var lat = 36.9881
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ timer in
+            var randlon = Double.random(in: -0.0001 ..< 0.0001)
+            var randlat = Double.random(in: -0.0001 ..< 0.0001)
+            lon = lon + randlon
+            lat = lat - randlon
+            var title = "LOOP"
+            var id = "95"
+            var bus = Bus(id: Int(id)!, busType: title, latitude: lat, longitude: lon)
+            self.map.updateBusArray(newBus: bus)
+            
+//            lon = lon - randlat
+//            lat = lat + randlat
+//            title = "UPPER"
+//            id = "17"
+//            bus = Bus(id: Int(id)!, busType: title, latitude: lat, longitude: lon)
+//            self.map.updateBusArray(newBus: bus)
+        }
+        
         // Read and process CSV file contents
         var data = readDataFromCSV(fileName: "bus_stop_data", fileType: ".csv")
         data = cleanRows(file: data!)
@@ -120,6 +139,10 @@ class MapVC: UIViewController, MGLMapViewDelegate {
                         //check if this feature is in the features and replace by a new one
                         print("adding new feature \(feature)")
                         updateFeatures(newFeature: feature)
+                        
+                        let bus = Bus(id: Int(id)!, busType: title, latitude: lat, longitude: lon)
+                        map.updateBusArray(newBus: bus)
+                        
                     }
                 }
             }
@@ -163,15 +186,15 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         //check if  feature is in features
         for feature in featuresToDisplay{
             if feature.identifier as! String == newFeature.identifier as! String{
-                print("Updating existing feature")
-                print("Old feature \(feature)")
+                //print("Updating existing feature")
+                //print("Old feature \(feature)")
                 feature.coordinate = newFeature.coordinate
-                print("New feature \(feature)")
+                //print("New feature \(feature)")
                 return
             }
         }
         //if not add it
-        print("Adding new feature")
+        //print("Adding new feature")
         featuresToDisplay.append(newFeature)
     }
         
@@ -208,28 +231,35 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         }
     
     func updateBusLocationFeatures(){
-        print(featuresToDisplay)
-        let source: MGLShapeSource
-        guard let style = mapView.style else { return }
-        //if there already exist source and layer with busses it must be removed and new one added
-        if let existingSource = style.source(withIdentifier: "bus_source") {
-            //convert features into shapes and add them to the existing source
-            let shapeSource = existingSource as! MGLShapeSource
-            let collection = MGLShapeCollectionFeature(shapes: featuresToDisplay)
-            shapeSource.shape = collection
-        }
-        else{
-            //new source
-            source = MGLShapeSource(identifier: "bus_source", features: featuresToDisplay, options: nil)
-            style.addSource(source)
-            //CUSTOM BUS ICON
-            //busIconImage - image created from assets
-            style.setImage(busIconImage, forName: "bus_icon")
-            let busLayer = MGLSymbolStyleLayer(identifier: "bus_layer", source: source)
-            //busLayer.iconImageName = NSExpression(forConstantValue: "bus_shuttle_icon")
-            busLayer.iconImageName = NSExpression(forConstantValue: "bus_icon")
-            style.addLayer(busLayer)
-
+        //print(featuresToDisplay)
+        //print("Bus array before adding to map \(map.busArray)")
+        for bus in map.busArray{
+            let feature = bus.getBusFeature()
+            guard let style = mapView.style else { return }
+            let source: MGLShapeSource
+            //if there already exist source and layer with busses it must be removed and new one added
+            if let existingSource = style.source(withIdentifier: bus.sourceIdentifier) {
+                //convert features into shapes and add them to the existing source
+                let shapeSource = existingSource as! MGLShapeSource
+                let collection = MGLShapeCollectionFeature(shapes: [feature])
+                shapeSource.shape = collection
+                let busLayer = style.layer(withIdentifier: bus.busLayerIdentifier) as! MGLSymbolStyleLayer
+                busLayer.iconRotation = NSExpression(forConstantValue: (bus.getBearing()))
+                //style.addLayer(busLayer)
+            }
+            else{
+                //new source
+                source = MGLShapeSource(identifier: bus.sourceIdentifier, features: [feature], options: nil)
+                style.addSource(source)
+                //CUSTOM BUS ICON
+                //busIconImage - image created from assets
+                style.setImage(busIconImage, forName: bus.busImageName)
+                let busLayer = MGLSymbolStyleLayer(identifier: bus.busLayerIdentifier, source: source)
+                //busLayer.iconImageName = NSExpression(forConstantValue: "bus_shuttle_icon")
+                busLayer.iconImageName = NSExpression(forConstantValue: bus.busImageName)
+                busLayer.iconRotation = NSExpression(forConstantValue: 0)
+                style.addLayer(busLayer)
+            }
         }
     }
     //adds an image to bus points
