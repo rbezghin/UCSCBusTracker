@@ -258,9 +258,14 @@ class MapVC: UIViewController, MGLMapViewDelegate {
                 busLayer.iconImageName = NSExpression(forConstantValue: bus.busImageName)
                 busLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
                 busLayer.iconRotation = NSExpression(forConstantValue: 0)
-                //busLayer.iconOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",[5.9: 0, 6: 1])
+                busLayer.iconOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",[5.9: 0, 6: 1])
+                busLayer.iconScale = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [14: 1.7, 15: 1.5, 16: 1.4, 18: 1.5, 19: 1.6])
                 style.addLayer(busLayer)
             }
+            
+            
+//            circles.circleOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [2: 0.5, 7: 1])
+//            circles.circleRadius = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [2: 3, 7: 4 ])
         }
     }
     //adds an image to bus points
