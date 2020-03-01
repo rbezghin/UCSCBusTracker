@@ -59,17 +59,6 @@ struct Bus: Equatable, CustomStringConvertible {
         let dx = x2 - x1
         let sita = atan2(sin(dx) * cos(y2), cos(y1) * sin(y2) - sin(y1) * cos(y2) * cos(dx))
 
-        return sita * (180.0 / Double.pi) - 100
+        return ((sita * (180.0 / Double.pi)) - 100)
     }
-    func getDirection()-> Double{
-        let dy = oldCoordinate.latitude - coordinate.latitude
-        let dx = oldCoordinate.longitude - coordinate.longitude
-        var rads = atan2(dy, dx)
-//        if (rads < 0) {
-//            rads += Double.pi*2.0
-//        }
-        
-        return rads * 180 / Double.pi
-    }
-    
 }

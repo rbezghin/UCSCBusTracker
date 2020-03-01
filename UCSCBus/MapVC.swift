@@ -18,12 +18,12 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     var mapView: MGLMapView!
     var featuresToDisplay = [MGLPointFeature]()
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
-    let busIconName = "bus_shuttle_icon"
+    let busIconName = "bus_top_shuttle_icon"
     let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"
     
     lazy var busIconImage: UIImage = {
         let image = UIImage(named: busIconName)
-        let size = CGSize(width: 20, height: 20)
+        let size = CGSize(width: 25, height: 25)
         var newImage: UIImage
         let renderer = UIGraphicsImageRenderer(size: size)
         newImage = renderer.image { (context) in
@@ -52,16 +52,16 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         config.urlCache = nil
         let session = URLSession(configuration: config)
         
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
             self.performTask(withSession: session, withURL: url) { [weak self]  in
                 self?.updateBusLocationFeatures()
             }
         }
         var lon = -122.0582
         var lat = 36.9881
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ timer in
-            var randlon = Double.random(in: -0.0001 ..< 0.0001)
-            var randlat = Double.random(in: -0.0001 ..< 0.0001)
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: true){ timer in
+            var randlon = Double.random(in: 0 ..< 0.0002)
+            var randlat = Double.random(in: -0.0002 ..< 0.0002)
             lon = lon + randlon
             lat = lat - randlon
             var title = "LOOP"
@@ -245,7 +245,6 @@ class MapVC: UIViewController, MGLMapViewDelegate {
                 shapeSource.shape = collection
                 let busLayer = style.layer(withIdentifier: bus.busLayerIdentifier) as! MGLSymbolStyleLayer
                 busLayer.iconRotation = NSExpression(forConstantValue: (bus.getBearing()))
-                //style.addLayer(busLayer)
             }
             else{
                 //new source
@@ -257,7 +256,9 @@ class MapVC: UIViewController, MGLMapViewDelegate {
                 let busLayer = MGLSymbolStyleLayer(identifier: bus.busLayerIdentifier, source: source)
                 //busLayer.iconImageName = NSExpression(forConstantValue: "bus_shuttle_icon")
                 busLayer.iconImageName = NSExpression(forConstantValue: bus.busImageName)
+                busLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
                 busLayer.iconRotation = NSExpression(forConstantValue: 0)
+                //busLayer.iconOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",[5.9: 0, 6: 1])
                 style.addLayer(busLayer)
             }
         }
