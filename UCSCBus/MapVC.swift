@@ -197,28 +197,98 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         featuresToDisplay.append(newFeature)
     }
         
+    let csvToDatabase: Dictionary = ["Campus Entrance (Main)":"Main Entrance","Lower Campus (Outer)":"Lower Campus","Village and the Farm (Outer)":"Village/Farm",
+                             "East Remote Lot Interior":"East Remote Interior","East Remote Parking (Outer)":"East Remote","East Field House":"East Field House",
+                             "Cowell & Stevenson (Outer)":"Bookstore","Crown & Merrill":"Crown/Merrill","College 9 & 10 (Outer)":"Colleges 9&10/Health Center",
+                             "Science Hill (Outer)":"Science Hill","Kresge (Outer)":"Kresge","Rachel Carson & Porter (Outer)":"Porter/Rachel Carson",
+                             "Family Student Housing":"Family Student Housing","Oakes (Outer)":"Oakes/Family Student Housing","Arboretum (Outer)":"Arboretum",
+                             "High and Western (Outer)":"Western Drive","Lower Campus (Inner)":"Lower Campus","Village and the Farm (Inner)":"Village/Farm",
+                             "East Remote Parking (Inner)":"East Remote","Cowell & Stevenson (Inner)":"Cowell College/Bookstore",
+                             "College 9 & 10 (Inner)":"Colleges 9&10/Health Center","Science Hill (Inner)":"Science Hill","Kresge (Inner)":"Kresge",
+                             "Kerr Hall Bridge":"Kerr Hall","Rachel Carson & Porter (Inner)":"Porter/Rachel Carson",
+                             "Oakes (Inner)":"Oakes/Rachel Carson","West Remote Lot Interior":"West Remote Interior","Arboretum (Inner)":"Arboretum",
+                             "High and Western (Inner)":"Western Drive","Campus Entrance (Barn Theater)":"Barn Theatre",]
+    
+    let innerStops = ["Lower Campus (Inner)","Village and the Farm (Inner)","East Remote Parking (Inner)",
+                      "Cowell & Stevenson (Inner)","College 9 & 10 (Inner)","Science Hill (Inner)","Kresge (Inner)",
+                      "Kerr Hall Bridge","Rachel Carson & Porter (Inner)","Oakes (Inner)","West Remote Lot Interior",
+                      "Arboretum (Inner)","High and Western (Inner)","Campus Entrance (Barn Theater)"]
+        
     func mapView(_ mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {
-        // Hide the callout view.
-        mapView.deselectAnnotation(annotation, animated: false)
-     
-        let schedule = ScheduleVC()
-        schedule.name = annotation.title!!
-        self.present(schedule, animated: true, completion: nil)
+        var etas = [String]()
+        var noETA = false
         
-        
-        /* ALERT POPUP VERSION (use in case we can't figure out better option)
-         
-        if annotation.title == "College 9 & 10 (Outer)" {
-            let alert = UIAlertController(title: annotation.title!!, message: "Upper Campus - 5 min\nLoop - 7 min", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+        // Setting up HTTP POST request
+        let headers = [
+          "content-type": "application/x-www-form-urlencoded",
+          "cache-control": "no-cache",
+          "postman-token": "23cb4108-e24b-adab-b979-e37fd8f78622"
+        ]
+        let name = csvToDatabase[annotation.title!!] ?? "" // use database name for request
+        let stopString = "bus_stop=" + name
+        var location = "outer_eta"
+        for stop in innerStops {
+            if annotation.title!! == stop {
+                location = "inner_eta"
+            }
         }
-        else if annotation.title == "College 9 & 10 (Inner)" {
-            let alert = UIAlertController(title: annotation.title!!, message: "Upper Campus - 3 min\nLoop - 8 min", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+        let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_stops/" + location + ".php"
+        let postData = NSMutableData(data: stopString.data(using: String.Encoding.utf8)!)
+        var request = URLRequest(url: URL(string: urlString)! as URL,
+                                          cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+                                          timeoutInterval: 10.0)
+        request.httpMethod = "POST"
+        request.allHTTPHeaderFields = headers
+        request.httpBody = postData as Data
+        print(stopString)
+        print(urlString)
+
+        // Sending HTTP POST request and processing response
+        let group = DispatchGroup()
+        group.enter()
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
+            if (error != nil) {
+                print(error!)
+            }
+            DispatchQueue.main.async {
+                do {
+                    let jsonObject = try JSONSerialization.jsonObject(with: data!)
+                    guard let jsonArray = jsonObject as? [String: Any] else{
+                        print("JsonSerialization Failed")
+                        return
+                        }
+                    if let etaTableRows = jsonArray["rows"] as? NSArray{
+                        for etaData in etaTableRows{
+                            let etaDictionary = etaData as? NSDictionary
+                            let busType = etaDictionary!["bus_type"] as! String
+                            let timeAway = String(etaDictionary!["time_away"] as! Int)
+                            let etaCell = busType + " is " + timeAway + " minutes away"
+                            etas.append(etaCell)
+                        }
+                    }
+                } catch {
+                    print("JSONSerialization error:", error)
+                    noETA = true
+                }
+                 group.leave()
+            }
+        })
+        dataTask.resume()
+        group.notify(queue: .main) { // Wait for HTTP section to complete before adding data to table
+            mapView.deselectAnnotation(annotation, animated: false)
+            let schedule = ScheduleVC()
+            schedule.data.append(annotation.title!! + " ETAs:")
+            for item in etas {
+                schedule.data.append(item)
+            }
+            if noETA == true {
+                schedule.data.append("Sorry, ETAs not available!")
+            }
+            schedule.data.append("") // two line buffer
+            schedule.data.append("")
+            self.present(schedule, animated: true, completion: nil)
         }
-        */
     }
 
     func mapView(_ mapView: MGLMapView, rightCalloutAccessoryViewFor     annotation: MGLAnnotation) -> UIView? {
