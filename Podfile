@@ -4,7 +4,7 @@
 target 'UCSCBus' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-
+  #use_modular_headers!
   # Pods for UCSCBus
-  pod 'Mapbox-iOS-SDK', '~> 5.6'
+  pod 'Mapbox-iOS-SDK', '~> 5.7'
 end
