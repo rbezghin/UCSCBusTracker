@@ -14,35 +14,24 @@ import Foundation
 
 class MapVC: UIViewController, MGLMapViewDelegate {
     
+    var Map = MapModel()
     var mapView: MGLMapView!
-    var source: MGLSource!
-    var coordinates = [CLLocationCoordinate2D]() //are used to store locations of features
-    var featuresToDisplay = [MGLPointFeature]()
-    //let urlString = "https://www.kerryveenstra.com/location/get/v1/"
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
-                   //https://ucsc-bts3.soe.ucsc.edu/bus_table.php
+    let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"
     
-    let busIconImage: UIImage = {
-        let image = UIImage(named: "bus_icon")
-        let size = CGSize(width: 20, height: 20)
-        var newImage: UIImage
-        let renderer = UIGraphicsImageRenderer(size: size)
-        newImage = renderer.image { (context) in
-            image?.draw(in: CGRect(origin: .zero, size: size))
-        }
-        return newImage
-    }()
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        mapView = MGLMapView(frame: view.frame, styleURL: URL(string: "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"))
+        mapView = MGLMapView(frame: view.frame, styleURL: URL(string: mapBoxStyleURLString))
         mapView.delegate = self
         mapView.showsUserLocation = true
-        view.addSubview(mapView)   
+        // Enable the always-on heading indicator for the user location annotation.
+        mapView.showsUserHeadingIndicator = true
+        mapView.logoView.isHidden = true
+        mapView.attributionButton.isHidden = true
+        view.addSubview(mapView)
     }
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
         mapView.setCenter((mapView.userLocation?.coordinate)!, zoomLevel: 14, animated: false)
-
     }
     //add bus tracking here
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
@@ -53,12 +42,11 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         config.urlCache = nil
         let session = URLSession(configuration: config)
         
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            self.performTask(withSession: session, withURL: url) { [weak self] (features) in
-                self?.updateBusLocationFeatures(features: features)
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
+            self.performTask(withSession: session, withURL: url) { [weak self]  in
+                self?.updateBusLocationFeatures()
             }
         }
-      
         // Read and process CSV file contents
         var data = readDataFromCSV(fileName: "bus_stop_data", fileType: ".csv")
         data = cleanRows(file: data!)
@@ -78,8 +66,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
             mapView.addAnnotation(stops[item])
         }
     }
-    //
-    func performTask(withSession: URLSession, withURL: URL,completion: @escaping (([MGLPointFeature]) -> Void)){
+    func performTask(withSession: URLSession, withURL: URL,completion: @escaping ((()) -> Void)){
         let task = withSession.dataTask(with: withURL) { (data, response, error) in
             if error != nil {
                 print( "Error in task \(String(describing: error)) ")
@@ -94,62 +81,31 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         task.resume()
     }
     //processing data received from database
-    func parseDataFromDB(data: Data)->[MGLPointFeature]{
-        //print("Parsing Data")
-        var features = featuresToDisplay
+    func parseDataFromDB(data: Data){
         do{
             let jsonData = try JSONSerialization.jsonObject(with: data, options: [])
             guard let jsonArray = jsonData as? [String: Any] else{
                 print("JsonSerialization Failed")
-                return features}
-            //print(jsonArray)
+                return
+            }
             if let busTableRows = jsonArray["rows"] as? NSArray{
-                //print(busTableRows)
                 for busData in busTableRows{
-                    
                     if let busDictionary = busData as? NSDictionary{
-                        //print(busDictionary)
+                        print(busDictionary)
                         let lonString = busDictionary["lon"] as! String
                         let latString = busDictionary["lat"] as! String
-                        let lon = Double(lonString)!
-                        let lat = Double(latString)!
-                        
-                        
+                        let lon = Double(lonString)! ; let lat = Double(latString)!
                         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
                         let title = busDictionary["type"] as! String
-                        let id = busDictionary["id"] as! String
-                        coordinates.append(coordinate)
-                        let feature = MGLPointFeature()
-                        feature.coordinate = coordinate
-                        feature.identifier = id
-                        feature.attributes = ["name": title]
-                        //check if this feature is in the features and replace by a new one
-                        updateFeatures(newFeature: feature)
-                        //features.append(feature)
+                        let id = Int(busDictionary["id"] as! String)!
+                        let bus = Bus(id: id, busType: title,coordinate: coordinate)
+                        Map.updateBusArray(newBus: bus)
                     }
                 }
-               
             }
-            
-//            for item in jsonArray{
-//                print(item)
-//                let coordinate = CLLocationCoordinate2D(latitude: item["lat"] as! Double, longitude: item["lon"] as! Double)
-//                let title = item["type"] as! String
-//                let id = item["id"] as! String
-//                print("Coordinate is \(coordinate)")
-//                coordinates.append(coordinate)
-//                let feature = MGLPointFeature()
-//                feature.coordinate = coordinate
-//                feature.identifier = id
-//                feature.attributes = ["name": title]
-//                //check if this feature is in the features and replace by a new one
-//                updateFeatures(newFeature: feature)
-//                features.append(feature)
-//            }
         }catch let error {
             print(error.localizedDescription)
         }
-        return features
     }
     
     func csv(data: String) -> [[String]] {
@@ -181,20 +137,6 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         cleanFile = cleanFile.replacingOccurrences(of: "\r", with: "\n")
         cleanFile = cleanFile.replacingOccurrences(of: "\n\n", with: "\n")
         return cleanFile
-    }
-  
-    func updateFeatures(newFeature: MGLPointFeature){
-        //check if  feature is in features
-        for feature in featuresToDisplay{
-            if feature.identifier as! String == newFeature.identifier as! String{
-                //print("Updating existing feature")
-                feature.coordinate = newFeature.coordinate
-                return
-            }
-        }
-        //if not add it
-        //print("Adding new feature")
-        featuresToDisplay.append(newFeature)
     }
         
     let csvToDatabase: Dictionary = ["Campus Entrance (Main)":"Main Entrance","Lower Campus (Outer)":"Lower Campus","Village and the Farm (Outer)":"Village/Farm",
@@ -299,47 +241,38 @@ class MapVC: UIViewController, MGLMapViewDelegate {
             return true
         }
     
-    func updateBusLocationFeatures(features: [MGLPointFeature]){
-        //print("Adding points")
-        //print(featuresToDisplay)
-        //TODO: dissapearing busses issue
-        let source: MGLShapeSource
-        guard let style = mapView.style else { return }
-        
-        //if there already exist source and layer with busses
-        //it must be removed and new one added
-        //else create first source
-        if let existingSource = style.source(withIdentifier: "bus_source") {
-            //get existing source
-            //convert features into shapes and add them to the existing source
-            let shapeSource = existingSource as! MGLShapeSource
-            let collection = MGLShapeCollectionFeature(shapes: featuresToDisplay)
-            shapeSource.shape = collection
+    func updateBusLocationFeatures(){
+        for bus in Map.busArray{
+            let feature = bus.getBusFeature()
+            guard let style = mapView.style else { return }
+            let source: MGLShapeSource
+            //if there already exist source and layer with busses it must be removed and new one added
+            if let existingSource = style.source(withIdentifier: bus.sourceIdentifier) {
+                //convert features into shapes and add them to the existing source
+                let shapeSource = existingSource as! MGLShapeSource
+                let collection = MGLShapeCollectionFeature(shapes: [feature])
+                shapeSource.shape = collection
+                let busLayer = style.layer(withIdentifier: bus.busLayerIdentifier) as! MGLSymbolStyleLayer
+                let bearing = bus.getBearing()
+                if bearing != 0 {
+                    busLayer.iconRotation = NSExpression(forConstantValue: (bearing - 90))
+                }
+            }
+            else{
+                //new source
+                source = MGLShapeSource(identifier: bus.sourceIdentifier, features: [feature], options: nil)
+                style.addSource(source)
+                //CUSTOM BUS ICON
+                style.setImage(Map.busImage, forName: bus.busImageName)
+                let busLayer = MGLSymbolStyleLayer(identifier: bus.busLayerIdentifier, source: source)
+                busLayer.iconImageName = NSExpression(forConstantValue: bus.busImageName)
+                busLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
+                busLayer.iconRotation = NSExpression(forConstantValue: 0)
+                busLayer.iconOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",[5.9: 0, 6: 1])
+                busLayer.iconScale = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [14: 1.7, 15: 1.5, 16: 1.4, 18: 1.5, 19: 1.6   ])
+                style.addLayer(busLayer)
+            }
         }
-        else{
-            //new source
-            source = MGLShapeSource(identifier: "bus_source", features: features, options: nil)
-            style.addSource(source)
-            let color = UIColor(red: 0.08, green: 0.44, blue: 0.96, alpha: 1.0)
-            let circles = MGLCircleStyleLayer(identifier: "circles", source: source)
-            circles.circleColor = NSExpression(forConstantValue: color)
-
-            // The circles should increase in opacity from 0.5 to 1 based on zoom level.
-            circles.circleOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [2: 0.5, 7: 1])
-            circles.circleRadius = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [2: 3, 7: 4 ])
-            style.addLayer(circles)
-
-        }
-            //CUSTOM BUS ICON
-//           style.setImage(busIconImage, forName: "bus_image")
-//            let source = MGLShapeSource(identifier: "bus_source", features: features, options: nil)
-//            style.addSource(source)
-            
-    //         CUSTOM BUS ICON
-    //        let busLayer = MGLSymbolStyleLayer(identifier: "bus_layer", source: source)
-    //        busLayer.iconImageName = NSExpression(forConstantValue: "bus_image")
-    //        style.addLayer(busLayer)
-
     }
     //adds an image to bus points
     //TODO: resize image
@@ -355,6 +288,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "stop_icon")
         return annotationImage
     }
+
 
 }
 
