@@ -16,8 +16,8 @@ class MapModel {
             //print("Bus count is \(busCount)")
         }
     }
-    let busIconName = "bus_top_shuttle_icon"
-    lazy var busImage: UIImage = {
+    private let busIconName = "bus_top_shuttle_icon"
+    private(set) lazy var busImage: UIImage = {
         let image = UIImage(named: busIconName)
         let size = CGSize(width: 25, height: 25)
         var newImage: UIImage

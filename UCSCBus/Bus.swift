@@ -9,9 +9,7 @@
 import Mapbox
 import Foundation
 
-
 struct Bus: Equatable, CustomStringConvertible {
-    
     var description: String {
         return "\(id) lat: \(coordinate.latitude) lon: \(coordinate.longitude)"
     }
@@ -37,7 +35,6 @@ struct Bus: Equatable, CustomStringConvertible {
         self.busImageName = "busImageName_"+String(id)
 
     }
-    
     func getBusFeature() -> MGLPointFeature {
         let feature = MGLPointFeature()
         feature.coordinate = coordinate
@@ -50,16 +47,13 @@ struct Bus: Equatable, CustomStringConvertible {
         oldCoordinate = coordinate
         coordinate = newCoordinate
     }
-    
     func getBearing() -> Double {
         let x1 = oldCoordinate.longitude * (Double.pi / 180.0)
         let y1 = oldCoordinate.latitude  * (Double.pi / 180.0)
         let x2 = coordinate.longitude   * (Double.pi / 180.0)
         let y2 = coordinate.latitude    * (Double.pi / 180.0)
-
         let dx = x2 - x1
         let sita = atan2(sin(dx) * cos(y2), cos(y1) * sin(y2) - sin(y1) * cos(y2) * cos(dx))
-
         return ((sita * (180.0 / Double.pi)))
     }
 }

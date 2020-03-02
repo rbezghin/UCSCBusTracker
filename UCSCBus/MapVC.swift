@@ -17,19 +17,8 @@ class MapVC: UIViewController, MGLMapViewDelegate {
     var Map = MapModel()
     var mapView: MGLMapView!
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
-    let busIconImageName = "bus_top_shuttle_icon"
     let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"
     
-    lazy var busIconImage: UIImage = {
-        let image = UIImage(named: busIconImageName)
-        let size = CGSize(width: 25, height: 25)
-        var newImage: UIImage
-        let renderer = UIGraphicsImageRenderer(size: size)
-        newImage = renderer.image { (context) in
-            image?.draw(in: CGRect(origin: .zero, size: size))
-        }
-        return newImage
-    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView = MGLMapView(frame: view.frame, styleURL: URL(string: mapBoxStyleURLString))
@@ -77,7 +66,6 @@ class MapVC: UIViewController, MGLMapViewDelegate {
             mapView.addAnnotation(stops[item])
         }
     }
-    //
     func performTask(withSession: URLSession, withURL: URL,completion: @escaping ((()) -> Void)){
         let task = withSession.dataTask(with: withURL) { (data, response, error) in
             if error != nil {
@@ -184,8 +172,6 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         }
     
     func updateBusLocationFeatures(){
-        //print(featuresToDisplay)
-        //print("Bus array before adding to map \(map.busArray)")
         for bus in Map.busArray{
             let feature = bus.getBusFeature()
             guard let style = mapView.style else { return }
@@ -201,14 +187,13 @@ class MapVC: UIViewController, MGLMapViewDelegate {
                 if bearing != 0 {
                     busLayer.iconRotation = NSExpression(forConstantValue: (bearing - 90))
                 }
-                
             }
             else{
                 //new source
                 source = MGLShapeSource(identifier: bus.sourceIdentifier, features: [feature], options: nil)
                 style.addSource(source)
                 //CUSTOM BUS ICON
-                style.setImage(busIconImage, forName: busIconImageName)
+                style.setImage(Map.busImage, forName: bus.busImageName)
                 let busLayer = MGLSymbolStyleLayer(identifier: bus.busLayerIdentifier, source: source)
                 busLayer.iconImageName = NSExpression(forConstantValue: bus.busImageName)
                 busLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
