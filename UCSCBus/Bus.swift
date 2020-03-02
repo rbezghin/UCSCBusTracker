@@ -9,7 +9,9 @@
 import Mapbox
 import Foundation
 
+
 struct Bus: Equatable, CustomStringConvertible {
+    
     var description: String {
         return "\(id) lat: \(coordinate.latitude) lon: \(coordinate.longitude)"
     }
@@ -24,13 +26,12 @@ struct Bus: Equatable, CustomStringConvertible {
     
     var sourceIdentifier: String
     var busLayerIdentifier: String
-    var busUIImage: UIImage?
     var busImageName: String
 
-    init(id: Int, busType: String, latitude: Double, longitude: Double) {
+    init(id: Int, busType: String, coordinate: CLLocationCoordinate2D) {
         self.id = id
         self.busType = busType
-        self.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        self.coordinate = coordinate
         self.sourceIdentifier = "sourceIdentifier_"+String(id)
         self.busLayerIdentifier = "busLayerIdentifier_"+String(id)
         self.busImageName = "busImageName_"+String(id)
@@ -59,6 +60,6 @@ struct Bus: Equatable, CustomStringConvertible {
         let dx = x2 - x1
         let sita = atan2(sin(dx) * cos(y2), cos(y1) * sin(y2) - sin(y1) * cos(y2) * cos(dx))
 
-        return ((sita * (180.0 / Double.pi)) - 100)
+        return ((sita * (180.0 / Double.pi)))
     }
 }
