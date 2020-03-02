@@ -42,7 +42,7 @@ class MapModel {
                 return
             }
         }
-        print("Adding new Bus")
+        //print("Adding new Bus")
         busArray.append(newBus)
     }
 }

@@ -40,7 +40,7 @@ struct Bus: Equatable, CustomStringConvertible {
         feature.coordinate = coordinate
         feature.identifier = id
         feature.attributes = ["name": busType]
-        print("SendingFeateure: \n Old coordinate - \(oldCoordinate)\n New coordinate - \(coordinate) \n Bearing is \(getBearing())")
+        //print("SendingFeateure: \n Old coordinate - \(oldCoordinate)\n New coordinate - \(coordinate) \n Bearing is \(getBearing())")
         return feature
     }
     mutating func updateCoordinate(newCoordinate: CLLocationCoordinate2D){
