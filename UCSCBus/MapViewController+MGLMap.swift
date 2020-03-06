@@ -18,6 +18,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     var mapView: MGLMapView!
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
     let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"
+    var userLocationButton: UserLocationButton?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,11 +31,13 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
         view.addSubview(mapView)
+        setupLocationButton()
     }
+    
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
         mapView.setCenter((mapView.userLocation?.coordinate)!, zoomLevel: 14, animated: false)
     }
-    //add bus tracking here
+    
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         guard let url = URL(string: urlString) else {return}
         
@@ -289,6 +293,87 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         return annotationImage
     }
 
+    @IBAction func locationButtonTapped(sender: UserLocationButton) {
+        //Jump to user location, but don't actually follow it.
+        mapView.userTrackingMode = .follow
+        mapView.userTrackingMode = .none
+    }
+    
+    func setupLocationButton() {
+         let userLocationButton = UserLocationButton(buttonSize: 45)
+         userLocationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
+         userLocationButton.tintColor = mapView.tintColor
+         userLocationButton.translatesAutoresizingMaskIntoConstraints = false
 
+         var leadingConstraintSecondItem: AnyObject
+         if #available(iOS 11.0, *) {
+             leadingConstraintSecondItem = view.safeAreaLayoutGuide
+         } else {
+             leadingConstraintSecondItem = view
+         }
+
+         let constraints: [NSLayoutConstraint] = [
+             NSLayoutConstraint(item: userLocationButton, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 10),
+             NSLayoutConstraint(item: userLocationButton, attribute: .leading, relatedBy: .equal, toItem: leadingConstraintSecondItem, attribute: .leading, multiplier: 1, constant: 10),
+             NSLayoutConstraint(item: userLocationButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.height),
+             NSLayoutConstraint(item: userLocationButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.width)
+         ]
+
+         view.addSubview(userLocationButton)
+         view.addConstraints(constraints)
+         self.userLocationButton = userLocationButton
+     }
+     
+    class UserLocationButton: UIButton {
+        private var arrow: CAShapeLayer?
+        private let buttonSize: CGFloat
+
+        // Initializer to create the user tracking mode button
+        init(buttonSize: CGFloat) {
+            self.buttonSize = buttonSize
+            super.init(frame: CGRect(x: 0, y: 0, width: buttonSize, height: buttonSize))
+            self.backgroundColor = UIColor.white.withAlphaComponent(0.9)
+            self.layer.cornerRadius = 4
+
+            let arrow = CAShapeLayer()
+            arrow.path = arrowPath()
+            arrow.lineWidth = 2
+            arrow.lineJoin = CAShapeLayerLineJoin.round
+            arrow.bounds = CGRect(x: 0, y: 0, width: buttonSize / 2, height: buttonSize / 2)
+            arrow.position = CGPoint(x: buttonSize / 2, y: buttonSize / 2)
+            arrow.shouldRasterize = true
+            arrow.rasterizationScale = UIScreen.main.scale
+            arrow.drawsAsynchronously = true
+            self.arrow = arrow
+
+            // Update arrow for initial tracking mode
+            updateArrowForTrackingMode(mode: .none)
+            layer.addSublayer(self.arrow!)
+        }
+
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        private func arrowPath() -> CGPath {
+            let bezierPath = UIBezierPath()
+            let max: CGFloat = buttonSize / 2
+            bezierPath.move(to: CGPoint(x: max * 0.5, y: 0))
+            bezierPath.addLine(to: CGPoint(x: max * 0.1, y: max))
+            bezierPath.addLine(to: CGPoint(x: max * 0.5, y: max * 0.65))
+            bezierPath.addLine(to: CGPoint(x: max * 0.9, y: max))
+            bezierPath.addLine(to: CGPoint(x: max * 0.5, y: 0))
+            bezierPath.close()
+            return bezierPath.cgPath
+        }
+
+        // Update the arrow's color and rotation when tracking mode is changed.
+        func updateArrowForTrackingMode(mode: MGLUserTrackingMode) {
+            guard let arrow = arrow else { return }
+            arrow.fillColor = UIColor.clear.cgColor
+            arrow.strokeColor = UIColor.black.cgColor
+            layoutIfNeeded()
+        }
+    }
 }
 

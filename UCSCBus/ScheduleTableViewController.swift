@@ -24,7 +24,8 @@ class ScheduleTableViewController: UITableViewController {
         let bounds = UIScreen.main.bounds
         let width = bounds.size.width
         let height = bounds.size.height
-        self.tableView.frame = CGRect(x: 0, y: 500, width: width, height: height/2)
+        let yPoint = Int(height*0.56)
+        self.tableView.frame = CGRect(x: 0, y: CGFloat(yPoint), width: width, height: height/2)
         self.tableView.layer.cornerRadius = 12; // for rounded corners
     }
     
