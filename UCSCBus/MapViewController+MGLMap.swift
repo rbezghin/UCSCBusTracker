@@ -12,7 +12,7 @@ import Foundation
 //import MapboxNavigation
 //import MapboxDirections
 
-class MapVC: UIViewController, MGLMapViewDelegate {
+class MapViewController: UIViewController, MGLMapViewDelegate {
     
     var Map = MapModel()
     var mapView: MGLMapView!
@@ -219,7 +219,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         dataTask.resume()
         group.notify(queue: .main) { // Wait for HTTP section to complete before adding data to table
             mapView.deselectAnnotation(annotation, animated: false)
-            let schedule = ScheduleVC()
+            let schedule = ScheduleTableViewController()
             schedule.data.append(annotation.title!! + " ETAs:")
             for item in etas {
                 schedule.data.append(item)

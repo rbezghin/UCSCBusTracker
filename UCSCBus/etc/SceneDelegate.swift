@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
        
         if let windowScene = (scene as? UIWindowScene){
             let window = UIWindow(windowScene: windowScene)
-            let view = MapVC()
+            let view = MapViewController()
             window.rootViewController = view
             self.window = window
             window.makeKeyAndVisible()
