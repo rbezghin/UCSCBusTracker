@@ -10,7 +10,7 @@
 		40AE3AFE8E184ED453352E32 /* Pods_UCSCBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802A46633472885C25EB655B /* Pods_UCSCBus.framework */; };
 		462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */ = {isa = PBXBuildFile; fileRef = 462FFF2923EBE441003848F4 /* bus_stop_data.csv */; };
 		8063D89324046F63001FFA90 /* MapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8063D89224046F63001FFA90 /* MapModel.swift */; };
-		807345D0241206F100D73EB4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 807345CF241206F100D73EB4 /* Default-568h@2x.png */; };
+		807345D6241208AC00D73EB4 /* UserLocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807345D5241208AC00D73EB4 /* UserLocationButton.swift */; };
 		807B7B6423DFE5B200609EC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6323DFE5B200609EC8 /* AppDelegate.swift */; };
 		807B7B6623DFE5B200609EC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6523DFE5B200609EC8 /* SceneDelegate.swift */; };
 		807B7B6823DFE5B200609EC8 /* MapViewController+MGLMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6723DFE5B200609EC8 /* MapViewController+MGLMap.swift */; };
@@ -28,7 +28,7 @@
 		802A46633472885C25EB655B /* Pods_UCSCBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UCSCBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8063D89224046F63001FFA90 /* MapModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapModel.swift; sourceTree = "<group>"; };
 		806D15362409BA190034B4E9 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		807345CF241206F100D73EB4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		807345D5241208AC00D73EB4 /* UserLocationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationButton.swift; sourceTree = "<group>"; };
 		807B7B6023DFE5B200609EC8 /* UCSCBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UCSCBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		807B7B6323DFE5B200609EC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		807B7B6523DFE5B200609EC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -88,7 +88,6 @@
 		807B7B5723DFE5B100609EC8 = {
 			isa = PBXGroup;
 			children = (
-				807345CF241206F100D73EB4 /* Default-568h@2x.png */,
 				807B7B6223DFE5B200609EC8 /* UCSCBus */,
 				807B7B6123DFE5B200609EC8 /* Products */,
 				9D441DA3EA0C4BAF7F3143BD /* Pods */,
@@ -108,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				807B7B6723DFE5B200609EC8 /* MapViewController+MGLMap.swift */,
+				807345D5241208AC00D73EB4 /* UserLocationButton.swift */,
 				80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */,
 				8063D89224046F63001FFA90 /* MapModel.swift */,
 				80B7347223E51F07002A63E9 /* Bus.swift */,
@@ -190,7 +190,6 @@
 				807B7B7023DFE5B300609EC8 /* LaunchScreen.storyboard in Resources */,
 				807B7B6D23DFE5B300609EC8 /* Assets.xcassets in Resources */,
 				807B7B6B23DFE5B200609EC8 /* Main.storyboard in Resources */,
-				807345D0241206F100D73EB4 /* Default-568h@2x.png in Resources */,
 				462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -251,6 +250,7 @@
 				8063D89324046F63001FFA90 /* MapModel.swift in Sources */,
 				807B7B6623DFE5B200609EC8 /* SceneDelegate.swift in Sources */,
 				80B7347723E644C1002A63E9 /* ScheduleTableViewController.swift in Sources */,
+				807345D6241208AC00D73EB4 /* UserLocationButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
