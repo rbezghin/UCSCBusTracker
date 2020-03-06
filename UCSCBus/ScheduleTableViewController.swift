@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ScheduleVC: UITableViewController {
+class ScheduleTableViewController: UITableViewController {
     var data = [String]()
     
     override func viewDidLoad() {

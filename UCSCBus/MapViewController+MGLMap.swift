@@ -12,12 +12,14 @@ import Foundation
 //import MapboxNavigation
 //import MapboxDirections
 
-class MapVC: UIViewController, MGLMapViewDelegate {
+class MapViewController: UIViewController, MGLMapViewDelegate {
     
     var Map = MapModel()
     var mapView: MGLMapView!
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
     let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"
+    var userLocationButton: UserLocationButton?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,11 +31,13 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         mapView.logoView.isHidden = true
         mapView.attributionButton.isHidden = true
         view.addSubview(mapView)
+        setupLocationButton()
     }
+    
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
         mapView.setCenter((mapView.userLocation?.coordinate)!, zoomLevel: 14, animated: false)
     }
-    //add bus tracking here
+    
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         guard let url = URL(string: urlString) else {return}
         
@@ -219,7 +223,7 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         dataTask.resume()
         group.notify(queue: .main) { // Wait for HTTP section to complete before adding data to table
             mapView.deselectAnnotation(annotation, animated: false)
-            let schedule = ScheduleVC()
+            let schedule = ScheduleTableViewController()
             schedule.data.append(annotation.title!! + " ETAs:")
             for item in etas {
                 schedule.data.append(item)
@@ -289,6 +293,37 @@ class MapVC: UIViewController, MGLMapViewDelegate {
         return annotationImage
     }
 
+    @IBAction func locationButtonTapped(sender: UserLocationButton) {
+        //Jump to user location, but don't actually follow it.
+        mapView.userTrackingMode = .follow
+        mapView.userTrackingMode = .none
+    }
+    
+    func setupLocationButton() {
+         let userLocationButton = UserLocationButton(buttonSize: 45)
+         userLocationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
+         userLocationButton.tintColor = mapView.tintColor
+         userLocationButton.translatesAutoresizingMaskIntoConstraints = false
 
+         var leadingConstraintSecondItem: AnyObject
+         if #available(iOS 11.0, *) {
+             leadingConstraintSecondItem = view.safeAreaLayoutGuide
+         } else {
+             leadingConstraintSecondItem = view
+         }
+
+         let constraints: [NSLayoutConstraint] = [
+             NSLayoutConstraint(item: userLocationButton, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 10),
+             NSLayoutConstraint(item: userLocationButton, attribute: .leading, relatedBy: .equal, toItem: leadingConstraintSecondItem, attribute: .leading, multiplier: 1, constant: 10),
+             NSLayoutConstraint(item: userLocationButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.height),
+             NSLayoutConstraint(item: userLocationButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.width)
+         ]
+
+         view.addSubview(userLocationButton)
+         view.addConstraints(constraints)
+         self.userLocationButton = userLocationButton
+     }
+     
+    
 }
 
