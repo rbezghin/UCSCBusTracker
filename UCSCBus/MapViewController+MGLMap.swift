@@ -17,7 +17,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     var Map = MapModel()
     var mapView: MGLMapView!
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
-    let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"
+    let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck7azhx9h083p1hqvwh2409ic"
     var userLocationButton: UserLocationButton?
 
     
