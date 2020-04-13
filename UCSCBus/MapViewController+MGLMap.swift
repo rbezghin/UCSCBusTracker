@@ -37,7 +37,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
         if mapView.userLocation?.coordinate.latitude == -180 { // if user doesn't allow their location
-            mapView.setCenter(CLLocationCoordinate2D(latitude: 36.988792, longitude: -122.058351), zoomLevel: 13.2, animated: false)
+            mapView.setCenter(CLLocationCoordinate2D(latitude: 36.988792, longitude: -122.059351), zoomLevel: 13.2, animated: false)
             }
         else {
             mapView.setCenter((mapView.userLocation?.coordinate)!, zoomLevel: 14, animated: false)
