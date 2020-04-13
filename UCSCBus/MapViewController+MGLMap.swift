@@ -73,6 +73,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         for item in 0...csvRows.count-2 {
             stops[item].coordinate = CLLocationCoordinate2D(latitude: Double(csvRows[item][1])!, longitude: Double(csvRows[item][2])!)
             stops[item].title = csvRows[item][0]
+            stops[item].subtitle = csvRows[item][3]
             mapView.addAnnotation(stops[item])
         }
     }
