@@ -92,6 +92,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         task.resume()
     }
     //processing data received from database
+    //FIXME: (Radomyr) add error checking
     func parseDataFromDB(data: Data){
         do{
             let jsonData = try JSONSerialization.jsonObject(with: data, options: [])
@@ -177,6 +178,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
           "cache-control": "no-cache",
           "postman-token": "23cb4108-e24b-adab-b979-e37fd8f78622"
         ]
+        //FIXME:  fatal error: Unexpectedly found nil while unwrapping an Optional value: line 180
         let name = csvToDatabase[annotation.title!!] ?? "" // use database name for request
         let stopString = "bus_stop=" + name
         var location = "outer_eta"
@@ -280,25 +282,33 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
                 busLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
                 busLayer.iconRotation = NSExpression(forConstantValue: 0)
                 busLayer.iconOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",[5.9: 0, 6: 1])
-                busLayer.iconScale = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [14: 1.7, 15: 1.5, 16: 1.4, 18: 1.5, 19: 1.6   ])
+                busLayer.iconScale = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [14: 1.3, 15: 1.4, 16: 1.4, 18: 1.5, 19: 1.6   ])
                 style.addLayer(busLayer)
             }
         }
     }
     //adds an image to bus points
     //TODO: resize image
-    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        guard  let image = UIImage(named: "bus_stop") else {return nil}
-        //resizing image
-        let size = CGSize(width: 20, height: 20)
-        var newImage: UIImage
-        let renderer = UIGraphicsImageRenderer(size: size)
-        newImage = renderer.image { (context) in
-             image.draw(in: CGRect(origin: .zero, size: size))
-        }
-        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "stop_icon")
-        return annotationImage
-    }
+//    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+//        print("I am in imageFor annotation")
+//        guard  let image = UIImage(named: "bus_stop") else {return nil}
+//        //resizing image
+//        let size = CGSize(width: 20, height: 20)
+//        var newImage: UIImage
+//        let renderer = UIGraphicsImageRenderer(size: size)
+//        newImage = renderer.image { (context) in
+//             image.draw(in: CGRect(origin: .zero, size: size))
+//        }
+//        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "stop_icon")
+//        return annotationImage
+//    }
+//    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+//        guard annotation is MGLPointAnnotation else {
+//            return nil
+//        }
+//    // Create an empty view annotation. Set a frame to offset the callout.
+//        return MGLAnnotationView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+//    }
 
     @IBAction func locationButtonTapped(sender: UserLocationButton) {
         //Jump to user location, but don't actually follow it.
