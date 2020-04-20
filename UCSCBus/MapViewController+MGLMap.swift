@@ -17,8 +17,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     var Map = MapModel()
     var mapView: MGLMapView!
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
-//    let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck7azhx9h083p1hqvwh2409ic"
-    let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck5wvxti30efg1ikv39wd08kv"
+    let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck7azhx9h083p1hqvwh2409ic"
     
     var userLocationButton: UserLocationButton?
     
@@ -38,7 +37,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
         if mapView.userLocation?.coordinate.latitude == -180 { // if user doesn't allow their location
-            mapView.setCenter(CLLocationCoordinate2D(latitude: 36.988792, longitude: -122.058351), zoomLevel: 13.2, animated: false)
+            mapView.setCenter(CLLocationCoordinate2D(latitude: 36.988792, longitude: -122.059351), zoomLevel: 13.2, animated: false)
             }
         else {
             mapView.setCenter((mapView.userLocation?.coordinate)!, zoomLevel: 14, animated: false)
@@ -74,6 +73,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         for item in 0...csvRows.count-2 {
             stops[item].coordinate = CLLocationCoordinate2D(latitude: Double(csvRows[item][1])!, longitude: Double(csvRows[item][2])!)
             stops[item].title = csvRows[item][0]
+            stops[item].subtitle = csvRows[item][3]
             mapView.addAnnotation(stops[item])
         }
     }
