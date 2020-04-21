@@ -82,13 +82,15 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         
         //busses running not running
         let label = setupLabel()
-        //add timer??? or not needed?/
         Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
             if(self.Map.busCount == 0){
                 label.isHidden = false
             }else{
                 //there is a bus
                 if(label.isHidden == false){
+//                    UIView.animate(withDuration: 1.0, animations: {
+//                        label.layer.backgroundColor = UIColor.systemGreen.cgColor
+//                    })
                     label.backgroundColor = .systemGreen
                     label.text = "Picking up some signal!"
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
