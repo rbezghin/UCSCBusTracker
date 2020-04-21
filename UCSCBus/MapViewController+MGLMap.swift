@@ -13,14 +13,13 @@ import Foundation
 //import MapboxDirections
 
 class MapViewController: UIViewController, MGLMapViewDelegate {
-    
+    let SizesAndConstants = ConstantSizes()
     var Map = MapModel()
     var mapView: MGLMapView!
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
     let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck7azhx9h083p1hqvwh2409ic"
     
     var userLocationButton: UserLocationButton?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -289,26 +288,40 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     }
     //adds an image to bus points
     //TODO: resize image
-//    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-//        print("I am in imageFor annotation")
-//        guard  let image = UIImage(named: "bus_stop") else {return nil}
-//        //resizing image
-//        let size = CGSize(width: 20, height: 20)
-//        var newImage: UIImage
-//        let renderer = UIGraphicsImageRenderer(size: size)
-//        newImage = renderer.image { (context) in
-//             image.draw(in: CGRect(origin: .zero, size: size))
-//        }
-//        let annotationImage = MGLAnnotationImage(image: newImage, reuseIdentifier: "stop_icon")
-//        return annotationImage
-//    }
-//    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-//        guard annotation is MGLPointAnnotation else {
-//            return nil
-//        }
-//    // Create an empty view annotation. Set a frame to offset the callout.
-//        return MGLAnnotationView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
-//    }
+    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        if let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName){
+            let annotationImage = MGLAnnotationImage(image: image, reuseIdentifier: SizesAndConstants.busStopIconReuseIdentifier)
+            return annotationImage
+        }
+        return nil
+    }
+    // regionDidChangeAnimated to change visibility of bus stop annotations
+    func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
+        let zoomLevel = mapView.zoomLevel
+        if let annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: SizesAndConstants.busStopIconReuseIdentifier){
+            if zoomLevel < 16 {
+                let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName)
+                if let image = image{
+                    annotationImage.image = image
+                }
+            }
+            else{
+                let image = createImage(withSize: SizesAndConstants.visibleBusIconSize, withName: SizesAndConstants.busStopImageName)
+                if let image = image{
+                    annotationImage.image = image
+                }
+            }
+        }
+    }
+    func createImage(withSize size: CGSize,withName name: String) -> UIImage?{
+        guard  let image = UIImage(named: name) else {return nil}
+        var newImage: UIImage
+        let renderer = UIGraphicsImageRenderer(size: size)
+        newImage = renderer.image { (context) in
+             image.draw(in: CGRect(origin: .zero, size: size))
+        }
+        return newImage
+    }
 
     @IBAction func locationButtonTapped(sender: UserLocationButton) {
         //Jump to user location, but don't actually follow it.
@@ -340,7 +353,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
          view.addConstraints(constraints)
          self.userLocationButton = userLocationButton
      }
-     
-    
 }
 
+//SIZES AND IDENTIFIERS
+struct ConstantSizes {
+    let invisibleBusIconSize = CGSize(width: 1, height: 1)
+    let visibleBusIconSize = CGSize(width: 20, height: 20)
+    let busStopIconReuseIdentifier = "stop_icon"
+    let busStopImageName = "bus_stop"
+}
