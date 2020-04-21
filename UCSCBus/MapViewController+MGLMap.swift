@@ -44,8 +44,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        guard let url = URL(string: urlString) else {return}
         
+        //**********busses info
+        //
+        guard let url = URL(string: urlString) else {return}
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = .reloadIgnoringLocalCacheData
         config.urlCache = nil
@@ -56,6 +58,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
                 self?.updateBusLocationFeatures()
             }
         }
+        //**********busstops info
+        //
         // Read and process CSV file contents
         var data = readDataFromCSV(fileName: "bus_stop_data", fileType: ".csv")
         data = cleanRows(file: data!)
@@ -75,7 +79,42 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             stops[item].subtitle = csvRows[item][3]
             mapView.addAnnotation(stops[item])
         }
+        
+        //busses running not running
+        let label = setupLabel()
+        //add timer??? or not needed?/
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
+            if(self.Map.busCount == 0){
+                label.isHidden = false
+            }else{
+                //there is a bus
+                if(label.isHidden == false){
+                    label.backgroundColor = .systemGreen
+                    label.text = "Picking up some signal!"
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        label.isHidden = true
+                    }
+                }
+            }
+        }
+
+        
+
     }
+    //FIXME: (Radomyr) constants must be not variable nubmers
+    func setupLabel() -> UILabel{
+        let label = NoBussesAvailableLabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        label.isHidden = true
+        view.addSubview(label)
+        label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 80).isActive = true
+        label.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -80).isActive = true
+        label.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -700).isActive = true
+        
+        return label
+    }
+    
     func performTask(withSession: URLSession, withURL: URL,completion: @escaping ((()) -> Void)){
         let task = withSession.dataTask(with: withURL) { (data, response, error) in
             if error != nil {
@@ -281,7 +320,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
                 busLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
                 busLayer.iconRotation = NSExpression(forConstantValue: 0)
                 busLayer.iconOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",[5.9: 0, 6: 1])
-                busLayer.iconScale = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [14: 1.3, 15: 1.4, 16: 1.4, 18: 1.5, 19: 1.6   ])
+                busLayer.iconScale = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [10:1.7, 14: 1.3, 15: 1.4, 16: 1.4, 18: 1.5, 19: 1.6   ])
                 style.addLayer(busLayer)
             }
         }
