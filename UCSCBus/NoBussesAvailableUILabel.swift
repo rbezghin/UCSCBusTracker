@@ -12,6 +12,8 @@ class NoBussesAvailableUILabel: UILabel {
     
     //if label was tapped once no need to show it again
     var labelWasTapped = false
+    var textOffline = "All busses are offline"
+    var textOnline = "Picking up some signal!"
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
@@ -33,15 +35,16 @@ class NoBussesAvailableUILabel: UILabel {
         self.backgroundColor = .red
         self.layer.cornerRadius = 5
         self.layer.masksToBounds = true
-        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dissmissLabel(sender: ))))
+        //self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dissmissLabel(sender: ))))
         self.isUserInteractionEnabled = true
     }
-    @objc func dissmissLabel(sender: UITapGestureRecognizer){
-        labelWasTapped = true
-        UIView.animate(withDuration: 10) {
-            self.isHidden = true
-        }
-        
-    }
+//    @objc func dissmissLabel(sender: UITapGestureRecognizer){
+//        labelWasTapped = true
+//        UIView.animate(withDuration: 10) {
+//
+//            self.isHidden = true
+//        }
+//
+//    }
     
 }

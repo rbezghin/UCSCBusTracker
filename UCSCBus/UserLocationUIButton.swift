@@ -9,7 +9,7 @@
 import UIKit
 import Mapbox
 
-class UserLocationButton: UIButton {
+class UserLocationUIButton: UIButton {
     private var arrow: CAShapeLayer?
     private let buttonSize: CGFloat
 

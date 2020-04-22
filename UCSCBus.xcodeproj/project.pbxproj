@@ -10,14 +10,14 @@
 		40AE3AFE8E184ED453352E32 /* Pods_UCSCBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802A46633472885C25EB655B /* Pods_UCSCBus.framework */; };
 		462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */ = {isa = PBXBuildFile; fileRef = 462FFF2923EBE441003848F4 /* bus_stop_data.csv */; };
 		8063D89324046F63001FFA90 /* MapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8063D89224046F63001FFA90 /* MapModel.swift */; };
-		807345D6241208AC00D73EB4 /* UserLocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807345D5241208AC00D73EB4 /* UserLocationButton.swift */; };
+		807345D6241208AC00D73EB4 /* UserLocationUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807345D5241208AC00D73EB4 /* UserLocationUIButton.swift */; };
 		807B7B6423DFE5B200609EC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6323DFE5B200609EC8 /* AppDelegate.swift */; };
 		807B7B6623DFE5B200609EC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6523DFE5B200609EC8 /* SceneDelegate.swift */; };
 		807B7B6823DFE5B200609EC8 /* MapViewController+MGLMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6723DFE5B200609EC8 /* MapViewController+MGLMap.swift */; };
 		807B7B6B23DFE5B200609EC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807B7B6923DFE5B200609EC8 /* Main.storyboard */; };
 		807B7B6D23DFE5B300609EC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 807B7B6C23DFE5B300609EC8 /* Assets.xcassets */; };
 		807B7B7023DFE5B300609EC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807B7B6E23DFE5B300609EC8 /* LaunchScreen.storyboard */; };
-		80A7E797244E74870070C325 /* NoBussesAvailableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80A7E796244E74870070C325 /* NoBussesAvailableLabel.swift */; };
+		80A7E797244E74870070C325 /* NoBussesAvailableUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80A7E796244E74870070C325 /* NoBussesAvailableUILabel.swift */; };
 		80B7347323E51F07002A63E9 /* Bus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347223E51F07002A63E9 /* Bus.swift */; };
 		80B7347523E63FDB002A63E9 /* TabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347423E63FDB002A63E9 /* TabBarVC.swift */; };
 		80B7347723E644C1002A63E9 /* ScheduleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */; };
@@ -29,7 +29,7 @@
 		802A46633472885C25EB655B /* Pods_UCSCBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UCSCBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8063D89224046F63001FFA90 /* MapModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapModel.swift; sourceTree = "<group>"; };
 		806D15362409BA190034B4E9 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		807345D5241208AC00D73EB4 /* UserLocationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationButton.swift; sourceTree = "<group>"; };
+		807345D5241208AC00D73EB4 /* UserLocationUIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationUIButton.swift; sourceTree = "<group>"; };
 		807B7B6023DFE5B200609EC8 /* UCSCBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UCSCBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		807B7B6323DFE5B200609EC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		807B7B6523DFE5B200609EC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -38,7 +38,7 @@
 		807B7B6C23DFE5B300609EC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		807B7B6F23DFE5B300609EC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		807B7B7123DFE5B300609EC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		80A7E796244E74870070C325 /* NoBussesAvailableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoBussesAvailableLabel.swift; sourceTree = "<group>"; };
+		80A7E796244E74870070C325 /* NoBussesAvailableUILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoBussesAvailableUILabel.swift; sourceTree = "<group>"; };
 		80B7347223E51F07002A63E9 /* Bus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bus.swift; sourceTree = "<group>"; };
 		80B7347423E63FDB002A63E9 /* TabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarVC.swift; sourceTree = "<group>"; };
 		80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewController.swift; sourceTree = "<group>"; };
@@ -109,8 +109,8 @@
 			isa = PBXGroup;
 			children = (
 				807B7B6723DFE5B200609EC8 /* MapViewController+MGLMap.swift */,
-				807345D5241208AC00D73EB4 /* UserLocationButton.swift */,
-				80A7E796244E74870070C325 /* NoBussesAvailableLabel.swift */,
+				807345D5241208AC00D73EB4 /* UserLocationUIButton.swift */,
+				80A7E796244E74870070C325 /* NoBussesAvailableUILabel.swift */,
 				80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */,
 				8063D89224046F63001FFA90 /* MapModel.swift */,
 				80B7347223E51F07002A63E9 /* Bus.swift */,
@@ -253,8 +253,8 @@
 				8063D89324046F63001FFA90 /* MapModel.swift in Sources */,
 				807B7B6623DFE5B200609EC8 /* SceneDelegate.swift in Sources */,
 				80B7347723E644C1002A63E9 /* ScheduleTableViewController.swift in Sources */,
-				807345D6241208AC00D73EB4 /* UserLocationButton.swift in Sources */,
-				80A7E797244E74870070C325 /* NoBussesAvailableLabel.swift in Sources */,
+				807345D6241208AC00D73EB4 /* UserLocationUIButton.swift in Sources */,
+				80A7E797244E74870070C325 /* NoBussesAvailableUILabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

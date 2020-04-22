@@ -19,7 +19,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
     let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck7azhx9h083p1hqvwh2409ic"
     
-    var userLocationButton: UserLocationButton?
+    var userLocationButton: UserLocationUIButton?
+    var label: NoBussesAvailableUILabel?
+    let durationAndDelay = 0.7
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +34,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         mapView.attributionButton.isHidden = true
         view.addSubview(mapView)
         setupLocationButton()
+        setupBussesNotRunningLabel()
     }
     
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
@@ -79,44 +82,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             stops[item].subtitle = csvRows[item][3]
             mapView.addAnnotation(stops[item])
         }
-        
-        //busses running not running
-        let label = setupLabel()
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
-            if(self.Map.busCount == 0){
-                label.isHidden = false
-            }else{
-                //there is a bus
-                if(label.isHidden == false){
-//                    UIView.animate(withDuration: 1.0, animations: {
-//                        label.layer.backgroundColor = UIColor.systemGreen.cgColor
-//                    })
-                    label.backgroundColor = .systemGreen
-                    label.text = "Picking up some signal!"
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        label.isHidden = true
-                    }
-                }
-            }
-        }
-
-        
-
     }
-    //FIXME: (Radomyr) constants must be not variable nubmers
-    func setupLabel() -> UILabel{
-        let label = NoBussesAvailableLabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-        label.isHidden = true
-        view.addSubview(label)
-        label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
-        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        label.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 80).isActive = true
-        label.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -80).isActive = true
-        label.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -700).isActive = true
-        
-        return label
-    }
-    
     func performTask(withSession: URLSession, withURL: URL,completion: @escaping ((()) -> Void)){
         let task = withSession.dataTask(with: withURL) { (data, response, error) in
             if error != nil {
@@ -364,36 +330,107 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         return newImage
     }
 
-    @IBAction func locationButtonTapped(sender: UserLocationButton) {
-        //Jump to user location, but don't actually follow it.
-        mapView.userTrackingMode = .follow
-        mapView.userTrackingMode = .none
+        
+    func setupBussesNotRunningLabel(){
+        //busses running not running
+        label = setupLabel()
+        if let label = label{
+            Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
+                if(self.Map.busCount == 0 && label.labelWasTapped == false){
+                    label.isHidden = false
+                }else{
+                    //there is a bus
+                    if(label.isHidden == false){
+                        label.backgroundColor = .systemGreen
+                        label.text = label.textOnline
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            UIView.animate(withDuration: self.durationAndDelay) {
+                                    label.transform = CGAffineTransform(translationX: 0, y: -256)
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + self.durationAndDelay) {
+                                    label.isHidden = true
+                                }
+                        }
+                        timer.invalidate()
+                    }
+                }
+                if label.labelWasTapped == true {
+                    timer.invalidate()
+                }
+            }
+        }
+
+    }
+    //FIXME: (Radomyr) constants must be not variable nubmers
+    func setupLabel() -> NoBussesAvailableUILabel{
+        let label = NoBussesAvailableUILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        label.isHidden = true
+        view.addSubview(label)
+        label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dissmissLabel(sender: ))))
+        label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
+        label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 80).isActive = true
+        label.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -80).isActive = true
+        label.heightAnchor.constraint(equalToConstant: view.frame.height*0.075).isActive = true        
+        return label
+    }
+    @objc func dissmissLabel(sender: UITapGestureRecognizer){
+        let durationAndDelay = 0.7
+        if let label = label{
+            label.labelWasTapped = true
+            
+            UIView.animate(withDuration: durationAndDelay) {
+                label.transform = CGAffineTransform(translationX: 0, y: -256)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + durationAndDelay) {
+                label.isHidden = true
+            }
+        }
     }
     
     func setupLocationButton() {
-         let userLocationButton = UserLocationButton(buttonSize: 45)
-         userLocationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
-         userLocationButton.tintColor = mapView.tintColor
-         userLocationButton.translatesAutoresizingMaskIntoConstraints = false
+        userLocationButton = UserLocationUIButton(buttonSize: 45)
+        if let userLocationButton = userLocationButton{
+            userLocationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
+            userLocationButton.tintColor = mapView.tintColor
+            userLocationButton.translatesAutoresizingMaskIntoConstraints = false
 
-         var leadingConstraintSecondItem: AnyObject
-         if #available(iOS 11.0, *) {
-             leadingConstraintSecondItem = view.safeAreaLayoutGuide
-         } else {
-             leadingConstraintSecondItem = view
-         }
+            var leadingConstraintSecondItem: AnyObject
+            if #available(iOS 11.0, *) {
+                leadingConstraintSecondItem = view.safeAreaLayoutGuide
+            } else {
+                leadingConstraintSecondItem = view
+            }
 
-         let constraints: [NSLayoutConstraint] = [
-             NSLayoutConstraint(item: userLocationButton, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 10),
-             NSLayoutConstraint(item: userLocationButton, attribute: .leading, relatedBy: .equal, toItem: leadingConstraintSecondItem, attribute: .leading, multiplier: 1, constant: 10),
-             NSLayoutConstraint(item: userLocationButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.height),
-             NSLayoutConstraint(item: userLocationButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.width)
-         ]
+            let constraints: [NSLayoutConstraint] = [
+                NSLayoutConstraint(item: userLocationButton, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 10),
+                NSLayoutConstraint(item: userLocationButton, attribute: .leading, relatedBy: .equal, toItem: leadingConstraintSecondItem, attribute: .leading, multiplier: 1, constant: 10),
+                NSLayoutConstraint(item: userLocationButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.height),
+                NSLayoutConstraint(item: userLocationButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.width)
+            ]
 
-         view.addSubview(userLocationButton)
-         view.addConstraints(constraints)
-         self.userLocationButton = userLocationButton
+            view.addSubview(userLocationButton)
+            view.addConstraints(constraints)
+            self.userLocationButton = userLocationButton
+        }
+         
      }
+    
+    //when screen was moved button must appear to give an option to set a tracking mode
+    func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
+        
+    }
+    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
+        print("regionDidChangeWith")
+    }
+
+    @IBAction func locationButtonTapped(sender: UserLocationUIButton) {
+        //Jump to user location, but don't actually follow it.
+        print("locationButtonTapped")
+        mapView.userTrackingMode = .follow
+        mapView.userTrackingMode = .none  
+        
+    }
 }
 
 //SIZES AND IDENTIFIERS
