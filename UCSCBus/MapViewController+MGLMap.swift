@@ -332,29 +332,35 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
 
         
     func setupBussesNotRunningLabel(){
+        //FIXME : Radomyr labels are messed up
         //busses running not running
-        label = setupLabel()
+        label = setupLabelConstraints()
         if let label = label{
-            Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
-                if(self.Map.busCount == 0 && label.labelWasTapped == false){
-                    label.isHidden = false
-                }else{
-                    //there is a bus
+            let topAnchorConstaint = label.topAnchor
+            Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { timer in
+                if(self.Map.busCount == 0 && label.labelWasDissmissed == false){  // show the no busses running label
+                    label.text = label.textOffline
+                    label.labelAppear()
+                }
+                else if(self.Map.busCount != 0){//there is a bus
+                    label.backgroundColor = .systemGreen
+                    label.text = label.textOnline
+                    //label was either dissmissed before, removed from the view or it is still in the view
                     if(label.isHidden == false){
-                        label.backgroundColor = .systemGreen
-                        label.text = label.textOnline
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            UIView.animate(withDuration: self.durationAndDelay) {
-                                    label.transform = CGAffineTransform(translationX: 0, y: -256)
-                                }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + self.durationAndDelay) {
-                                    label.isHidden = true
-                                }
+                            label.labelDissappear()
+                        }
+                        timer.invalidate()
+                    }
+                    else{
+                        label.labelAppear()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            label.labelDissappear()
                         }
                         timer.invalidate()
                     }
                 }
-                if label.labelWasTapped == true {
+                if label.labelWasDissmissed == true {
                     timer.invalidate()
                 }
             }
@@ -362,31 +368,17 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
 
     }
     //FIXME: (Radomyr) constants must be not variable nubmers
-    func setupLabel() -> NoBussesAvailableUILabel{
-        let label = NoBussesAvailableUILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+    func setupLabelConstraints() -> NoBussesAvailableUILabel{
+        let label = NoBussesAvailableUILabel(frame: CGRect(x: 0, y: -50, width: 0, height: 0))
         label.isHidden = true
         view.addSubview(label)
-        label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dissmissLabel(sender: ))))
-        label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5).isActive = true
         label.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        label.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 80).isActive = true
-        label.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -80).isActive = true
-        label.heightAnchor.constraint(equalToConstant: view.frame.height*0.075).isActive = true        
+        label.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: label.labelHeight).isActive = true
+        label.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -label.labelHeight).isActive = true
+        label.heightAnchor.constraint(equalToConstant: label.labelHeight).isActive = true
         return label
     }
-    @objc func dissmissLabel(sender: UITapGestureRecognizer){
-        let durationAndDelay = 0.7
-        if let label = label{
-            label.labelWasTapped = true
-            
-            UIView.animate(withDuration: durationAndDelay) {
-                label.transform = CGAffineTransform(translationX: 0, y: -256)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + durationAndDelay) {
-                label.isHidden = true
-            }
-        }
-    }
+
     
     func setupLocationButton() {
         userLocationButton = UserLocationUIButton(buttonSize: 45)
@@ -428,7 +420,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         //Jump to user location, but don't actually follow it.
         print("locationButtonTapped")
         mapView.userTrackingMode = .follow
-        mapView.userTrackingMode = .none  
+        mapView.userTrackingMode = .none
         
     }
 }

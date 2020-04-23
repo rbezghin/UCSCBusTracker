@@ -10,10 +10,12 @@ import UIKit
 
 class NoBussesAvailableUILabel: UILabel {
     
-    //if label was tapped once no need to show it again
-    var labelWasTapped = false
+    //if label was tapped(dissmissed) once no need to show it again
+    var labelWasDissmissed = false
     var textOffline = "All busses are offline"
     var textOnline = "Picking up some signal!"
+    let durationAndDelay = 0.7 //used for animations
+    let labelHeight: CGFloat = 50
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
@@ -35,16 +37,26 @@ class NoBussesAvailableUILabel: UILabel {
         self.backgroundColor = .red
         self.layer.cornerRadius = 5
         self.layer.masksToBounds = true
-        //self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dissmissLabel(sender: ))))
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dissmissLabel(sender: ))))
         self.isUserInteractionEnabled = true
     }
-//    @objc func dissmissLabel(sender: UITapGestureRecognizer){
-//        labelWasTapped = true
-//        UIView.animate(withDuration: 10) {
-//
-//            self.isHidden = true
-//        }
-//
-//    }
+    @objc func dissmissLabel(sender: UITapGestureRecognizer){ 
+        labelWasDissmissed = true
+        labelDissappear()
+    }
     
+    func labelAppear(){
+        self.isHidden = false
+        UIView.animate(withDuration: durationAndDelay) {
+            self.transform = CGAffineTransform(translationX: 0, y: self.labelHeight)
+        }
+    }
+    func labelDissappear() {
+        UIView.animate(withDuration: durationAndDelay) {
+            self.transform = CGAffineTransform(translationX: 0, y: -self.labelHeight)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + durationAndDelay) {
+            self.isHidden = true
+        }
+    }
 }
