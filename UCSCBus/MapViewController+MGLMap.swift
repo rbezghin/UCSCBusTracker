@@ -185,7 +185,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
           "postman-token": "23cb4108-e24b-adab-b979-e37fd8f78622"
         ]
         //FIXME:  fatal error: Unexpectedly found nil while unwrapping an Optional value: line 180
-        let name = csvToDatabase[annotation.title!!] ?? "" // use database name for request
+        guard let title = annotation.title else { print("error unwrapping in calloutAccessoryControlTapped"); return}
+        guard let titleTitle = title else { print("error unwrapping in calloutAccessoryControlTapped"); return}
+        let tryName = csvToDatabase[titleTitle] // use database name for request
+        guard let name = tryName else { print("error receiving from DB in calloutAccessoryControlTapped"); return}
         let stopString = "bus_stop=" + name
         var location = "outer_eta"
         for stop in innerStops {
@@ -331,7 +334,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             let zoomLevel = mapView.zoomLevel
             if let annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: SizesAndConstants.busStopIconReuseIdentifier){
                 if zoomLevel < 16 {
-                    print("changing visibility")
                     let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName)
                     if let image = image{
                         annotationImage.image = image
@@ -435,7 +437,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     @objc func locationButtonTapped(sender: UserLocationUIButton) {
         //Jump to user location, but don't actually follow it.
         //print("locationButtonTapped")
+        mapView.setZoomLevel(14, animated: true)
         mapView.userTrackingMode = .follow
+        
         if let userLocationButton = userLocationButton {
             userLocationButton.updateArrowForTrackingMode(mode: mapView.userTrackingMode)
         }
