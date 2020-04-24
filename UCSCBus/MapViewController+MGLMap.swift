@@ -296,30 +296,55 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     //adds an image to bus points
     //TODO: resize image
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        
         if let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName){
             let annotationImage = MGLAnnotationImage(image: image, reuseIdentifier: SizesAndConstants.busStopIconReuseIdentifier)
             return annotationImage
         }
         return nil
     }
+    
+
+//for some reason this stopped working. used to work though
     // regionDidChangeAnimated to change visibility of bus stop annotations
-    func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
-        let zoomLevel = mapView.zoomLevel
-        if let annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: SizesAndConstants.busStopIconReuseIdentifier){
-            if zoomLevel < 16 {
-                let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName)
-                if let image = image{
-                    annotationImage.image = image
+//    func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
+//        print("regionView did change")
+//        let zoomLevel = mapView.zoomLevel
+//        if let annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: SizesAndConstants.busStopIconReuseIdentifier){
+//            if zoomLevel < 16 {
+//                print("changing visibility")
+//                let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName)
+//                if let image = image{
+//                    annotationImage.image = image
+//                }
+//            }
+//            else{
+//                let image = createImage(withSize: SizesAndConstants.visibleBusIconSize, withName: SizesAndConstants.busStopImageName)
+//                if let image = image{
+//                    annotationImage.image = image
+//                }
+//            }
+//        }
+//   }
+    //fix
+        func mapViewRegionIsChanging(_ mapView: MGLMapView) {
+            let zoomLevel = mapView.zoomLevel
+            if let annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: SizesAndConstants.busStopIconReuseIdentifier){
+                if zoomLevel < 16 {
+                    print("changing visibility")
+                    let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName)
+                    if let image = image{
+                        annotationImage.image = image
+                    }
                 }
-            }
-            else{
-                let image = createImage(withSize: SizesAndConstants.visibleBusIconSize, withName: SizesAndConstants.busStopImageName)
-                if let image = image{
-                    annotationImage.image = image
+                else{
+                    let image = createImage(withSize: SizesAndConstants.visibleBusIconSize, withName: SizesAndConstants.busStopImageName)
+                    if let image = image{
+                        annotationImage.image = image
+                    }
                 }
             }
         }
-    }
     func createImage(withSize size: CGSize,withName name: String) -> UIImage?{
         guard  let image = UIImage(named: name) else {return nil}
         var newImage: UIImage
