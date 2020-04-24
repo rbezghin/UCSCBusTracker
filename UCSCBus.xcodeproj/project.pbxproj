@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15B10110245295C100B9C3BD /* SymbolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B1010F245295C100B9C3BD /* SymbolButton.swift */; };
 		40AE3AFE8E184ED453352E32 /* Pods_UCSCBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802A46633472885C25EB655B /* Pods_UCSCBus.framework */; };
 		462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */ = {isa = PBXBuildFile; fileRef = 462FFF2923EBE441003848F4 /* bus_stop_data.csv */; };
 		8063D89324046F63001FFA90 /* MapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8063D89224046F63001FFA90 /* MapModel.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		15B1010F245295C100B9C3BD /* SymbolButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolButton.swift; sourceTree = "<group>"; };
 		462FFF2923EBE441003848F4 /* bus_stop_data.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bus_stop_data.csv; sourceTree = "<group>"; };
 		4EB30620D92CFAA65B994934 /* Pods-UCSCBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UCSCBus.release.xcconfig"; path = "Target Support Files/Pods-UCSCBus/Pods-UCSCBus.release.xcconfig"; sourceTree = "<group>"; };
 		802A46633472885C25EB655B /* Pods_UCSCBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UCSCBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,6 +112,7 @@
 			children = (
 				807B7B6723DFE5B200609EC8 /* MapViewController+MGLMap.swift */,
 				807345D5241208AC00D73EB4 /* UserLocationUIButton.swift */,
+				15B1010F245295C100B9C3BD /* SymbolButton.swift */,
 				80A7E796244E74870070C325 /* NoBussesAvailableUILabel.swift */,
 				80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */,
 				8063D89224046F63001FFA90 /* MapModel.swift */,
@@ -255,6 +258,7 @@
 				80B7347723E644C1002A63E9 /* ScheduleTableViewController.swift in Sources */,
 				807345D6241208AC00D73EB4 /* UserLocationUIButton.swift in Sources */,
 				80A7E797244E74870070C325 /* NoBussesAvailableUILabel.swift in Sources */,
+				15B10110245295C100B9C3BD /* SymbolButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,7 +404,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3S8Y6C28BB;
+				DEVELOPMENT_TEAM = SS74D43GDA;
 				INFOPLIST_FILE = UCSCBus/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -420,7 +424,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3S8Y6C28BB;
+				DEVELOPMENT_TEAM = SS74D43GDA;
 				INFOPLIST_FILE = UCSCBus/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -35,6 +35,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         view.addSubview(mapView)
         setupLocationButton()
         setupBussesNotRunningLabel()
+        setupInfoButton()
     }
     
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
@@ -331,7 +332,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             let zoomLevel = mapView.zoomLevel
             if let annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: SizesAndConstants.busStopIconReuseIdentifier){
                 if zoomLevel < 16 {
-                    print("changing visibility")
+                    //print("changing visibility")
                     let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName)
                     if let image = image{
                         annotationImage.image = image
@@ -439,6 +440,17 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         if let userLocationButton = userLocationButton {
             userLocationButton.updateArrowForTrackingMode(mode: mapView.userTrackingMode)
         }
+    }
+    
+    func setupInfoButton() {
+        let infoButton = SymbolButton(symbolName: "info.circle")
+        view.addSubview(infoButton)
+        infoButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 80).isActive = true
+        infoButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+    }
+    
+    @objc func infoSegue(sender: UIButton) {
+        
     }
 }
 
