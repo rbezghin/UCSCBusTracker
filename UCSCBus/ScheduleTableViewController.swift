@@ -53,7 +53,7 @@ class ScheduleTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: "cell")
-        print(data)
+        //print(data)
         //cell.detailTextLabel?.text = data[indexPath.row]
 
         cell.textLabel?.text = "bus name"
