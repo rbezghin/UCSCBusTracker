@@ -332,12 +332,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
 
         
     func setupBussesNotRunningLabel(){
-        //FIXME : Radomyr labels are messed up
         //busses running not running
         label = setupLabelConstraints()
         if let label = label{
             let topAnchorConstaint = label.topAnchor
-            Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { timer in
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
                 if(self.Map.busCount == 0 && label.labelWasDissmissed == false){  // show the no busses running label
                     label.text = label.textOffline
                     label.labelAppear()
@@ -381,29 +380,18 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
 
     
     func setupLocationButton() {
-        userLocationButton = UserLocationUIButton(buttonSize: 45)
+        userLocationButton = UserLocationUIButton(buttonSize: 55)
         if let userLocationButton = userLocationButton{
             userLocationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
             userLocationButton.tintColor = mapView.tintColor
             userLocationButton.translatesAutoresizingMaskIntoConstraints = false
 
-            var leadingConstraintSecondItem: AnyObject
-            if #available(iOS 11.0, *) {
-                leadingConstraintSecondItem = view.safeAreaLayoutGuide
-            } else {
-                leadingConstraintSecondItem = view
-            }
-
-            let constraints: [NSLayoutConstraint] = [
-                NSLayoutConstraint(item: userLocationButton, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: topLayoutGuide, attribute: .bottom, multiplier: 1, constant: 10),
-                NSLayoutConstraint(item: userLocationButton, attribute: .leading, relatedBy: .equal, toItem: leadingConstraintSecondItem, attribute: .leading, multiplier: 1, constant: 10),
-                NSLayoutConstraint(item: userLocationButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.height),
-                NSLayoutConstraint(item: userLocationButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: userLocationButton.frame.size.width)
-            ]
-
             view.addSubview(userLocationButton)
-            view.addConstraints(constraints)
-            self.userLocationButton = userLocationButton
+            userLocationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -50).isActive = true
+            userLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -10).isActive = true
+            userLocationButton.widthAnchor.constraint(equalToConstant: userLocationButton.frame.size.width).isActive = true
+            userLocationButton.heightAnchor.constraint(equalToConstant: userLocationButton.frame.size.width).isActive = true
+            //self.userLocationButton = userLocationButton
         }
          
      }
@@ -413,15 +401,19 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         
     }
     func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
-        print("regionDidChangeWith")
+        //print("regionDidChangeWith")
+        if let userLocationButton = userLocationButton {
+            userLocationButton.updateArrowForTrackingMode(mode: mapView.userTrackingMode)
+        }
     }
 
-    @IBAction func locationButtonTapped(sender: UserLocationUIButton) {
+    @objc func locationButtonTapped(sender: UserLocationUIButton) {
         //Jump to user location, but don't actually follow it.
-        print("locationButtonTapped")
+        //print("locationButtonTapped")
         mapView.userTrackingMode = .follow
-        mapView.userTrackingMode = .none
-        
+        if let userLocationButton = userLocationButton {
+            userLocationButton.updateArrowForTrackingMode(mode: mapView.userTrackingMode)
+        }
     }
 }
 
