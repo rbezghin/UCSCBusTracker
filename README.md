@@ -30,24 +30,24 @@ Getting project ready in project workspace:
  2. Under "Targets" select "UCSCBus"
  3. Go to "Signing & Capabilities" tab
  4. Change "Team" to your (Personal Team) in dropdown
- 5. Create a unique "Bundle Identifier" by changing "co.rbezghin.**UCSCBus**" to anything you like. Ex "co.rbezghin.**MYBUSAPP**"
+ 5. Create a unique "Bundle Identifier" by changing "co.rbezghin.**UCSCBus**" to anything you like. Ex "co.rbezghin.**MYBUSAPP**" <br/>
   ![Image Not Found](Getting_Project_Ready.png "Getting Project Ready")
 
 Running on your iPhone:
- 1. Make sure your AppleID/iCloud account has been added to Xcode. Found at "Xcode"→"Preferences" under "Accounts" tab
+ 1. Make sure your AppleID/iCloud account has been added to Xcode. Found at "Xcode"→"Preferences" under "Accounts" tab <br/>
  ![Image Not Found](AppleID_Accounts.png "Adding AppleID") 
  2. Connect your iPhone to mac with usb connector
- 3. On your iPhone click "Trust"
+ 3. On your iPhone click "Trust" <br/>
   ![Image Not Found](Trust_Computer.png "Trust Computer")
- 4. Click the play button to build and install app onto phone, make sure your phone is the selected target
+ 4. Click the play button to build and install app onto phone, make sure your phone is the selected target <br/>
   ![Image Not Found](Running.png "First Run")
- 5. An error will appear in Xcode, Click "Ok" and grab your iPhone.
+ 5. An error will appear in Xcode, Click "Ok" and grab your iPhone. <br/>
   ![Image Not Found](Could_Not_Launch.png "Could Not Launch")
- 6. On iPhone, go to "Settings"→"Device Management"→"Apple Development:*(Your AppleID)*"
+ 6. On iPhone, go to "Settings"→"Device Management"→"Apple Development:*(Your AppleID)*" <br/>
   ![Image Not Found](General_DM.png "Settings")
- 7. Tap "Trust "Apple Development: *(Your AppleID)*"", Then "Trust" once more
+ 7. Tap "Trust "Apple Development: *(Your AppleID)*"", Then "Trust" once more <br/>
   ![Image Not Found](Trust_Developer.png "Trust Developer")
- 8. Finally, play & run the app on Xcode. It should install and open the app on the connected iPhone
+ 8. Finally, play & run the app on Xcode. It should install and open the app on the connected iPhone <br/>
   ![Image Not Found](First_Load.png "Allow Location")
  9. Done! <br/>
   ![Image Not Found](Completed.png "All set!")
