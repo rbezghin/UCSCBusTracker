@@ -20,6 +20,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck7azhx9h083p1hqvwh2409ic"
     
     var userLocationButton: UserLocationUIButton?
+    var loopRouteButton: UIButton!
+    var upperCampusRouteButton: UIButton!
     var label: NoBussesAvailableUILabel?
     let durationAndDelay = 0.7
     
@@ -35,6 +37,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         view.addSubview(mapView)
         setupLocationButton()
         setupBussesNotRunningLabel()
+        setupLoopRouteButton()
+        setupUpperCampusRouteButton()
     }
     
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
@@ -47,7 +51,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        
         //**********busses info
         //
         guard let url = URL(string: urlString) else {return}
@@ -83,6 +86,96 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             mapView.addAnnotation(stops[item])
         }
     }
+    
+    func setupLoopRouteButton() {
+        loopRouteButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 150, y: view.frame.height - 160, width: 50, height: 50))
+        loopRouteButton.backgroundColor = UIColor.white
+        loopRouteButton.setTitle("L", for: .normal)
+        loopRouteButton.setTitleColor(UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
+        loopRouteButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
+        loopRouteButton.layer.cornerRadius = 25
+        loopRouteButton.addTarget(self, action: #selector(loopRouteButtonWasPressed(_:)), for: .touchUpInside)
+        view.addSubview(loopRouteButton)
+    }
+    
+    func setupUpperCampusRouteButton() {
+        upperCampusRouteButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 150, y: view.frame.height - 100, width: 50, height: 50))
+        upperCampusRouteButton.backgroundColor = UIColor.white
+        upperCampusRouteButton.setTitle("UC", for: .normal)
+        upperCampusRouteButton.setTitleColor(UIColor(red: 224/255, green: 0/255, blue: 26/255, alpha: 1), for: .normal)
+        upperCampusRouteButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
+        upperCampusRouteButton.layer.cornerRadius = 25
+        upperCampusRouteButton.addTarget(self, action: #selector(upperCampusRouteButtonWasPressed(_:)), for: .touchUpInside)
+        view.addSubview(upperCampusRouteButton)
+    }
+    
+    @objc func loopRouteButtonWasPressed(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        if sender.isSelected == true {
+            loadGeoJson(bustype: "Loop")
+        }
+        else {
+            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "Loop"))!)
+            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "Loop"))!)
+        }
+    }
+    
+    @objc func upperCampusRouteButtonWasPressed(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        if sender.isSelected == true {
+            loadGeoJson(bustype: "UC")
+        }
+        else {
+            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "UC"))!)
+            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "UC"))!)
+        }
+    }
+    
+    func loadGeoJson(bustype: String) {
+        DispatchQueue.global().async {
+            guard let jsonUrl = Bundle.main.url(forResource: bustype, withExtension: "geojson") else {
+                preconditionFailure("Failed to load local GeoJSON file")
+            }
+            guard let jsonData = try? Data(contentsOf: jsonUrl) else {
+                preconditionFailure("Failed to parse GeoJSON file")
+            }
+            DispatchQueue.main.async {
+                self.drawPolyline(geoJson: jsonData, bustype: bustype)
+            }
+        }
+    }
+    
+    func drawPolyline(geoJson: Data, bustype: String) {
+        guard let style = self.mapView.style else { return }
+
+        guard let shapeFromGeoJSON = try? MGLShape(data: geoJson, encoding: String.Encoding.utf8.rawValue) else {
+            fatalError("Could not generate MGLShape")
+        }
+
+        let source = MGLShapeSource(identifier: bustype, shape: shapeFromGeoJSON, options: nil)
+        style.addSource(source)
+
+        // Create new layer for the line.
+        let layer = MGLLineStyleLayer(identifier: bustype, source: source)
+
+        // Set the line join and cap to a rounded end.
+        layer.lineJoin = NSExpression(forConstantValue: "round")
+        layer.lineCap = NSExpression(forConstantValue: "round")
+
+        // Set the line color to a constant blue color.
+        if (bustype == "Loop") {
+            layer.lineColor = NSExpression(forConstantValue: UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1))
+        }
+        else if (bustype == "UC") {
+            layer.lineColor = NSExpression(forConstantValue: UIColor(red: 224/255, green: 0/255, blue: 26/255, alpha: 1))
+
+        }
+
+        layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+                                       [14: 2, 18: 20])
+        style.addLayer(layer)
+    }
+    
     func performTask(withSession: URLSession, withURL: URL,completion: @escaping ((()) -> Void)){
         let task = withSession.dataTask(with: withURL) { (data, response, error) in
             if error != nil {
