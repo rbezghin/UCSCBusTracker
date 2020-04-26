@@ -25,7 +25,7 @@ On mac:
  4. Open the newly created workspace "UCSCBus.xcworkspace" in the Xcode App
 
 # Running on iPhone
-Getting project ready in project workspace:
+##Getting project ready in project workspace:
  1. Click "UCSCBus" Project Header
  2. Under "Targets" select "UCSCBus"
  3. Go to "Signing & Capabilities" tab
@@ -33,7 +33,7 @@ Getting project ready in project workspace:
  5. Create a unique "Bundle Identifier" by changing "co.rbezghin.**UCSCBus**" to anything you like. Ex "co.rbezghin.**MYBUSAPP**" <br/>
   ![Image Not Found](Getting_Project_Ready.png "Getting Project Ready")
 
-Running on your iPhone:
+##Running on your iPhone:
  1. Make sure your AppleID/iCloud account has been added to Xcode. Found at "Xcode"→"Preferences" under "Accounts" tab <br/>
  ![Image Not Found](AppleID_Accounts.png "Adding AppleID") 
  2. Connect your iPhone to mac with usb connector
