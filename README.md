@@ -38,16 +38,16 @@ Running on your iPhone:
  ![Image Not Found](AppleID_Accounts.png "Adding AppleID") 
  2. Connect your iPhone to mac with usb connector
  3. On your iPhone click "Trust"
-  ![Image Not Found](Trust_Computer.png =250x "Trust Computer")
+  ![Image Not Found](Trust_Computer.png "Trust Computer")
  4. Click the play button to build and install app onto phone, make sure your phone is the selected target
   ![Image Not Found](Running.png "First Run")
  5. An error will appear in Xcode, Click "Ok" and grab your iPhone.
   ![Image Not Found](Could_Not_Launch.png "Could Not Launch")
  6. On iPhone, go to "Settings"→"Device Management"→"Apple Development:*(Your AppleID)*"
-  ![Image Not Found](General_DM.png =250x "Settings")
+  ![Image Not Found](General_DM.png "Settings")
  7. Tap "Trust "Apple Development: *(Your AppleID)*"", Then "Trust" once more
-  ![Image Not Found](Trust_Developer.png =250x "Trust Developer")
+  ![Image Not Found](Trust_Developer.png "Trust Developer")
  8. Finally, play & run the app on Xcode. It should install and open the app on the connected iPhone
-  ![Image Not Found](First_Load.png =250x "Allow Location")
+  ![Image Not Found](First_Load.png "Allow Location")
  9. Done! <br/>
-  ![Image Not Found](Completed.png =250x "All set!")
+  ![Image Not Found](Completed.png "All set!")
