@@ -14,7 +14,7 @@ import json
 # User library/python file imports
 from FetchData import getETA
 from BusStopDetermination import ApproachingBusStop
-from DataTables import IndexToName, NameToIndex
+from BusStopData import IndexToName, NameToIndex
 
 
 
