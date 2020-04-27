@@ -1,0 +1,20 @@
+# Required Package Installation
+     1. Use command "curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py" or simply
+	use the "get-pip.py" file already within the Support Files
+     2. Use command "python get-pip.py"
+     3. Install requests: "pip install requests"
+ 
+# Running the Program
+     -use command "python eta.py" to run the program.
+     -Will keep running and continuously calculate ETAs
+
+# Support Files Contained
+     -"get-pop.py": installation script for pip
+     -"test.py":  test file for testing post requests to BTS3 server.
+
+# Code Files Contained
+     -"eta.py": file containing the main function
+     -"ETACalc.py": contains functions relating to ETA calculations
+     -"FetchData.py": contains functions that retrieves data from MapBox and BTS3 Server
+     -"BusStopData.py": contains the static bus(stop) datas
+     -"BusStopDetermination.py": contains functions regarding bus stop calculations
