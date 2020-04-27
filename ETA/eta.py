@@ -40,7 +40,7 @@ fakeBusLocaitons = {
 }
 
 # Calls function that returns bus ETA data
-bus_data = CalculateETAs(fakeBusLocaitons, OuterBusStops, OuterBusStopIntervals)
+bus_data = CalculateETAs(fakeBusLocaitons, InnerBusStops, OuterBusStopIntervals)
 
 print(json.dumps(bus_data, indent=2))
 
