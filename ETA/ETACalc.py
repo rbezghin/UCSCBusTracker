@@ -23,36 +23,45 @@ from BusStopData import IndexToName, NameToIndex
 # PURPOSE: Calculates every bus's ETAs to every bus stops
 # Input Parameters:
 #     Bus_Data: json object that contains bus data (location, id, type, etc.)
+#     Outer_Stops: json object containing location of stops
+#     BusStopIntervals: json object cantaining intervals between all adjacent bus stops
+#     StopType: Type of bus stop (inner or outer)
 # Returns: json object containing every buses' ETA to all bus stops
 # ------------------------------------------------------------------------------------------------------
-def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals):
-  
+def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType):
+    
   # Defines variable used to store all ETA data and return
   BusETAs = {}
+  
+  # Sets Max Stop Index based on the type of bus stops
+  if(StopType == "OuterBusStops"):
+    MaxStopIndex = 15
+  else:
+    MaxStopIndex = 13
   
   # For loop that gets the ETAs of all buses
   for buses in Bus_Data['rows']:
     # Calculate which stop the bus is approaching
-    StopBusIsApproaching = ApproachingBusStop(buses['lat'], buses['lon'], Outer_Stops)
+    StopBusIsApproaching = ApproachingBusStop(buses['lat'], buses['lon'], Outer_Stops, StopType)
     
     # Sets up json object variables that keeps track of the buses and their ETAs
     BusETAs[str(buses['id'])] = []                     # Defines what goes into BusETA json object
     PreallocatedIndeces = 0
 
     # While Loop that allocates 15 indeces to the json object
-    while (PreallocatedIndeces < 15):
-      BusETAs[str(buses['id'])].append({'StopName': IndexToName(PreallocatedIndeces),'ETAToStop': 0})
+    while (PreallocatedIndeces < MaxStopIndex):
+      BusETAs[str(buses['id'])].append({'StopName': IndexToName(Outer_Stops, PreallocatedIndeces),'ETAToStop': 0})
       PreallocatedIndeces += 1
     
     
     # Sets up variables used to calculate bus's ETA to every bus stop (for correct Bus Stop order for bus ETAs)
-    BusStopETAsCalclated = 0                           # Keeks track of the number of Bus Stop ETAs calculated
-    FirstETACalculated = False                         # Flag used to determine if it's the first ETA calculated or not
-    CurrBusStop = NameToIndex(StopBusIsApproaching)    # Keeps track of which bus stop in the json array to calculate
-    TotalETA = 0                                       # Keeps track of the total time it takes to get from a bus to each bus stop
+    BusStopETAsCalclated = 0                                      # Keeks track of the number of Bus Stop ETAs calculated
+    FirstETACalculated = False                                    # Flag used to determine if it's the first ETA calculated or not
+    CurrBusStop = NameToIndex(Outer_Stops, StopBusIsApproaching)  # Keeps track of which bus stop in the json array to calculate
+    TotalETA = 0                                                  # Keeps track of the total time it takes to get from a bus to each bus stop
     
     # While Loop that calculates the ETA from a bus to all bus stops
-    while BusStopETAsCalclated < 15:
+    while BusStopETAsCalclated < MaxStopIndex:
     
       # Calculates ETA to all bus stops based on pre-calulated intervals betwen adjacent stops
       if (FirstETACalculated == False):
@@ -71,7 +80,7 @@ def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals):
       # loop incrementations
       BusStopETAsCalclated += 1
       CurrBusStop += 1
-      if (CurrBusStop == 15):
+      if (CurrBusStop == MaxStopIndex):
         CurrBusStop = 0
   
   

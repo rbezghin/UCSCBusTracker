@@ -23,7 +23,9 @@ InnerBusStopIntervals = CalcStopIntervals(InnerBusStops, "InnerBusStops")
 # Gets the bus data (id, location, type) of all active buses from BTS3 server
 busData = getBusData()
 
+######## CREATE FUNCTION HERE THAT DETERMINES IF A BUS IS INNER OR OUTER (if it's not given) #######
 
+# Fake Bus locatinons for testing
 fakeBusLocaitons = {
   'rows': [
     {
@@ -40,9 +42,13 @@ fakeBusLocaitons = {
 }
 
 # Calls function that returns bus ETA data
-bus_data = CalculateETAs(fakeBusLocaitons, InnerBusStops, OuterBusStopIntervals)
+outer_bus_data = CalculateETAs(fakeBusLocaitons, OuterBusStops, OuterBusStopIntervals, "OuterBusStops")
+inner_bus_data = CalculateETAs(fakeBusLocaitons, InnerBusStops, InnerBusStopIntervals, "InnerBusStops")
 
-print(json.dumps(bus_data, indent=2))
+# prints the calculated ETAs
+print(json.dumps(inner_bus_data, indent=2))
+print("--------------------")
+print(json.dumps(outer_bus_data, indent=2))
 
 
 # To Do:
