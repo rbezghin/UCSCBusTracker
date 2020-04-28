@@ -17,8 +17,6 @@ from BusStopDetermination import ApproachingBusStop
 from BusStopData import IndexToName, NameToIndex
 
 
-
-
 # ------------------------------------------------------------------------------------------------------
 # PURPOSE: Calculates every bus's ETAs to every bus stops
 # Input Parameters:
@@ -35,9 +33,9 @@ def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType):
   
   # Sets Max Stop Index based on the type of bus stops
   if(StopType == "OuterBusStops"):
-    MaxStopIndex = 15
+    MaxStopIndex = 15 # Number of stops for Outer Loops
   else:
-    MaxStopIndex = 13
+    MaxStopIndex = 13 # Number of stops for Inner Loops
   
   # For loop that gets the ETAs of all buses
   for buses in Bus_Data['rows']:
