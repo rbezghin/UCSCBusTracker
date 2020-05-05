@@ -39,6 +39,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         setupBussesNotRunningLabel()
         setupLoopRouteButton()
         setupUpperCampusRouteButton()
+        setupInfoButton()
     }
     
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
@@ -536,6 +537,20 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         if let userLocationButton = userLocationButton {
             userLocationButton.updateArrowForTrackingMode(mode: mapView.userTrackingMode)
         }
+    }
+    
+    func setupInfoButton() {
+        let infoButton = SymbolButton(symbolName: "info.circle")
+        infoButton.addTarget(self, action: #selector(infoSegue), for: .touchUpInside)
+        view.addSubview(infoButton)
+        infoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -110).isActive = true
+        infoButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+    }
+    
+    @objc func infoSegue(sender: SymbolButton) {
+        let infoViewController = InfoViewController()
+        //infoViewController.modalPresentationStyle = .fullScreen
+        self.present(infoViewController, animated: true, completion: nil)
     }
 }
 
