@@ -548,9 +548,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     }
     
     @objc func infoSegue(sender: SymbolButton) {
-        let infoViewController = InfoViewController()
-        //infoViewController.modalPresentationStyle = .fullScreen
-        self.present(infoViewController, animated: true, completion: nil)
+//        let infoViewController = InfoViewController()
+//        infoViewController.modalPresentationStyle = .fullScreen
+//        self.modalPresentationStyle = .fullScreen
+//        self.present(infoViewController, animated: true, completion: nil)
+        self.performSegue(withIdentifier: "infoSegue", sender: nil)
     }
 }
 

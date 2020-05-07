@@ -53,7 +53,7 @@ class InfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        //infoTextView.text = "HELLO WORLD"
         //infoTextView.attributedText = tableHTML.htmlToAttributedString;
     }
     
