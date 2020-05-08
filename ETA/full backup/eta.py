@@ -7,19 +7,13 @@ import httplib
 
 # User library/python file imports
 from BusStopData import getStopsLocation
-from FetchData import getETA, getBusData, getBusType, postETAData
+from FetchData import getETA, getBusData, getBusType
 from ETACalc import CalcStopIntervals, CalculateETAs
-from BusStopDetermination import determineLoopDirection
 
 
 # ------------------------------------------------------------------------------------------------------
 #                                     MAIN FUNCTION
 # ------------------------------------------------------------------------------------------------------
-# Oaks to West Remote Interior
-#hahaha = getETA(36.989884, -122.067163, 36.988497, -122.064781)
-#print(getETA(36.991293, -122.054782, 36.990735,  -122.052200))
-
-#exit(1)
 
 print("  =>  Fetching Bus Stop Coordinates...")
 
@@ -43,17 +37,6 @@ print("  =>  Fetching Bus Direction Data...")
 # Gets the directional data on which way the bus is traveling
 busDirectionData = getBusType()
 
-# Checks which buses are inner loops and which are outer loops
-outerBusData = determineLoopDirection(busData, busDirectionData, "outer")
-innerBusData = determineLoopDirection(busData, busDirectionData, "inner")
-#upperBusData =
-
-#print("OUTER LOOP BUSES:")
-#print(json.dumps(outerBusData, indent=2))
-#print("-------------------------------")
-#print("INNER LOOP BUSES:")
-#print(json.dumps(innerBusData, indent=2))
-
 
 # Fake Bus locatinons for testing
 """
@@ -75,21 +58,15 @@ fakeBusLocaitons = {
 # Calls function that returns bus ETA data
 
 print("  =>  Calculating Outer Loop ETAs...")
-outer_bus_data = CalculateETAs(outerBusData, OuterBusStops, OuterBusStopIntervals, "OuterBusStops")
+outer_bus_data = CalculateETAs(busData, OuterBusStops, OuterBusStopIntervals, "OuterBusStops")
 
 print("  =>  Calculating Inner Loop ETAs...")
-inner_bus_data = CalculateETAs(innerBusData, InnerBusStops, InnerBusStopIntervals, "InnerBusStops")
+inner_bus_data = CalculateETAs(busData, InnerBusStops, InnerBusStopIntervals, "InnerBusStops")
 
 # prints the calculated ETAs
-#print("INNER LOOP BUS DATA")
-#print(json.dumps(inner_bus_data, indent=2))
-#print("-------------------------------")
-#print("OUTER LOOP BUS DATA")
-#print(json.dumps(outer_bus_data, indent=2))
-
-
-# Posts to server
-postETAData(inner_bus_data, outer_bus_data)
+print(json.dumps(inner_bus_data, indent=2))
+print("--------------------")
+print(json.dumps(outer_bus_data, indent=2))
 
 
 # To Do:

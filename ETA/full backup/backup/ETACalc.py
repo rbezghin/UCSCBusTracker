@@ -27,27 +27,31 @@ from BusStopData import IndexToName, NameToIndex
 # Returns: json object containing every buses' ETA to all bus stops
 # ------------------------------------------------------------------------------------------------------
 def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType):
-      
-  # Defines variable/array used to store all ETA data
-  ETAs = []         # Array used to strictly store ETAs
-  BusETAData = []   # json Array usd to store all bus ETA data (bus ID, ETA to each stop, etc.)
+    
+  # Defines variable used to store all ETA data and return
+  BusETAs = {}
+  BusETA = []   # array used to store the ETAS of the bus
   
   # Sets Max Stop Index based on the type of bus stops
   if(StopType == "OuterBusStops"):
-    MaxStopIndex = 16 # Number of stops for Outer Loops
+    MaxStopIndex = 15 # Number of stops for Outer Loops
   else:
-    MaxStopIndex = 14 # Number of stops for Inner Loops
+    MaxStopIndex = 13 # Number of stops for Inner Loops
   
-  # Preallocates the space for exactly the number of stops for the Bus ETA Array
-  PreallocETAIndeces = 0
-  while (PreallocETAIndeces < MaxStopIndex):
-    ETAs.append(0)
-    PreallocETAIndeces += 1
-  
-  # For Loop that goes through all buses and calculates its ETAs to all bus stops
+  # For loop that gets the ETAs of all buses
   for buses in Bus_Data['rows']:
     # Calculate which stop the bus is approaching
     StopBusIsApproaching = ApproachingBusStop(buses['lat'], buses['lon'], Outer_Stops, StopType)
+    
+    # Sets up json object variables that keeps track of the buses and their ETAs
+    BusETAs[str(buses['id'])] = []                     # Defines what goes into BusETA json object
+    PreallocatedIndeces = 0
+
+    # While Loop that allocates 15 indeces to the json object
+    while (PreallocatedIndeces < MaxStopIndex):
+      BusETAs[str(buses['id'])].append({'StopName': IndexToName(Outer_Stops, PreallocatedIndeces),'ETAToStop': 0})
+      PreallocatedIndeces += 1
+    
     
     # Sets up variables used to calculate bus's ETA to every bus stop (for correct Bus Stop order for bus ETAs)
     BusStopETAsCalclated = 0                                      # Keeks track of the number of Bus Stop ETAs calculated
@@ -62,13 +66,13 @@ def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType):
       if (FirstETACalculated == False):
         #Calculates ETA then stores it in the apropriate index of the pre-allocated json object
         TotalETA = TotalETA + BusStopIntervals['Intervals'][CurrBusStop]['ETA']
-        ETAs[CurrBusStop] = TotalETA
+        BusETAs[str(buses['id'])][CurrBusStop]['ETAToStop'] = TotalETA
         
       # Calculates first ETA of bus to the bus stop it's approaching
       else:
         eta = getETA(fakeBusLocaitons['lat'], fakeBusLocaitons['lon'],
           Outer_Stops['BusStops'][CurrBusStop]['lat'], Outer_Stops['BusStops'][CurrBusStop]['lon'])
-        ETAs[CurrBusStop] = eta
+        BusETAs[str(fakeBusLocaitons['id'])][CurrBusStop]['ETAToStop'] = eta
         FirstETACalculated = True
         TotalETA += eta
       
@@ -77,17 +81,9 @@ def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType):
       CurrBusStop += 1
       if (CurrBusStop == MaxStopIndex):
         CurrBusStop = 0
-        
-        
-    # Once all ETAs from 1 bus to all bus stops are calculated, format it correctly
-    if (StopType == "OuterBusStops"):
-      BusETAData.append({'bus_id': buses['id'], 'bus_type': 'LOOP OUT OF SERVICE AT THE BARN THEATER', 'Main_Entrance_ETA': ETAs[0], 'Lower_Campus_ETA': ETAs[1], 'Village_Farm_ETA': ETAs[2], 'East_Remote_Interior_ETA': ETAs[3], 'East_Remote_ETA': ETAs[4], 'East_Field_House_ETA': ETAs[5], 'Bookstore_ETA': ETAs[6], 'Crown_Merrill_ETA': ETAs[7], 'Colleges9_10_ETA': ETAs[8], 'Science_Hill_ETA': ETAs[9], 'Kresge_ETA': ETAs[10], 'Porter_RCC_ETA': ETAs[11], 'Family_Student_Housing_ETA': ETAs[12], 'Oakes_FSH_ETA': ETAs[13], 'Arboretum_ETA': ETAs[14],'Western_Drive_ETA': ETAs[15]})
-    
-    else:
-      BusETAData.append({'bus_id': buses['id'], 'bus_type': 'LOOP', 'Barn_Theater_ETA': ETAs[0], 'Western_Drive_ETA': ETAs[1], 'Arboretum_ETA': ETAs[2], 'West_Remote_Interior_ETA': ETAs[3], 'Oakes_RCC_ETA': ETAs[4], 'Porter_RCC_ETA': ETAs[5], 'Kerr_Hall_ETA': ETAs[6], 'Kresge_ETA': ETAs[7], 'Science_Hill_ETA': ETAs[8], 'Colleges9_10_ETA': ETAs[9], 'Cowell_College_Bookstore_ETA': ETAs[10], 'East_Remote_ETA': ETAs[11], 'Village_Farm_ETA': ETAs[12],'Lower_Campus_ETA': ETAs[13]})
   
   
-  return BusETAData
+  return BusETAs
 
 
 

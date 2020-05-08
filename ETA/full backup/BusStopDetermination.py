@@ -84,69 +84,59 @@ def determineNextOuterStop(BusLat, BusLon, StopName, Outer_Stops):
     if(BusLat < Outer_Stops['BusStops'][3]['lat']):
       return "East_Remote_ETA"
     else:
-      return "East_Remote_Interior_ETA"
-      
-  #***********************************************
-  elif(StopName == "East_Remote_Interior_ETA"):            # if closest stop is Each Remote
-    if(BusLat < Outer_Stops['BusStops'][4]['lat']):
-      return "East_Remote_Interior_ETA"
-    else:
       return "East_Field_House_ETA"
-  #***********************************************
-  
-      
   elif(StopName == "East_Field_House_ETA"):    # if closest stop is East Field House
-    if(BusLat < Outer_Stops['BusStops'][5]['lat']):
+    if(BusLat < Outer_Stops['BusStops'][4]['lat']):
       return "East_Field_House_ETA"
     else:
       return "Bookstore_ETA"
   elif(StopName == "Bookstore_ETA"):              # if closest stop is Bookstore
-    if(BusLat < Outer_Stops['BusStops'][6]['lat']):
+    if(BusLat < Outer_Stops['BusStops'][5]['lat']):
       return "Bookstore_ETA"
     else:
       return "Crown_Merrill_ETA"
   elif(StopName == "Crown_Merrill_ETA"):          # if closest stop is Crown/Merill
-    if(BusLat < Outer_Stops['BusStops'][7]['lat'] or BusLon > Outer_Stops['BusStops'][7]['lon']):
+    if(BusLat < Outer_Stops['BusStops'][6]['lat'] or BusLon > Outer_Stops['BusStops'][6]['lon']):
       return "Crown_Merrill_ETA"
     else:
       return "Colleges9_10_ETA"
   elif(StopName == "Colleges9_10_ETA"):           # if closest stop is College 9/10
-    if(BusLon > Outer_Stops['BusStops'][8]['lon']):
+    if(BusLon > Outer_Stops['BusStops'][7]['lon']):
       return "Colleges9_10_ETA"
     else:
       return "Science_Hill_ETA"
   elif(StopName == "Science_Hill_ETA"):           # if closest stop is Science Hill
-    if(BusLon > Outer_Stops['BusStops'][9]['lon']):
+    if(BusLon > Outer_Stops['BusStops'][8]['lon']):
       return "Science_Hill_ETA"
     else:
       return "Kresge_ETA"
   elif(StopName == "Kresge_ETA"):                 # if closest stop is Kresge
-    if(BusLat > Outer_Stops['BusStops'][10]['lat']):
+    if(BusLat > Outer_Stops['BusStops'][9]['lat']):
       return "Kresge_ETA"
     else:
       return "Porter_RCC_ETA"
   elif(StopName == "Porter_RCC_ETA"):             # if closest stop is Porter
-    if(BusLat > Outer_Stops['BusStops'][11]['lat']):
+    if(BusLat > Outer_Stops['BusStops'][10]['lat']):
       return "Porter_RCC_ETA"
     else:
       return "Family_Student_Housing_ETA"
   elif(StopName == "Family_Student_Housing_ETA"): # if closest stop is Family Student Housing
-    if(BusLat > Outer_Stops['BusStops'][12]['lat']):
+    if(BusLat > Outer_Stops['BusStops'][11]['lat']):
       return "Family_Student_Housing_ETA"
     else:
       return "Oakes_FSH_ETA"
   elif(StopName == "Oakes_FSH_ETA"):              # if closest stop is Oaks
-    if(BusLat > Outer_Stops['BusStops'][13]['lat']):
+    if(BusLat > Outer_Stops['BusStops'][12]['lat']):
       return "Oakes_FSH_ETA"
     else:
       return "Arboretum_ETA"
   elif(StopName == "Arboretum_ETA"):           # if closest stop is is arborettum
-    if(BusLat > Outer_Stops['BusStops'][14]['lat']):
+    if(BusLat > Outer_Stops['BusStops'][13]['lat']):
       return "Arboretum_ETA"
     else:
       return "Western_Drive_ETA"
   else:                                           # if IntervalStop = "Western_Drive_ETA"
-    if(BusLat > Outer_Stops['BusStops'][15]['lat']):
+    if(BusLat > Outer_Stops['BusStops'][14]['lat']):
       return "Western_Drive_ETA"
     else:
       return "Main_Entrance_ETA"
@@ -179,90 +169,54 @@ def determineNextInnerStop(BusLat, BusLon, StopName, Inner_Stops):
     if(BusLat > Inner_Stops['BusStops'][2]['lat']):
       return "Arboretum_ETA"
     else:
-      return "West_Remote_Interior_ETA"
-      
-  #***********************************************
-  elif(StopName == "West_Remote_Interior_ETA"):           # if closest stop is West Remote Interior
-     if(BusLat > Inner_Stops['BusStops'][3]['lat']):
-       return "West_Remote_Interior_ETA"
-     else:
-       return "Oakes_RCC_ETA"
-  #***********************************************
-      
+      return "Oakes_RCC_ETA"
   elif(StopName == "Oakes_RCC_ETA"):            # if closest stop is Each Remote
-    if(BusLat > Inner_Stops['BusStops'][4]['lat']):
+    if(BusLat > Inner_Stops['BusStops'][3]['lat']):
       return "Oakes_RCC_ETA"
     else:
       return "Porter_RCC_ETA"
   elif(StopName == "Porter_RCC_ETA"):    # if closest stop is East Field House
-    if(BusLat > Inner_Stops['BusStops'][5]['lat']):
+    if(BusLat > Inner_Stops['BusStops'][4]['lat']):
       return "Porter_RCC_ETA"
     else:
       return "Kerr_Hall_ETA"
   elif(StopName == "Kerr_Hall_ETA"):              # if closest stop is Bookstore
-    if(BusLat > Inner_Stops['BusStops'][6]['lat']):
+    if(BusLat > Inner_Stops['BusStops'][5]['lat']):
       return "Kerr_Hall_ETA"
     else:
       return "Kresge_ETA"
   elif(StopName == "Kresge_ETA"):          # if closest stop is Crown/Merill
-    if(BusLat > Inner_Stops['BusStops'][7]['lat'] or BusLon > Inner_Stops['BusStops'][7]['lon']):
+    if(BusLat > Inner_Stops['BusStops'][6]['lat'] or BusLon > Inner_Stops['BusStops'][6]['lon']):
       return "Kresge_ETA"
     else:
       return "Science_Hill_ETA"
   elif(StopName == "Science_Hill_ETA"):           # if closest stop is College 9/10
-    if(BusLon < Inner_Stops['BusStops'][8]['lon']):
+    if(BusLon < Inner_Stops['BusStops'][7]['lon']):
       return "Science_Hill_ETA"
     else:
       return "Colleges9_10_ETA"
   elif(StopName == "Colleges9_10_ETA"):           # if closest stop is Science Hill
-    if(BusLon < Inner_Stops['BusStops'][9]['lon']):
+    if(BusLon < Inner_Stops['BusStops'][8]['lon']):
       return "Colleges9_10_ETA"
     else:
       return "Cowell_College_Bookstore_ETA"
   elif(StopName == "Cowell_College_Bookstore_ETA"):                 # if closest stop is Kresge
-    if(BusLat < Inner_Stops['BusStops'][10]['lat']):
+    if(BusLat < Inner_Stops['BusStops'][9]['lat']):
       return "Cowell_College_Bookstore_ETA"
     else:
       return "East_Remote_ETA"
   elif(StopName == "East_Remote_ETA"):             # if closest stop is Porter
-    if(BusLat < Inner_Stops['BusStops'][11]['lat']):
+    if(BusLat < Inner_Stops['BusStops'][10]['lat']):
       return "East_Remote_ETA"
     else:
       return "Village_Farm_ETA"
   elif(StopName == "Village_Farm_ETA"): # if closest stop is Family Student Housing
-    if(BusLat < Inner_Stops['BusStops'][12]['lat']):
+    if(BusLat < Inner_Stops['BusStops'][11]['lat']):
       return "Village_Farm_ETA"
     else:
       return "Lower_Campus_ETA"
   else:                                           # if IntervalStop = "Lower_Campus_ETA"
-    if(BusLat < Inner_Stops['BusStops'][13]['lat']):
+    if(BusLat < Inner_Stops['BusStops'][12]['lat']):
       return "Lower_Campus_ETA"
     else:
       return "Barn_Theater_ETA"
-
-
-# ------------------------------------------------------------------------------------------------------
-# PURPOSE: Function that returns a json object of buses (outer loop or inner loop)
-# Input Parameters:
-#     # Bus_Data: Bus Stop data containing their cooridnates
-#     # findType: Index of the array to convert to it's bus name
-# Returns: Name of the bus
-# ------------------------------------------------------------------------------------------------------
-def determineLoopDirection(BusData, BusDirData, findType):
-
-  #Variables used to create a json object of inner/outer loops
-  LoopData = {}
-  LoopData['rows'] = []
-  
-  # For Loop that goes through bus Directions
-  for busDir in BusDirData['rows']:
-    
-    # If it's the bus direction we're trying to loop for
-    if(busDir['direc'] == findType):
-      # Loops through real-time bus data
-      for buses in BusData['rows']:
-        if(buses['id'] == busDir['bus_id']):
-          LoopData['rows'].append(buses)
-
-  return LoopData
-  

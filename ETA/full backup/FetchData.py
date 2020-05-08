@@ -60,14 +60,3 @@ def getETA(StartLat, StartLong, DestLat, DestLong):
 def getBusType():
   # Get request for bus direction data then returns result
   return requests.get("https://ucsc-bts3.soe.ucsc.edu/direction.php").json()
-
-
-# ------------------------------------------------------------------------------------------------------
-# PURPOSE: function that gets the prev locations of buses
-# Input Parameters: NONE
-# Returns: json data containing the previous location of buses and the direction they're traveling
-# ------------------------------------------------------------------------------------------------------
-def postETAData(inner_ETA, outer_ETA):
-  # Get request for bus direction data then returns result
-  requests.post("https://ucsc-bts3.soe.ucsc.edu/update_innereta.php", json=inner_ETA)
-  requests.post("https://ucsc-bts3.soe.ucsc.edu/update_outereta.php", json=outer_ETA)
