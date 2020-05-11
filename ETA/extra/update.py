@@ -71,7 +71,7 @@ for o in range(len(outer_stops)):
 	outer_etas.append(300+len(outer_stops)-o)
 
 inner_result = []
-inner_result.append({'bus_id': 72, 'bus_type': 'LOOP', 'Barn_Theater_ETA': inner_etas[0], 'Western_Drive_ETA': inner_etas[1], 'Arboretum_ETA': inner_etas[2],
+inner_result.append({'bus_id': 95, 'bus_type': 'LOOP', 'Barn_Theater_ETA': inner_etas[0], 'Western_Drive_ETA': inner_etas[1], 'Arboretum_ETA': inner_etas[2],
 													   'Oakes_RCC_ETA': inner_etas[3], 'Porter_RCC_ETA': inner_etas[4], 'Kerr_Hall_ETA': inner_etas[5], 
 													   'Kresge_ETA': inner_etas[6], 'Science_Hill_ETA': inner_etas[7], 'Colleges9_10_ETA': inner_etas[8], 
 													   'Cowell_College_Bookstore_ETA': inner_etas[9], 'East_Remote_ETA': inner_etas[10],'East_Remote_Interior_ETA': inner_etas[11], 
@@ -80,7 +80,7 @@ print(json.dumps(inner_result, indent=2))
 
 
 outer_result = []
-outer_result.append({'bus_id': 72, 'bus_type': 'LOOP OUT OF SERVICE AT THE BARN THEATER', 'Main_Entrance_ETA': outer_etas[0], 'Lower_Campus_ETA': outer_etas[1], 'Village_Farm_ETA': outer_etas[2],
+outer_result.append({'bus_id': 95, 'bus_type': 'LOOP OUT OF SERVICE AT THE BARN THEATER', 'Main_Entrance_ETA': outer_etas[0], 'Lower_Campus_ETA': outer_etas[1], 'Village_Farm_ETA': outer_etas[2],
 													   'East_Remote_ETA': outer_etas[3], 'East_Field_House_ETA': outer_etas[4], 'Bookstore_ETA': outer_etas[5], 
 													   'Crown_Merrill_ETA': outer_etas[6], 'Colleges9_10_ETA': outer_etas[7], 'Science_Hill_ETA': outer_etas[8], 
 													   'Kresge_ETA': outer_etas[9], 'Porter_RCC_ETA': outer_etas[10], 'Family_Student_Housing_ETA': outer_etas[11], 

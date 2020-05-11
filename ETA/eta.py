@@ -21,99 +21,60 @@ from BusStopDetermination import determineLoopDirection
 
 #exit(1)
 
-print("  =>  Fetching Bus Stop Coordinates...")
+def main():
 
-# Creates a json object that contains all the bus stop locations and their names
-OuterBusStops = getStopsLocation("OuterBusStops")
-InnerBusStops = getStopsLocation("InnerBusStops")
+  print("  =>  Fetching Bus Stop Coordinates...")
 
-print("  =>  Calculating Bus Stop Intervals...")
+  # Creates a json object that contains all the bus stop locations and their names
+  OuterBusStops = getStopsLocation("OuterBusStops")
+  InnerBusStops = getStopsLocation("InnerBusStops")
 
-# Gets the ETA intervals between all outer and inner bus stops
-OuterBusStopIntervals = CalcStopIntervals(OuterBusStops, "OuterBusStops")
-InnerBusStopIntervals = CalcStopIntervals(InnerBusStops, "InnerBusStops")
+  print("  =>  Calculating Bus Stop Intervals...")
 
-print("  =>  Fetching Real-Time Bus Data...")
+  # Gets the ETA intervals between all outer and inner bus stops
+  OuterBusStopIntervals = CalcStopIntervals(OuterBusStops, "OuterBusStops")
+  InnerBusStopIntervals = CalcStopIntervals(InnerBusStops, "InnerBusStops")
 
-# Gets the bus data (id, location, type) of all active buses from BTS3 server
-busData = getBusData()
+  print("  =>  Fetching Real-Time Bus Data...")
 
-print("  =>  Fetching Bus Direction Data...")
+  # Gets the bus data (id, location, type) of all active buses from BTS3 server
+  busData = getBusData()
+  
+  
+  print(json.dumps(busData, indent=2))
+  exit(1)
 
-# Gets the directional data on which way the bus is traveling
-busDirectionData = getBusType()
+  print("  =>  Fetching Bus Direction Data...")
 
-# Checks which buses are inner loops and which are outer loops
-outerBusData = determineLoopDirection(busData, busDirectionData, "outer")
-innerBusData = determineLoopDirection(busData, busDirectionData, "inner")
-#upperBusData =
+  # Gets the directional data on which way the bus is traveling
+  busDirectionData = getBusType()
 
-#print("OUTER LOOP BUSES:")
-#print(json.dumps(outerBusData, indent=2))
-#print("-------------------------------")
-#print("INNER LOOP BUSES:")
-#print(json.dumps(innerBusData, indent=2))
-
-
-# Fake Bus locatinons for testing
-"""
-fakeBusLocaitons = {
-  'rows': [
-    {
-      'id': 1,            # at base of campus (before Western Bus Stop)
-      'lat': 36.978783,
-      'lon': -122.057917
-    },
-    {
-      'id': 2,            # at c9/10
-      'lat': 36.999955,
-      'lon': -122.057780
-    }
-  """
+  # Checks which buses are inner loops and which are outer loops
+  outerBusData = determineLoopDirection(busData, busDirectionData, "outer")
+  innerBusData = determineLoopDirection(busData, busDirectionData, "inner")
+  #upperBusData =
 
 
-# Calls function that returns bus ETA data
-
-print("  =>  Calculating Outer Loop ETAs...")
-outer_bus_data = CalculateETAs(outerBusData, OuterBusStops, OuterBusStopIntervals, "OuterBusStops")
-
-print("  =>  Calculating Inner Loop ETAs...")
-inner_bus_data = CalculateETAs(innerBusData, InnerBusStops, InnerBusStopIntervals, "InnerBusStops")
-
-# prints the calculated ETAs
-#print("INNER LOOP BUS DATA")
-#print(json.dumps(inner_bus_data, indent=2))
-#print("-------------------------------")
-#print("OUTER LOOP BUS DATA")
-#print(json.dumps(outer_bus_data, indent=2))
 
 
-# Posts to server
-postETAData(inner_bus_data, outer_bus_data)
+  # Calls function that returns bus ETA data
+  print("  =>  Calculating Outer Loop ETAs...")
+  outer_bus_data = CalculateETAs(outerBusData, OuterBusStops, OuterBusStopIntervals, "OuterBusStops")
 
+  print("  =>  Calculating Inner Loop ETAs...")
+  inner_bus_data = CalculateETAs(innerBusData, InnerBusStops, InnerBusStopIntervals, "InnerBusStops")
 
-# To Do:
-  # - Push bus_data to server
-  # - Put main function in a while(1) loop to have it run forever
+  # prints the calculated ETAs
+  #print("INNER LOOP BUS DATA")
+  #print(json.dumps(inner_bus_data, indent=2))
+  #print("-------------------------------")
+  #print("OUTER LOOP BUS DATA")
+  #print(json.dumps(outer_bus_data, indent=2))
 
+  print("  => Sending Data to Server...")
 
-# ETA Format
-"""
-{
-  <Bus ID>: [
-    {
-      "StopName": "Main Entrance",
-      "ETAToStop": "14.45"
-    },
-    {
-      "StopName": "Main Entrance",
-      "ETAToStop": "14.45"
-    },
-    ..........
-  ]
-}
-"""
+  # Posts to server
+  postETAData(inner_bus_data, outer_bus_data)
 
-# Formatting Notes
-#   -Still needs to be converted so that the bus stops contain the ETA of buses instead of
-#     the buses containing the ETAs to the stops
+while(1):
+  main()

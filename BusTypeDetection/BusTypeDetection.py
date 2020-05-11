@@ -14,37 +14,38 @@ import requests
 from FetchData import getBusData, getBusType, postNewData
 from DetectBusType import DetermineBusType
 
-print("\n ---------------------------- ")
-print("|  Detecting Bus Directions  |")            # Progress alert
-print(" ---------------------------- ")
+def main():
+  print("\n ---------------------------- ")
+  print("|  Detecting Bus Directions  |")            # Progress alert
+  print(" ---------------------------- ")
 
-# Gets the live Bus coordinates/data from the BTS3 Server
-liveBusData = getBusData()
+  # Gets the live Bus coordinates/data from the BTS3 Server
+  liveBusData = getBusData()
 
-print("  =>  Getting Real-Time Bus Locations...")  # Progress alert
+  print("  =>  Getting Real-Time Bus Locations...")  # Progress alert
 
-# Gets the Bus Direction Data from BTS3 Server
-busDirData = getBusType()
+  # Gets the Bus Direction Data from BTS3 Server
+  busDirData = getBusType()
 
-print("  =>  Getting Bus Direcotion Data...")      # Progress alert
+  print("  =>  Getting Bus Direcotion Data...")      # Progress alert
 
-# Using previously calculated Data, Calculates the direction the bus is going (bus type: inner or outer loop)
-newbusDirData = DetermineBusType(liveBusData['rows'], busDirData['rows'])
+  # Using previously calculated Data, Calculates the direction the bus is going (bus type: inner or outer loop)
+  newbusDirData = DetermineBusType(liveBusData['rows'], busDirData['rows'])
 
-print("  =>  Calculating Bus Direction...")  # Progress alert
+  print("  =>  Calculating Bus Direction...")  # Progress alert
 
-# POSTs the newly calculated bus direciotn data to the server
-postNewData(newbusDirData)
+  # POSTs the newly calculated bus direciotn data to the server
+  postNewData(newbusDirData)
 
-print("  =>  Pushing Data To Server...")  # Progress alert
+  print("  =>  Pushing Data To Server...")  # Progress alert
 
-print(" ---------------------------- ")
-print("|            DONE            |")            # Progress alert
-print(" ----------------------------\n")
-
-
+  print(" ---------------------------- ")
+  print("|            DONE            |")            # Progress alert
+  print(" ----------------------------\n")
 
 
+while(1):
+  main()
 
 
 
