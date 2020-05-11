@@ -23,7 +23,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     var loopRouteButton: UIButton!
     var upperCampusRouteButton: UIButton!
     var label: NoBussesAvailableUILabel?
-    let durationAndDelay = 0.7
+    let durationAndDelay = 0.7 //how long animation works
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,25 +88,40 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     }
     
     func setupLoopRouteButton() {
-        loopRouteButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 150, y: view.frame.height - 160, width: 50, height: 50))
+        loopRouteButton = UIButton(frame: CGRect(x: 0, y: 0, width: 55, height: 55))
         loopRouteButton.backgroundColor = UIColor.white
         loopRouteButton.setTitle("L", for: .normal)
         loopRouteButton.setTitleColor(UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
         loopRouteButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        loopRouteButton.layer.cornerRadius = 25
+        loopRouteButton.layer.cornerRadius = loopRouteButton.frame.size.width/2
         loopRouteButton.addTarget(self, action: #selector(loopRouteButtonWasPressed(_:)), for: .touchUpInside)
         view.addSubview(loopRouteButton)
+        
+        loopRouteButton.translatesAutoresizingMaskIntoConstraints = false
+        loopRouteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -25).isActive = true
+        loopRouteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 10).isActive = true
+        loopRouteButton.widthAnchor.constraint(equalToConstant: loopRouteButton.frame.size.width).isActive = true
+        loopRouteButton.heightAnchor.constraint(equalToConstant: loopRouteButton.frame.size.width).isActive = true
+        
     }
     
+    
     func setupUpperCampusRouteButton() {
-        upperCampusRouteButton = UIButton(frame: CGRect(x: (view.frame.width/2) - 150, y: view.frame.height - 100, width: 50, height: 50))
+        upperCampusRouteButton = UIButton(frame: CGRect(x: 0, y: 0, width: 55, height: 55))
         upperCampusRouteButton.backgroundColor = UIColor.white
         upperCampusRouteButton.setTitle("UC", for: .normal)
         upperCampusRouteButton.setTitleColor(UIColor(red: 224/255, green: 0/255, blue: 26/255, alpha: 1), for: .normal)
         upperCampusRouteButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        upperCampusRouteButton.layer.cornerRadius = 25
+        upperCampusRouteButton.layer.cornerRadius = upperCampusRouteButton.frame.size.width/2
         upperCampusRouteButton.addTarget(self, action: #selector(upperCampusRouteButtonWasPressed(_:)), for: .touchUpInside)
         view.addSubview(upperCampusRouteButton)
+        
+        upperCampusRouteButton.translatesAutoresizingMaskIntoConstraints = false
+        upperCampusRouteButton.bottomAnchor.constraint(equalTo: loopRouteButton.topAnchor,constant: -10).isActive = true
+        upperCampusRouteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 10).isActive = true
+        upperCampusRouteButton.widthAnchor.constraint(equalToConstant: upperCampusRouteButton.frame.size.width).isActive = true
+        upperCampusRouteButton.heightAnchor.constraint(equalToConstant: upperCampusRouteButton.frame.size.width).isActive = true
+        
     }
     
     @objc func loopRouteButtonWasPressed(_ sender: UIButton) {
@@ -507,7 +522,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             userLocationButton.translatesAutoresizingMaskIntoConstraints = false
 
             view.addSubview(userLocationButton)
-            userLocationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -50).isActive = true
+            userLocationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -25).isActive = true
             userLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -10).isActive = true
             userLocationButton.widthAnchor.constraint(equalToConstant: userLocationButton.frame.size.width).isActive = true
             userLocationButton.heightAnchor.constraint(equalToConstant: userLocationButton.frame.size.width).isActive = true
