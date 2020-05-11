@@ -127,68 +127,69 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     @objc func loopRouteButtonWasPressed(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected == true {
-            loadGeoJson(bustype: "Loop")
+            loadGeoJson(routetype: "LoopRoute")
         }
         else {
-            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "Loop"))!)
-            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "Loop"))!)
+            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "LoopRoute"))!)
+            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "LoopRoute"))!)
         }
     }
     
     @objc func upperCampusRouteButtonWasPressed(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected == true {
-            loadGeoJson(bustype: "UC")
+            loadGeoJson(routetype: "UCRoute")
         }
         else {
-            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "UC"))!)
-            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "UC"))!)
+            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "UCRoute"))!)
+            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "UCRoute"))!)
         }
     }
     
-    func loadGeoJson(bustype: String) {
+    func loadGeoJson(routetype: String) {
         DispatchQueue.global().async {
-            guard let jsonUrl = Bundle.main.url(forResource: bustype, withExtension: "geojson") else {
+            guard let jsonUrl = Bundle.main.url(forResource: routetype, withExtension: "geojson") else {
                 preconditionFailure("Failed to load local GeoJSON file")
             }
             guard let jsonData = try? Data(contentsOf: jsonUrl) else {
                 preconditionFailure("Failed to parse GeoJSON file")
             }
             DispatchQueue.main.async {
-                self.drawPolyline(geoJson: jsonData, bustype: bustype)
+                self.drawPolyline(geoJson: jsonData, routetype: routetype)
             }
         }
     }
     
-    func drawPolyline(geoJson: Data, bustype: String) {
+    func drawPolyline(geoJson: Data, routetype: String) {
         guard let style = self.mapView.style else { return }
 
         guard let shapeFromGeoJSON = try? MGLShape(data: geoJson, encoding: String.Encoding.utf8.rawValue) else {
             fatalError("Could not generate MGLShape")
         }
 
-        let source = MGLShapeSource(identifier: bustype, shape: shapeFromGeoJSON, options: nil)
+        let source = MGLShapeSource(identifier: routetype, shape: shapeFromGeoJSON, options: nil)
         style.addSource(source)
 
         // Create new layer for the line.
-        let layer = MGLLineStyleLayer(identifier: bustype, source: source)
+        let layer = MGLLineStyleLayer(identifier: routetype, source: source)
 
         // Set the line join and cap to a rounded end.
         layer.lineJoin = NSExpression(forConstantValue: "round")
         layer.lineCap = NSExpression(forConstantValue: "round")
 
         // Set the line color to a constant blue color.
-        if (bustype == "Loop") {
+        if (routetype == "LoopRoute") {
             layer.lineColor = NSExpression(forConstantValue: UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1))
         }
-        else if (bustype == "UC") {
+        else if (routetype == "UCRoute") {
             layer.lineColor = NSExpression(forConstantValue: UIColor(red: 224/255, green: 0/255, blue: 26/255, alpha: 1))
 
         }
 
         layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
                                        [14: 2, 18: 20])
-        style.addLayer(layer)
+        
+        style.insertLayer(layer, above: style.layer(withIdentifier: "com.mapbox.annotations.points")!) // insert route layer between annotation layer and bus layer
     }
     
     func performTask(withSession: URLSession, withURL: URL,completion: @escaping ((()) -> Void)){
@@ -228,6 +229,18 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
                         Map.updateBusArray(newBus: bus)
                     }
                 }
+//                let testlocation = CLLocationCoordinate2D(latitude: 36.995699, longitude: -122.055357)
+//                let testbus = Bus(id: 488392, busType: "NIGHT CORE", coordinate: testlocation)
+//                Map.updateBusArray(newBus: testbus)
+//                let testlocation1 = CLLocationCoordinate2D(latitude: 36.992631, longitude: -122.059928)
+//                let testbus1 = Bus(id: 499282, busType: "LOOP", coordinate: testlocation1)
+//                Map.updateBusArray(newBus: testbus1)
+//                let testlocation2 = CLLocationCoordinate2D(latitude: 36.990631, longitude: -122.059928)
+//                let testbus2 = Bus(id: 1234123, busType: "LOOP OUT OF SERVICE AT THE BARN THEATER", coordinate: testlocation2)
+//                Map.updateBusArray(newBus: testbus2)
+//                let testlocation3 = CLLocationCoordinate2D(latitude: 36.988631, longitude: -122.059928)
+//                let testbus3 = Bus(id: 24594984, busType: "UPPER CAMPUS", coordinate: testlocation3)
+//                Map.updateBusArray(newBus: testbus3)
             }
         }catch let error {
             print(error.localizedDescription)
@@ -393,7 +406,19 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
                 source = MGLShapeSource(identifier: bus.sourceIdentifier, features: [feature], options: nil)
                 style.addSource(source)
                 //CUSTOM BUS ICON
-                style.setImage(Map.busImage, forName: bus.busImageName)
+                let busIconName = bus.busType
+                let busImage: UIImage = {
+                    let image = UIImage(named: busIconName)
+                    let size = CGSize(width: 25, height: 25)
+                    var newImage: UIImage
+                    let renderer = UIGraphicsImageRenderer(size: size)
+                    newImage = renderer.image { (context) in
+                        image?.draw(in: CGRect(origin: .zero, size: size))
+                    }
+                    return newImage
+                }()
+                
+                style.setImage(busImage, forName: bus.busImageName)
                 let busLayer = MGLSymbolStyleLayer(identifier: bus.busLayerIdentifier, source: source)
                 busLayer.iconImageName = NSExpression(forConstantValue: bus.busImageName)
                 busLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)

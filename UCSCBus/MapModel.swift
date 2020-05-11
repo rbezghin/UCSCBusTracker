@@ -16,17 +16,6 @@ class MapModel {
             //print("Bus count is \(busCount)")
         }
     }
-    private let busIconName = "bus_top_shuttle_icon"
-    private(set) lazy var busImage: UIImage = {
-        let image = UIImage(named: busIconName)
-        let size = CGSize(width: 25, height: 25)
-        var newImage: UIImage
-        let renderer = UIGraphicsImageRenderer(size: size)
-        newImage = renderer.image { (context) in
-            image?.draw(in: CGRect(origin: .zero, size: size))
-        }
-        return newImage
-    }()
     private(set) var busCount = 0
     
     func checkConnectivity()->Bool{
