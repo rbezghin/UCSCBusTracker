@@ -71,21 +71,27 @@ for o in range(len(outer_stops)):
 	outer_etas.append(300+len(outer_stops)-o)
 
 inner_result = []
-inner_result.append({'bus_id': 95, 'bus_type': 'LOOP', 'Barn_Theater_ETA': inner_etas[0], 'Western_Drive_ETA': inner_etas[1], 'Arboretum_ETA': inner_etas[2],
-													   'Oakes_RCC_ETA': inner_etas[3], 'Porter_RCC_ETA': inner_etas[4], 'Kerr_Hall_ETA': inner_etas[5], 
-													   'Kresge_ETA': inner_etas[6], 'Science_Hill_ETA': inner_etas[7], 'Colleges9_10_ETA': inner_etas[8], 
-													   'Cowell_College_Bookstore_ETA': inner_etas[9], 'East_Remote_ETA': inner_etas[10],'East_Remote_Interior_ETA': inner_etas[11], 
-													   'Village_Farm_ETA': inner_etas[12],'Lower_Campus_ETA': inner_etas[13]})
+#inner_result.append({'bus_id': 95, 'bus_type': 'LOOP', 'Barn_Theater_ETA': inner_etas[0], #'Western_Drive_ETA': inner_etas[1], 'Arboretum_ETA': inner_etas[2],
+			#										   'Oakes_RCC_ETA': inner_etas[3], 'Porter_RCC_ETA': inner_etas[4], #'Kerr_Hall_ETA': inner_etas[5],
+						#							   'Kresge_ETA': inner_etas[6], 'Science_Hill_ETA': inner_etas[7], #'Colleges9_10_ETA': inner_etas[8],
+									#				   'Cowell_College_Bookstore_ETA': inner_etas[9], 'East_Remote_ETA': #inner_etas[10],'East_Remote_Interior_ETA': inner_etas[11],
+												#	   'Village_Farm_ETA': inner_etas[12],'Lower_Campus_ETA': inner_etas[13]})
+                
+inner_result.append({'bus_id': 95, 'bus_type': None, 'Barn_Theater_ETA': None, 'Western_Drive_ETA': None, 'Arboretum_ETA': None, 'Oakes_RCC_ETA': None, 'Porter_RCC_ETA': None, 'Kerr_Hall_ETA': None, 'Kresge_ETA': None, 'Science_Hill_ETA': None, 'Colleges9_10_ETA': None, 'Cowell_College_Bookstore_ETA': None, 'East_Remote_ETA': None,'East_Remote_Interior_ETA': None, 'Village_Farm_ETA': None,'Lower_Campus_ETA': None})
+                
 print(json.dumps(inner_result, indent=2))
 
 
 outer_result = []
+"""
 outer_result.append({'bus_id': 95, 'bus_type': 'LOOP OUT OF SERVICE AT THE BARN THEATER', 'Main_Entrance_ETA': outer_etas[0], 'Lower_Campus_ETA': outer_etas[1], 'Village_Farm_ETA': outer_etas[2],
 													   'East_Remote_ETA': outer_etas[3], 'East_Field_House_ETA': outer_etas[4], 'Bookstore_ETA': outer_etas[5], 
 													   'Crown_Merrill_ETA': outer_etas[6], 'Colleges9_10_ETA': outer_etas[7], 'Science_Hill_ETA': outer_etas[8], 
 													   'Kresge_ETA': outer_etas[9], 'Porter_RCC_ETA': outer_etas[10], 'Family_Student_Housing_ETA': outer_etas[11], 
 													   'Oakes_FSH_ETA': outer_etas[12],'West_Remote_Interior_ETA': outer_etas[13],
 													   'Arboretum_ETA': outer_etas[14],'Western_Drive_ETA': outer_etas[15]})
+"""
+outer_result.append({'bus_id': 95, 'bus_type': None, 'Main_Entrance_ETA': None, 'Lower_Campus_ETA': None, 'Village_Farm_ETA': None, 'East_Remote_ETA': None, 'East_Field_House_ETA': None, 'Bookstore_ETA': None, 'Crown_Merrill_ETA': None, 'Colleges9_10_ETA': None, 'Science_Hill_ETA': None, 'Kresge_ETA': None, 'Porter_RCC_ETA': None, 'Family_Student_Housing_ETA': None, 'Oakes_FSH_ETA': None,'West_Remote_Interior_ETA': None, 'Arboretum_ETA': None,'Western_Drive_ETA': None})
 print(json.dumps(outer_result, indent=2))
 
 

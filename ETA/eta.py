@@ -8,7 +8,7 @@ import httplib
 # User library/python file imports
 from BusStopData import getStopsLocation
 from FetchData import getETA, getBusData, getBusType, postETAData
-from ETACalc import CalcStopIntervals, CalculateETAs
+from ETACalc import CalcStopIntervals, CalculateETAs, NullETAs
 from BusStopDetermination import determineLoopDirection
 
 
@@ -21,7 +21,10 @@ from BusStopDetermination import determineLoopDirection
 
 #exit(1)
 
+
+
 def main():
+  Null_Buses = [75, 78, 79, 80, 84, 85, 90, 92, 93, 95, 96, 97, 98]
 
   print("  =>  Fetching Bus Stop Coordinates...")
 
@@ -39,13 +42,16 @@ def main():
 
   # Gets the bus data (id, location, type) of all active buses from BTS3 server
   busData = getBusData()
-  
-  
   print(json.dumps(busData, indent=2))
-  exit(1)
+  # Finds which buses are active
+  for BusIDs in Null_Buses:
+    for active in busData['rows']:
+      if(active['id'] == str(BusIDs)):
+        Null_Buses.remove(BusIDs)
 
   print("  =>  Fetching Bus Direction Data...")
 
+  
   # Gets the directional data on which way the bus is traveling
   busDirectionData = getBusType()
 
@@ -63,7 +69,10 @@ def main():
 
   print("  =>  Calculating Inner Loop ETAs...")
   inner_bus_data = CalculateETAs(innerBusData, InnerBusStops, InnerBusStopIntervals, "InnerBusStops")
-
+  
+  null_inner_bus_data = NullETAs(Null_Buses, 'InnerBusStops')
+  null_outer_bus_data = NullETAs(Null_Buses, 'OuterBusStops')
+  
   # prints the calculated ETAs
   #print("INNER LOOP BUS DATA")
   #print(json.dumps(inner_bus_data, indent=2))
@@ -74,7 +83,7 @@ def main():
   print("  => Sending Data to Server...")
 
   # Posts to server
-  postETAData(inner_bus_data, outer_bus_data)
+  postETAData(inner_bus_data, outer_bus_data, null_inner_bus_data, null_outer_bus_data)
 
 while(1):
   main()

@@ -90,6 +90,31 @@ def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType):
   return BusETAData
 
 
+# ------------------------------------------------------------------------------------------------------
+# PURPOSE: Gives inactive buses NULL data
+# Input Parameters:
+#     Bus_Data: json object that contains bus data (location, id, type, etc.)
+#     Outer_Stops: json object containing location of stops
+#     BusStopIntervals: json object cantaining intervals between all adjacent bus stops
+#     StopType: Type of bus stop (inner or outer)
+# Returns: json object containing every buses' ETA to all bus stops
+# ------------------------------------------------------------------------------------------------------
+def NullETAs(Inactive_Buses, StopType):
+      
+  # Defines variable/array used to store all ETA data
+  BusETAData = []   # json Array usd to store all bus ETA data (bus ID, ETA to each stop, etc.)
+  
+  for busIDs in Inactive_Buses:
+    # Once all ETAs from 1 bus to all bus stops are calculated, format it correctly
+    if (StopType == "OuterBusStops"):
+      BusETAData.append({'bus_id': busIDs, 'bus_type': None, 'Main_Entrance_ETA': None, 'Lower_Campus_ETA': None, 'Village_Farm_ETA': None, 'East_Remote_Interior_ETA': None, 'East_Remote_ETA': None, 'East_Field_House_ETA': None, 'Bookstore_ETA': None, 'Crown_Merrill_ETA': None, 'Colleges9_10_ETA': None, 'Science_Hill_ETA': None, 'Kresge_ETA': None, 'Porter_RCC_ETA': None, 'Family_Student_Housing_ETA': None, 'Oakes_FSH_ETA': None, 'Arboretum_ETA': None,'Western_Drive_ETA': None})
+    
+    else:
+      BusETAData.append({'bus_id': busIDs, 'bus_type': None, 'Barn_Theater_ETA': None, 'Western_Drive_ETA': None, 'Arboretum_ETA': None, 'West_Remote_Interior_ETA': None, 'Oakes_RCC_ETA': None, 'Porter_RCC_ETA': None, 'Kerr_Hall_ETA': None, 'Kresge_ETA': None, 'Science_Hill_ETA': None, 'Colleges9_10_ETA': None, 'Cowell_College_Bookstore_ETA': None, 'East_Remote_ETA': None, 'Village_Farm_ETA': None,'Lower_Campus_ETA': None})
+  
+  
+  return BusETAData
+
 
 # ------------------------------------------------------------------------------------------------------
 # PURPOSE: Calculates ETAs of adjacent bus stops
