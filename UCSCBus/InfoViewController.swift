@@ -57,8 +57,18 @@ class InfoViewController: UIViewController {
         self.modalPresentationStyle = .fullScreen
         view.backgroundColor = .white
         createTableTextView()
-        //createNavBar()
-        createBackButton()
+        createNavBar()
+        //createBackButton()
+//        for family:String in UIFont.familyNames {
+//            print(family)
+//            for names:String in UIFont.fontNames(forFamilyName: family) {
+//                print("==\(names)")
+//            }
+//        }
+    }
+    
+    func createTitle() {
+        
     }
     
     func createTableTextView() {
@@ -78,6 +88,19 @@ class InfoViewController: UIViewController {
     }
 
     func createNavBar() {
+        let width = self.view.frame.width
+        let navigationBar: UINavigationBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: width, height: 100))
+        self.view.addSubview(navigationBar)
+        //navigationBar.backgroundColor = .clear
+        let navigationItem = UINavigationItem(title: "Info & Settings")
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(back))
+        navigationItem.rightBarButtonItem = doneButton
+        navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        navigationBar.setItems([navigationItem], animated: false)
+    }
+    
+    func createToolBar() {
         
         self.navigationController?.isToolbarHidden = false
         let toolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 20, width: self.view.frame.width, height: 44))
@@ -101,23 +124,22 @@ class InfoViewController: UIViewController {
     }
     
     func createBackButton() {
-//        let backButton = UIButton(frame: CGRect(x: 0, y: 20, width: 100, height: 30))
-//        backButton.tintColor = .black
-//        backButton.setTitle("Back", for: .normal)
-//        backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
-//        self.view.addSubview(backButton)
-        
-        let closeButton = SymbolButton(symbolName: "xmark", symbolWeight: UIImage.SymbolWeight.light, symbolColor: .black, backgroundColor: .lightGray)
+        let closeButton = SymbolButton(symbolName: "xmark", symbolWeight: UIImage.SymbolWeight.regular, symbolColor: .label, backgroundColor: .systemGray4, size: 30, symbolScale: .medium)
         closeButton.addTarget(self, action: #selector(back), for: .touchUpInside)
         self.view.addSubview(closeButton)
         //closeButton.frame = CGRect(x: 40, y: 40, width: 20, height: 20)
         
         closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+        closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         
-        closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
-        closeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
+        let title: UILabel = UILabel(frame: CGRect(x: 10, y: 0, width: view.frame.width - 50, height: 70))
+        title.text = "Info & Settings"
+        title.font = UIFont(name: "SFProDisplay-Heavy", size: 40)
+        //title.adjustsFontSizeToFitWidth = true
+        //title.font = UIFont.boldSystemFont(ofSize: 40)
         
-        
+        view.addSubview(title)
         
     }
     

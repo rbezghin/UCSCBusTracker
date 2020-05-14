@@ -4,6 +4,12 @@
 <dict>
 	<key></key>
 	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>SF-Pro-Display-Heavy.otf</string>
+	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>UILaunchStoryboardName</key>
@@ -14,6 +20,8 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>UIMainStoryboardFile</key>

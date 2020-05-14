@@ -502,7 +502,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
 
     
     func setupLocationButton() {
-        userLocationButton = SymbolButton(symbolName: "location.fill", symbolWeight: UIImage.SymbolWeight.medium, symbolColor: .systemBlue, backgroundColor: .white)
+        userLocationButton = SymbolButton(symbolName: "location.fill", symbolWeight: UIImage.SymbolWeight.medium, symbolColor: .systemBlue, backgroundColor: .systemBackground, size: 50, symbolScale: .large)
         userLocationButton?.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
         view.addSubview(userLocationButton!)
         userLocationButton?.translatesAutoresizingMaskIntoConstraints = false
@@ -534,14 +534,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         case .follow:
             userLocationButton?.updateSymbol(color: .systemBlue, symbolName: "location.fill")
         case .none:
-            userLocationButton?.updateSymbol(color: .black, symbolName: "location")
+            userLocationButton?.updateSymbol(color: .label, symbolName: "location")
         default:
-            userLocationButton?.updateSymbol(color: .black, symbolName: "location")
+            userLocationButton?.updateSymbol(color: .label, symbolName: "location")
         }
     }
     
     func setupInfoButton() {
-        let infoButton = SymbolButton(symbolName: "info.circle", symbolWeight: UIImage.SymbolWeight.medium, symbolColor: .black, backgroundColor: .white)
+        let infoButton = SymbolButton(symbolName: "info.circle", symbolWeight: UIImage.SymbolWeight.medium, symbolColor: .label, backgroundColor: .systemBackground, size: 50, symbolScale: .large)
         infoButton.addTarget(self, action: #selector(infoSegue), for: .touchUpInside)
         view.addSubview(infoButton)
         infoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -110).isActive = true
@@ -550,9 +550,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     
     @objc func infoSegue(sender: SymbolButton) {
         let infoVC = InfoViewController()
-        infoVC.modalPresentationStyle = .fullScreen
+        //infoVC.modalPresentationStyle = .fullscreen
         self.present(infoVC, animated: true, completion: nil)
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return UIStatusBarStyle.darkContent
+    }
+        
 }
 
 //SIZES AND IDENTIFIERS
