@@ -7,12 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		15767A6A245A4FA100A3D6AC /* SymbolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15767A69245A4FA100A3D6AC /* SymbolButton.swift */; };
 		159C5FCE246D07C100D41D3F /* SF-Pro-Display-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 159C5FCD246D07C100D41D3F /* SF-Pro-Display-Heavy.otf */; };
 		159C5FD6246D107800D41D3F /* SymbolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159C5FD5246D107800D41D3F /* SymbolButton.swift */; };
-		15FF79822460FC670036D367 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FF79812460FC670036D367 /* InfoViewController.swift */; };
 		40AE3AFE8E184ED453352E32 /* Pods_UCSCBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802A46633472885C25EB655B /* Pods_UCSCBus.framework */; };
 		462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */ = {isa = PBXBuildFile; fileRef = 462FFF2923EBE441003848F4 /* bus_stop_data.csv */; };
+		467C91E3246D13F400CB8BD4 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467C91E2246D13F400CB8BD4 /* InfoViewController.swift */; };
 		46D7B3802455EE6700960A8D /* LoopRoute.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 46D7B37F2455EE6700960A8D /* LoopRoute.geojson */; };
 		46D7B3822455F41A00960A8D /* UCRoute.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 46D7B3812455F41A00960A8D /* UCRoute.geojson */; };
 		8063D89324046F63001FFA90 /* MapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8063D89224046F63001FFA90 /* MapModel.swift */; };
@@ -29,11 +28,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		15767A69245A4FA100A3D6AC /* SymbolButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolButton.swift; sourceTree = "<group>"; };
 		159C5FCD246D07C100D41D3F /* SF-Pro-Display-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Heavy.otf"; sourceTree = "<group>"; };
 		159C5FD5246D107800D41D3F /* SymbolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SymbolButton.swift; sourceTree = "<group>"; };
-		15FF79812460FC670036D367 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		462FFF2923EBE441003848F4 /* bus_stop_data.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bus_stop_data.csv; sourceTree = "<group>"; };
+		467C91E2246D13F400CB8BD4 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		46D7B37F2455EE6700960A8D /* LoopRoute.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = LoopRoute.geojson; sourceTree = "<group>"; };
 		46D7B3812455F41A00960A8D /* UCRoute.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = UCRoute.geojson; sourceTree = "<group>"; };
 		4EB30620D92CFAA65B994934 /* Pods-UCSCBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UCSCBus.release.xcconfig"; path = "Target Support Files/Pods-UCSCBus/Pods-UCSCBus.release.xcconfig"; sourceTree = "<group>"; };
@@ -70,8 +68,6 @@
 		159C5FD4246D101100D41D3F /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				15FF79812460FC670036D367 /* InfoViewController.swift */,
-				15767A69245A4FA100A3D6AC /* SymbolButton.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -138,6 +134,7 @@
 				807B7B7123DFE5B300609EC8 /* Info.plist */,
 				159C5FD5246D107800D41D3F /* SymbolButton.swift */,
 				159C5FCD246D07C100D41D3F /* SF-Pro-Display-Heavy.otf */,
+				467C91E2246D13F400CB8BD4 /* InfoViewController.swift */,
 				807345CE2412063300D73EB4 /* Supporting Files */,
 				807345CD2412060100D73EB4 /* etc */,
 			);
@@ -273,16 +270,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				807B7B6823DFE5B200609EC8 /* MapViewController+MGLMap.swift in Sources */,
-				15FF79822460FC670036D367 /* InfoViewController.swift in Sources */,
 				807B7B6423DFE5B200609EC8 /* AppDelegate.swift in Sources */,
 				80B7347323E51F07002A63E9 /* Bus.swift in Sources */,
 				80B7347523E63FDB002A63E9 /* TabBarVC.swift in Sources */,
+				467C91E3246D13F400CB8BD4 /* InfoViewController.swift in Sources */,
 				8063D89324046F63001FFA90 /* MapModel.swift in Sources */,
 				807B7B6623DFE5B200609EC8 /* SceneDelegate.swift in Sources */,
 				159C5FD6246D107800D41D3F /* SymbolButton.swift in Sources */,
 				80B7347723E644C1002A63E9 /* ScheduleTableViewController.swift in Sources */,
 				80A7E797244E74870070C325 /* NoBussesAvailableUILabel.swift in Sources */,
-				15767A6A245A4FA100A3D6AC /* SymbolButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,7 +424,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = SS74D43GDA;
+				DEVELOPMENT_TEAM = 3S8Y6C28BB;
 				INFOPLIST_FILE = UCSCBus/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -448,7 +444,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = SS74D43GDA;
+				DEVELOPMENT_TEAM = 3S8Y6C28BB;
 				INFOPLIST_FILE = UCSCBus/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
