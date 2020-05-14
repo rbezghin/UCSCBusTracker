@@ -19,7 +19,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php"
     let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck7azhx9h083p1hqvwh2409ic"
     
-    var userLocationButton: UserLocationUIButton?
+    var userLocationButton: SymbolButton?
     var loopRouteButton: UIButton!
     var upperCampusRouteButton: UIButton!
     var label: NoBussesAvailableUILabel?
@@ -48,6 +48,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             }
         else {
             mapView.setCenter((mapView.userLocation?.coordinate)!, zoomLevel: 14, animated: false)
+            mapView.userTrackingMode = .follow
         }
     }
     
@@ -501,46 +502,46 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
 
     
     func setupLocationButton() {
-        userLocationButton = UserLocationUIButton(buttonSize: 55)
-        if let userLocationButton = userLocationButton{
-            userLocationButton.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
-            userLocationButton.tintColor = mapView.tintColor
-            userLocationButton.translatesAutoresizingMaskIntoConstraints = false
-
-            view.addSubview(userLocationButton)
-            userLocationButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -50).isActive = true
-            userLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -10).isActive = true
-            userLocationButton.widthAnchor.constraint(equalToConstant: userLocationButton.frame.size.width).isActive = true
-            userLocationButton.heightAnchor.constraint(equalToConstant: userLocationButton.frame.size.width).isActive = true
-            //self.userLocationButton = userLocationButton
-        }
-         
+        userLocationButton = SymbolButton(symbolName: "location.fill", symbolWeight: UIImage.SymbolWeight.medium, symbolColor: .systemBlue, backgroundColor: .white)
+        userLocationButton?.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
+        view.addSubview(userLocationButton!)
+        userLocationButton?.translatesAutoresizingMaskIntoConstraints = false
+        userLocationButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
+        userLocationButton?.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
      }
     
     //when screen was moved button must appear to give an option to set a tracking mode
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        
-    }
-    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
-        //print("regionDidChangeWith")
         if let userLocationButton = userLocationButton {
-            userLocationButton.updateArrowForTrackingMode(mode: mapView.userTrackingMode)
+            updateArrowForTrackingMode(mode: mode, button: userLocationButton)
         }
     }
+    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
+        
+    }
 
-    @objc func locationButtonTapped(sender: UserLocationUIButton) {
+    @objc func locationButtonTapped(sender: SymbolButton) {
         //Jump to user location, but don't actually follow it.
         //print("locationButtonTapped")
         mapView.setZoomLevel(14, animated: true)
         mapView.userTrackingMode = .follow
-        
-        if let userLocationButton = userLocationButton {
-            userLocationButton.updateArrowForTrackingMode(mode: mapView.userTrackingMode)
+        updateArrowForTrackingMode(mode: mapView.userTrackingMode, button: sender)
+    }
+    
+    func updateArrowForTrackingMode(mode: MGLUserTrackingMode, button: SymbolButton) {
+        //print("Updating Arrow")
+        switch mode {
+        case .follow:
+            userLocationButton?.updateSymbol(color: .systemBlue, symbolName: "location.fill")
+        case .none:
+            userLocationButton?.updateSymbol(color: .black, symbolName: "location")
+        default:
+            userLocationButton?.updateSymbol(color: .black, symbolName: "location")
         }
     }
     
     func setupInfoButton() {
-        let infoButton = SymbolButton(symbolName: "info.circle")
+        let infoButton = SymbolButton(symbolName: "info.circle", symbolWeight: UIImage.SymbolWeight.medium, symbolColor: .black, backgroundColor: .white)
         infoButton.addTarget(self, action: #selector(infoSegue), for: .touchUpInside)
         view.addSubview(infoButton)
         infoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -110).isActive = true

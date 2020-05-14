@@ -76,7 +76,6 @@
                     </toolbar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="50N-Xc-5GZ"/>
-                        <segue destination="evk-cP-StA" kind="show" id="d62-Ac-zyr"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jCD-rn-qOw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -84,7 +83,4 @@
             <point key="canvasLocation" x="1047.8260869565217" y="76.339285714285708"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="MLP-Z5-LFN"/>
-    </inferredMetricsTieBreakers>
 </document>

@@ -25,7 +25,7 @@ class InfoViewController: UIViewController {
         </style>
         <table class="tg">
           <tr>
-            <th class="tg-6z9x"><span style="font-weight:bold">Bus Times:</span></th>
+            <th class="tg-6z9x"><span style="font-weight:bold">Bus<br>Times:</span></th>
             <th class="tg-ysz0">Mon-Thur</th>
             <th class="tg-ysz0">Friday</th>
             <th class="tg-ysz0">Sat-Sun</th>
@@ -34,13 +34,13 @@ class InfoViewController: UIViewController {
             <td class="tg-ysz0">Loop</td>
             <td class="tg-0lax">7:25am-<br>9:45pm</td>
             <td class="tg-0lax">7:25am-<br>6:35pm</td>
-            <td class="tg-0lax">No Service</td>
+            <td class="tg-0lax">No<br>Service</td>
           </tr>
           <tr>
             <td class="tg-ysz0">Upper<br>Campus</td>
             <td class="tg-0lax">7:30am-<br>8:45pm</td>
             <td class="tg-0lax">7:30am-<br>5:00pm</td>
-            <td class="tg-0lax">No Service</td>
+            <td class="tg-0lax">No<br>Service</td>
           </tr>
           <tr>
             <td class="tg-ysz0">Night<br>Core</td>
@@ -57,6 +57,8 @@ class InfoViewController: UIViewController {
         self.modalPresentationStyle = .fullScreen
         view.backgroundColor = .white
         createTableTextView()
+        //createNavBar()
+        createBackButton()
     }
     
     func createTableTextView() {
@@ -66,14 +68,58 @@ class InfoViewController: UIViewController {
         attributedTable?.addAttribute(.font, value: UIFont.systemFont(ofSize: 13), range: NSRange(location: 0, length: attributedTable!.length))
         
         
-        let tableTextView = UITextView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 200))
+        let tableTextView = UITextView(frame: CGRect(x: 0, y: 100, width: self.view.frame.width, height: 300))
         tableTextView.isEditable = false
         tableTextView.attributedText = attributedTable
         self.view.addSubview(tableTextView)
-        tableTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
-        tableTextView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 20).isActive = true
+        //tableTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+        tableTextView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 40).isActive = true
+        tableTextView.updateConstraints()
     }
 
+    func createNavBar() {
+        
+        self.navigationController?.isToolbarHidden = false
+        let toolbar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: 20, width: self.view.frame.width, height: 44))
+        
+        var items = [UIBarButtonItem]()
+        //items.append(UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil))
+        items.append(
+            UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(back))
+        )
+        //toolbarItems = items
+        toolbar.items = items
+        self.view.addSubview(toolbar)
+    }
+    
+    @objc func back() {
+        print("Back!")
+        let mapview = MapViewController()
+        mapview.modalPresentationStyle = .fullScreen
+        self.dismiss(animated: true, completion: nil)
+        //present(mapview, animated: true, completion: nil)
+    }
+    
+    func createBackButton() {
+//        let backButton = UIButton(frame: CGRect(x: 0, y: 20, width: 100, height: 30))
+//        backButton.tintColor = .black
+//        backButton.setTitle("Back", for: .normal)
+//        backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+//        self.view.addSubview(backButton)
+        
+        let closeButton = SymbolButton(symbolName: "xmark", symbolWeight: UIImage.SymbolWeight.light, symbolColor: .black, backgroundColor: .lightGray)
+        closeButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+        self.view.addSubview(closeButton)
+        //closeButton.frame = CGRect(x: 40, y: 40, width: 20, height: 20)
+        
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
+        closeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
+        
+        
+        
+    }
     
 }
 extension String {
