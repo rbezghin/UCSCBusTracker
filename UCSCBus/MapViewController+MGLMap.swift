@@ -20,8 +20,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     let mapBoxStyleURLString = "mapbox://styles/brianthyfault/ck7azhx9h083p1hqvwh2409ic"
     
     var userLocationButton: SymbolButton?
-    var loopRouteButton: UIButton!
-    var upperCampusRouteButton: UIButton!
+    var loopRouteButton: SymbolButton?
+    var upperCampusRouteButton: SymbolButton?
     var label: NoBussesAvailableUILabel?
     let durationAndDelay = 0.7 //how long animation works
     
@@ -89,64 +89,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         }
     }
     
-    func setupLoopRouteButton() {
-        loopRouteButton = UIButton(frame: CGRect(x: 0, y: 0, width: 55, height: 55))
-        loopRouteButton.backgroundColor = UIColor.white
-        loopRouteButton.setTitle("L", for: .normal)
-        loopRouteButton.setTitleColor(UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1), for: .normal)
-        loopRouteButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        loopRouteButton.layer.cornerRadius = loopRouteButton.frame.size.width/2
-        loopRouteButton.addTarget(self, action: #selector(loopRouteButtonWasPressed(_:)), for: .touchUpInside)
-        view.addSubview(loopRouteButton)
-        
-        loopRouteButton.translatesAutoresizingMaskIntoConstraints = false
-        loopRouteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,constant: -25).isActive = true
-        loopRouteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 10).isActive = true
-        loopRouteButton.widthAnchor.constraint(equalToConstant: loopRouteButton.frame.size.width).isActive = true
-        loopRouteButton.heightAnchor.constraint(equalToConstant: loopRouteButton.frame.size.width).isActive = true
-        
-    }
     
-    
-    func setupUpperCampusRouteButton() {
-        upperCampusRouteButton = UIButton(frame: CGRect(x: 0, y: 0, width: 55, height: 55))
-        upperCampusRouteButton.backgroundColor = UIColor.white
-        upperCampusRouteButton.setTitle("UC", for: .normal)
-        upperCampusRouteButton.setTitleColor(UIColor(red: 224/255, green: 0/255, blue: 26/255, alpha: 1), for: .normal)
-        upperCampusRouteButton.titleLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 18)
-        upperCampusRouteButton.layer.cornerRadius = upperCampusRouteButton.frame.size.width/2
-        upperCampusRouteButton.addTarget(self, action: #selector(upperCampusRouteButtonWasPressed(_:)), for: .touchUpInside)
-        view.addSubview(upperCampusRouteButton)
-        
-        upperCampusRouteButton.translatesAutoresizingMaskIntoConstraints = false
-        upperCampusRouteButton.bottomAnchor.constraint(equalTo: loopRouteButton.topAnchor,constant: -10).isActive = true
-        upperCampusRouteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 10).isActive = true
-        upperCampusRouteButton.widthAnchor.constraint(equalToConstant: upperCampusRouteButton.frame.size.width).isActive = true
-        upperCampusRouteButton.heightAnchor.constraint(equalToConstant: upperCampusRouteButton.frame.size.width).isActive = true
-        
-    }
-    
-    @objc func loopRouteButtonWasPressed(_ sender: UIButton) {
-        sender.isSelected.toggle()
-        if sender.isSelected == true {
-            loadGeoJson(routetype: "LoopRoute")
-        }
-        else {
-            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "LoopRoute"))!)
-            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "LoopRoute"))!)
-        }
-    }
-    
-    @objc func upperCampusRouteButtonWasPressed(_ sender: UIButton) {
-        sender.isSelected.toggle()
-        if sender.isSelected == true {
-            loadGeoJson(routetype: "UCRoute")
-        }
-        else {
-            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "UCRoute"))!)
-            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "UCRoute"))!)
-        }
-    }
     
     func loadGeoJson(routetype: String) {
         DispatchQueue.global().async {
@@ -539,27 +482,68 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         label.heightAnchor.constraint(equalToConstant: label.labelHeight).isActive = true
         return label
     }
-
+    
+    // =======================================================================
+    // MARK: - Buttons
+    // =======================================================================
+    
+    func setupLoopRouteButton() {
+        loopRouteButton = SymbolButton(symbolName: "", symbolWeight: .regular, symbolColor: .systemRed, backgroundColor: .systemBackground, size: 50, symbolScale: .default)
+        loopRouteButton?.setTitle("L", for: .normal)
+        loopRouteButton?.setTitleColor(.systemBlue, for: .normal)
+        loopRouteButton?.setTitleColor(.systemBackground, for: .selected)
+        loopRouteButton?.setBackgroundColor(color: .systemBlue, forState: .selected)
+        loopRouteButton?.titleLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 24)
+        loopRouteButton?.addTarget(self, action: #selector(loopRouteButtonWasPressed), for: .touchUpInside)
+        view.addSubview(loopRouteButton!)
+        loopRouteButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40).isActive = true
+        loopRouteButton?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+    }
+    
+    func setupUpperCampusRouteButton() {
+        upperCampusRouteButton = SymbolButton(symbolName: "", symbolWeight: .regular, symbolColor: .systemRed, backgroundColor: .systemBackground, size: 50, symbolScale: .default)
+        upperCampusRouteButton?.setTitle("UC", for: .normal)
+        upperCampusRouteButton?.setTitleColor(.systemRed, for: .normal)
+        upperCampusRouteButton?.setTitleColor(.systemBackground, for: .selected)
+        upperCampusRouteButton?.setBackgroundColor(color: .systemRed, forState: .selected)
+        upperCampusRouteButton?.titleLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 24)
+        upperCampusRouteButton?.addTarget(self, action: #selector(upperCampusRouteButtonWasPressed), for: .touchUpInside)
+        view.addSubview(upperCampusRouteButton!)
+        upperCampusRouteButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
+        upperCampusRouteButton?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+    }
+    
+    @objc func loopRouteButtonWasPressed(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        if sender.isSelected == true {
+            loadGeoJson(routetype: "LoopRoute")
+        }
+        else {
+            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "LoopRoute"))!)
+            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "LoopRoute"))!)
+        }
+    }
+    
+    @objc func upperCampusRouteButtonWasPressed(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        if sender.isSelected == true {
+            loadGeoJson(routetype: "UCRoute")
+        }
+        else {
+            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "UCRoute"))!)
+            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "UCRoute"))!)
+        }
+    }
     
     func setupLocationButton() {
         userLocationButton = SymbolButton(symbolName: "location.fill", symbolWeight: UIImage.SymbolWeight.medium, symbolColor: .systemBlue, backgroundColor: .systemBackground, size: 50, symbolScale: .large)
         userLocationButton?.addTarget(self, action: #selector(locationButtonTapped), for: .touchUpInside)
         view.addSubview(userLocationButton!)
         userLocationButton?.translatesAutoresizingMaskIntoConstraints = false
-        userLocationButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
+        userLocationButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40).isActive = true
         userLocationButton?.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
      }
     
-    //when screen was moved button must appear to give an option to set a tracking mode
-    func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        if let userLocationButton = userLocationButton {
-            updateArrowForTrackingMode(mode: mode, button: userLocationButton)
-        }
-    }
-    func mapView(_ mapView: MGLMapView, regionDidChangeWith reason: MGLCameraChangeReason, animated: Bool) {
-        
-    }
-
     @objc func locationButtonTapped(sender: SymbolButton) {
         //Jump to user location, but don't actually follow it.
         //print("locationButtonTapped")
@@ -580,11 +564,19 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         }
     }
     
+    //When screen was moved button must appear to give an option to set a tracking mode
+    func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
+        if let userLocationButton = userLocationButton {
+            updateArrowForTrackingMode(mode: mode, button: userLocationButton)
+        }
+    }
+    
+    //This adds the circular "i" button to bring up the "Info & Settings" view
     func setupInfoButton() {
         let infoButton = SymbolButton(symbolName: "info.circle", symbolWeight: UIImage.SymbolWeight.medium, symbolColor: .label, backgroundColor: .systemBackground, size: 50, symbolScale: .large)
         infoButton.addTarget(self, action: #selector(infoSegue), for: .touchUpInside)
         view.addSubview(infoButton)
-        infoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -110).isActive = true
+        infoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
         infoButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
     }
     

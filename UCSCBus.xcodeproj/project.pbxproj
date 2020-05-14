@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		159C5FCE246D07C100D41D3F /* SF-Pro-Display-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 159C5FCD246D07C100D41D3F /* SF-Pro-Display-Heavy.otf */; };
+		15657187246DF80B001E012A /* SF-Pro-Display-Heavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 15657186246DF80B001E012A /* SF-Pro-Display-Heavy.otf */; };
+		1565718A246E07E9001E012A /* SF-Pro-Display-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 15657189246E07E9001E012A /* SF-Pro-Display-Light.otf */; };
+		1565718C246E07F2001E012A /* SF-Pro-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1565718B246E07F2001E012A /* SF-Pro-Display-Medium.otf */; };
+		1565718E246E0800001E012A /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1565718D246E0800001E012A /* SF-Pro-Display-Regular.otf */; };
+		15657190246E0872001E012A /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1565718F246E0872001E012A /* SF-Pro-Display-Bold.otf */; };
 		159C5FD6246D107800D41D3F /* SymbolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159C5FD5246D107800D41D3F /* SymbolButton.swift */; };
 		40AE3AFE8E184ED453352E32 /* Pods_UCSCBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802A46633472885C25EB655B /* Pods_UCSCBus.framework */; };
 		462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */ = {isa = PBXBuildFile; fileRef = 462FFF2923EBE441003848F4 /* bus_stop_data.csv */; };
@@ -28,7 +32,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		159C5FCD246D07C100D41D3F /* SF-Pro-Display-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Heavy.otf"; sourceTree = "<group>"; };
+		15657186246DF80B001E012A /* SF-Pro-Display-Heavy.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Heavy.otf"; sourceTree = "<group>"; };
+		15657189246E07E9001E012A /* SF-Pro-Display-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Light.otf"; sourceTree = "<group>"; };
+		1565718B246E07F2001E012A /* SF-Pro-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Medium.otf"; sourceTree = "<group>"; };
+		1565718D246E0800001E012A /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
+		1565718F246E0872001E012A /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
 		159C5FD5246D107800D41D3F /* SymbolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SymbolButton.swift; sourceTree = "<group>"; };
 		462FFF2923EBE441003848F4 /* bus_stop_data.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bus_stop_data.csv; sourceTree = "<group>"; };
 		467C91E2246D13F400CB8BD4 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
@@ -95,6 +103,11 @@
 		807345CE2412063300D73EB4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				15657186246DF80B001E012A /* SF-Pro-Display-Heavy.otf */,
+				1565718F246E0872001E012A /* SF-Pro-Display-Bold.otf */,
+				1565718B246E07F2001E012A /* SF-Pro-Display-Medium.otf */,
+				1565718D246E0800001E012A /* SF-Pro-Display-Regular.otf */,
+				15657189246E07E9001E012A /* SF-Pro-Display-Light.otf */,
 				807B7B6C23DFE5B300609EC8 /* Assets.xcassets */,
 				462FFF2923EBE441003848F4 /* bus_stop_data.csv */,
 				807B7B6E23DFE5B300609EC8 /* LaunchScreen.storyboard */,
@@ -125,16 +138,15 @@
 			isa = PBXGroup;
 			children = (
 				807B7B6723DFE5B200609EC8 /* MapViewController+MGLMap.swift */,
-				46D7B37F2455EE6700960A8D /* LoopRoute.geojson */,
-				46D7B3812455F41A00960A8D /* UCRoute.geojson */,
+				467C91E2246D13F400CB8BD4 /* InfoViewController.swift */,
 				80A7E796244E74870070C325 /* NoBussesAvailableUILabel.swift */,
 				80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */,
 				8063D89224046F63001FFA90 /* MapModel.swift */,
 				80B7347223E51F07002A63E9 /* Bus.swift */,
-				807B7B7123DFE5B300609EC8 /* Info.plist */,
 				159C5FD5246D107800D41D3F /* SymbolButton.swift */,
-				159C5FCD246D07C100D41D3F /* SF-Pro-Display-Heavy.otf */,
-				467C91E2246D13F400CB8BD4 /* InfoViewController.swift */,
+				807B7B7123DFE5B300609EC8 /* Info.plist */,
+				46D7B37F2455EE6700960A8D /* LoopRoute.geojson */,
+				46D7B3812455F41A00960A8D /* UCRoute.geojson */,
 				807345CE2412063300D73EB4 /* Supporting Files */,
 				807345CD2412060100D73EB4 /* etc */,
 			);
@@ -212,11 +224,15 @@
 			files = (
 				46D7B3802455EE6700960A8D /* LoopRoute.geojson in Resources */,
 				807B7B7023DFE5B300609EC8 /* LaunchScreen.storyboard in Resources */,
-				159C5FCE246D07C100D41D3F /* SF-Pro-Display-Heavy.otf in Resources */,
+				15657187246DF80B001E012A /* SF-Pro-Display-Heavy.otf in Resources */,
 				807B7B6D23DFE5B300609EC8 /* Assets.xcassets in Resources */,
 				807B7B6B23DFE5B200609EC8 /* Main.storyboard in Resources */,
 				462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */,
+				1565718C246E07F2001E012A /* SF-Pro-Display-Medium.otf in Resources */,
+				1565718A246E07E9001E012A /* SF-Pro-Display-Light.otf in Resources */,
+				1565718E246E0800001E012A /* SF-Pro-Display-Regular.otf in Resources */,
 				46D7B3822455F41A00960A8D /* UCRoute.geojson in Resources */,
+				15657190246E0872001E012A /* SF-Pro-Display-Bold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,7 +440,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3S8Y6C28BB;
+				DEVELOPMENT_TEAM = SS74D43GDA;
 				INFOPLIST_FILE = UCSCBus/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -444,7 +460,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3S8Y6C28BB;
+				DEVELOPMENT_TEAM = SS74D43GDA;
 				INFOPLIST_FILE = UCSCBus/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
