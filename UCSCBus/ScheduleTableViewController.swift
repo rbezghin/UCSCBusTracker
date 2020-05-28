@@ -4,12 +4,21 @@
 //
 //  Created by Radomyr Bezghin on 2/1/20.
 //  Copyright © 2020 Radomyr Bezghin. All rights reserved.
-//
+//TO DO;
+//create a request to the DB using bus stop name
+//parse ETAs
+//display them
+//make cell nicer
+//make tableView nicer maybe?
+//add notifications (prof request)
+
+
 
 import UIKit
 
 class ScheduleTableViewController: UITableViewController {
     var data = [String]()
+    var busStopTitle: String?
     //TEMP DATA
     let tempDataNum = 6
     let tempETA = [1,7,15,23,27,30]
@@ -23,8 +32,8 @@ class ScheduleTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.title = "Bus stop name"
-//        self.tableView.sectionHeaderHeight = 100
+        //time to get the ETA data
+        performDatabaseRequest()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -39,7 +48,7 @@ class ScheduleTableViewController: UITableViewController {
         let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.size.width, height: 100.0))
         let label = UILabel()
         label.frame = CGRect.init(x: 5, y: 5, width: headerView.frame.width-10, height: headerView.frame.height-10)
-        label.text = "Science Hill"
+        label.text = busStopTitle
         label.textAlignment = .center
         headerView.addSubview(label)
         return headerView
@@ -52,7 +61,7 @@ class ScheduleTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: "cell")
 
-        var date = Date()
+        let date = Date()
         var calendar = Calendar.current
         if let timeZone = TimeZone(identifier: "PST") {
            calendar.timeZone = timeZone
@@ -66,10 +75,8 @@ class ScheduleTableViewController: UITableViewController {
                 hour = 00
             }
         }
-        
         cell.textLabel?.text = tempBusName[indexPath.row]
         cell.detailTextLabel?.text = "Scheduled at \(hour):\(minute+tempETA[indexPath.row])"
-        
         cell.imageView?.image = busImage
         cell.accessoryView = UIView(frame: CGRect(x: 0, y: 0, width: rowHeight-20, height: rowHeight-20))
         let textLabel = UILabel(frame: CGRect(x: 0, y: 0, width: (cell.accessoryView?.frame.width)!, height: (cell.accessoryView?.frame.width)!))
@@ -80,13 +87,14 @@ class ScheduleTableViewController: UITableViewController {
         textLabel.textAlignment = .center
         textLabel.lineBreakMode = .byWordWrapping
         cell.accessoryView?.addSubview(textLabel)
-        
-        //textLabel.centerXAnchor.constraint(equalTo: cell.accessoryView!.centerXAnchor).isActive = true
-        //textLabel.centerYAnchor.constraint(equalTo: cell.accessoryView!.centerYAnchor).isActive = true
-        
         return cell
     }
     
+    /// Creates a resized icon for each cell
+    /// - Parameters:
+    ///   - size: enter a size for image as CGSize
+    ///   - name: name for image in your assets
+    /// - Returns: returns an optional UIImage
     func createImage(withSize size: CGSize,withName name: String) -> UIImage?{
         guard  let image = UIImage(named: name) else {return nil}
         var newImage: UIImage
@@ -95,5 +103,11 @@ class ScheduleTableViewController: UITableViewController {
              image.draw(in: CGRect(origin: .zero, size: size))
         }
         return newImage
+    }
+    /// Performs a request to the database
+    /// which is made using the busStopTitle to differentiate it from other stops
+    /// as a result it should receive ETA's for this specific busStop
+    func performDatabaseRequest(){
+        
     }
 }
