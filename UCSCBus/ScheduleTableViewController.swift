@@ -4,7 +4,15 @@
 //
 //  Created by Radomyr Bezghin on 2/1/20.
 //  Copyright © 2020 Radomyr Bezghin. All rights reserved.
-//
+//TO DO;
+//create a request to the DB using bus stop name
+//parse ETAs
+//display them
+//make cell nicer
+//make tableView nicer maybe?
+//add notifications (prof request)
+
+
 
 import UIKit
 
@@ -24,6 +32,8 @@ class ScheduleTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //time to get the ETA data
+        performDatabaseRequest()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -93,5 +103,11 @@ class ScheduleTableViewController: UITableViewController {
              image.draw(in: CGRect(origin: .zero, size: size))
         }
         return newImage
+    }
+    /// Performs a request to the database
+    /// which is made using the busStopTitle to differentiate it from other stops
+    /// as a result it should receive ETA's for this specific busStop
+    func performDatabaseRequest(){
+        
     }
 }
