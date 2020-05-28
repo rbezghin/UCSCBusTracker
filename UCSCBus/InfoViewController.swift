@@ -83,8 +83,8 @@ class InfoViewController: UIViewController {
         tableTextView.attributedText = attributedTable
         self.view.addSubview(tableTextView)
         //tableTextView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
-        tableTextView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 40).isActive = true
-        tableTextView.updateConstraints()
+        //tableTextView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 40).isActive = true
+        //tableTextView.updateConstraints()
     }
 
     func createNavBar() {
@@ -142,6 +142,8 @@ class InfoViewController: UIViewController {
         view.addSubview(title)
         
     }
+    
+    
     
 }
 extension String {

@@ -22,6 +22,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     var userLocationButton: SymbolButton?
     var loopRouteButton: SymbolButton?
     var upperCampusRouteButton: SymbolButton?
+    var nightCoreRouteButton: SymbolButton?
     var label: NoBussesAvailableUILabel?
     let durationAndDelay = 0.7 //how long animation works
     
@@ -39,6 +40,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         setupBussesNotRunningLabel()
         setupLoopRouteButton()
         setupUpperCampusRouteButton()
+        setupNightCoreRouteButton()
         setupInfoButton()
     }
     
@@ -124,10 +126,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
 
         // Set the line color to a constant blue color.
         if (routetype == "LoopRoute") {
-            layer.lineColor = NSExpression(forConstantValue: UIColor(red: 59/255, green: 178/255, blue: 208/255, alpha: 1))
+            layer.lineColor = NSExpression(forConstantValue: UIColor.systemBlue)
         }
         else if (routetype == "UCRoute") {
-            layer.lineColor = NSExpression(forConstantValue: UIColor(red: 224/255, green: 0/255, blue: 26/255, alpha: 1))
+            layer.lineColor = NSExpression(forConstantValue: UIColor.systemRed)
 
         }
 
@@ -521,6 +523,20 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         view.addSubview(upperCampusRouteButton!)
         upperCampusRouteButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
         upperCampusRouteButton?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+    }
+    
+    func setupNightCoreRouteButton() {
+        nightCoreRouteButton = SymbolButton(symbolName: "", symbolWeight: .regular, symbolColor: .systemIndigo, backgroundColor: .systemBackground, size: 50, symbolScale: .default)
+        nightCoreRouteButton?.setTitle("NC", for: .normal)
+        nightCoreRouteButton?.setTitleColor(.systemIndigo, for: .normal)
+        nightCoreRouteButton?.setTitleColor(.systemBackground, for: .selected)
+        nightCoreRouteButton?.setBackgroundColor(color: .systemIndigo, forState: .selected)
+        nightCoreRouteButton?.titleLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 24)
+        // TODO: Change "#selector" to new function
+        nightCoreRouteButton?.addTarget(self, action: #selector(upperCampusRouteButtonWasPressed), for: .touchUpInside)
+        view.addSubview(nightCoreRouteButton!)
+        nightCoreRouteButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -160).isActive = true
+        nightCoreRouteButton?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
     }
     
     @objc func loopRouteButtonWasPressed(_ sender: UIButton) {
