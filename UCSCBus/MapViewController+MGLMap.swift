@@ -240,94 +240,104 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
                       "Kerr Hall Bridge","Rachel Carson & Porter (Inner)","Oakes (Inner)","West Remote Lot Interior",
                       "Arboretum (Inner)","High and Western (Inner)","Campus Entrance (Barn Theater)"]
         
-    func mapView(_ mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {
-        var etas = [String]()
-        var noETA = false
-        
-        // Setting up HTTP POST request
-        let headers = [
-          "content-type": "application/x-www-form-urlencoded",
-          "cache-control": "no-cache",
-          "postman-token": "23cb4108-e24b-adab-b979-e37fd8f78622"
-        ]
-        //FIXME:  fatal error: Unexpectedly found nil while unwrapping an Optional value: line 180
-        guard let title = annotation.title else { print("error unwrapping in calloutAccessoryControlTapped"); return}
-        guard let titleTitle = title else { print("error unwrapping in calloutAccessoryControlTapped"); return}
-        let tryName = csvToDatabase[titleTitle] // use database name for request
-        guard let name = tryName else { print("error receiving from DB in calloutAccessoryControlTapped"); return}
-        let stopString = "bus_stop=" + name
-        var location = "outer_eta"
-        for stop in innerStops {
-            if annotation.title!! == stop {
-                location = "inner_eta"
-            }
-        }
-        let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_stops/" + location + ".php"
-        let postData = NSMutableData(data: stopString.data(using: String.Encoding.utf8)!)
-        var request = URLRequest(url: URL(string: urlString)! as URL,
-                                          cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
-                                          timeoutInterval: 10.0)
-        request.httpMethod = "POST"
-        request.allHTTPHeaderFields = headers
-        request.httpBody = postData as Data
-        print(stopString)
-        print(urlString)
-
-        // Sending HTTP POST request and processing response
-        let group = DispatchGroup()
-        group.enter()
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
-            if (error != nil) {
-                print(error!)
-            }
-            DispatchQueue.main.async {
-                do {
-                    let jsonObject = try JSONSerialization.jsonObject(with: data!)
-                    guard let jsonArray = jsonObject as? [String: Any] else{
-                        print("JsonSerialization Failed")
-                        return
-                        }
-                    if let etaTableRows = jsonArray["rows"] as? NSArray{
-                        for etaData in etaTableRows{
-                            let etaDictionary = etaData as? NSDictionary
-                            let busType = etaDictionary!["bus_type"] as! String
-                            let timeAway = String(etaDictionary!["time_away"] as! Int)
-                            let etaCell = busType + " is " + timeAway + " minutes away"
-                            etas.append(etaCell)
-                        }
-                    }
-                } catch {
-                    print("JSONSerialization error:", error)
-                    noETA = true
-                }
-                 group.leave()
-            }
-        })
-        dataTask.resume()
-        group.notify(queue: .main) { // Wait for HTTP section to complete before adding data to table
-            mapView.deselectAnnotation(annotation, animated: false)
-            let schedule = ScheduleTableViewController()
-            schedule.data.append(annotation.title!! + " ETAs:")
-            for item in etas {
-                schedule.data.append(item)
-            }
-            if noETA == true {
-                schedule.data.append("Sorry, ETAs not available!")
-            }
-            schedule.data.append("") // two line buffer
-            schedule.data.append("")
+    func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
+        let schedule = ScheduleTableViewController()
+        if let optionalTitle = annotation.title, let title = optionalTitle{
+            schedule.busStopTitle = title
             self.present(schedule, animated: true, completion: nil)
         }
-    }
 
-    func mapView(_ mapView: MGLMapView, rightCalloutAccessoryViewFor     annotation: MGLAnnotation) -> UIView? {
-        return UIButton(type: .detailDisclosure)
     }
+    
+//    func mapView(_ mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {
+//        var etas = [String]()
+//        var noETA = false
+//
+//        // Setting up HTTP POST request
+//        let headers = [
+//          "content-type": "application/x-www-form-urlencoded",
+//          "cache-control": "no-cache",
+//          "postman-token": "23cb4108-e24b-adab-b979-e37fd8f78622"
+//        ]
+//        //FIXME:  fatal error: Unexpectedly found nil while unwrapping an Optional value: line 180
+//        guard let title = annotation.title else { print("error unwrapping in calloutAccessoryControlTapped"); return}
+//        guard let titleTitle = title else { print("error unwrapping in calloutAccessoryControlTapped"); return}
+//        let tryName = csvToDatabase[titleTitle] // use database name for request
+//        guard let name = tryName else { print("error receiving from DB in calloutAccessoryControlTapped"); return}
+//        let stopString = "bus_stop=" + name
+//        var location = "outer_eta"
+//        for stop in innerStops {
+//            if annotation.title!! == stop {
+//                location = "inner_eta"
+//            }
+//        }
+//        let urlString = "https://ucsc-bts3.soe.ucsc.edu/bus_stops/" + location + ".php"
+//        let postData = NSMutableData(data: stopString.data(using: String.Encoding.utf8)!)
+//        var request = URLRequest(url: URL(string: urlString)! as URL,
+//                                          cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+//                                          timeoutInterval: 10.0)
+//        request.httpMethod = "POST"
+//        request.allHTTPHeaderFields = headers
+//        request.httpBody = postData as Data
+//        print(stopString)
+//        print(urlString)
+//
+//        // Sending HTTP POST request and processing response
+//        let group = DispatchGroup()
+//        group.enter()
+//        let session = URLSession.shared
+//        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
+//            if (error != nil) {
+//                print(error!)
+//            }
+//            DispatchQueue.main.async {
+//                do {
+//                    let jsonObject = try JSONSerialization.jsonObject(with: data!)
+//                    guard let jsonArray = jsonObject as? [String: Any] else{
+//                        print("JsonSerialization Failed")
+//                        return
+//                        }
+//                    if let etaTableRows = jsonArray["rows"] as? NSArray{
+//                        for etaData in etaTableRows{
+//                            let etaDictionary = etaData as? NSDictionary
+//                            let busType = etaDictionary!["bus_type"] as! String
+//                            let timeAway = String(etaDictionary!["time_away"] as! Int)
+//                            let etaCell = busType + " is " + timeAway + " minutes away"
+//                            etas.append(etaCell)
+//                        }
+//                    }
+//                } catch {
+//                    print("JSONSerialization error:", error)
+//                    noETA = true
+//                }
+//                 group.leave()
+//            }
+//        })
+//        dataTask.resume()
+//        group.notify(queue: .main) { // Wait for HTTP section to complete before adding data to table
+//            mapView.deselectAnnotation(annotation, animated: false)
+//            let schedule = ScheduleTableViewController()
+//            schedule.data.append(annotation.title!! + " ETAs:")
+//            for item in etas {
+//                schedule.data.append(item)
+//            }
+//            if noETA == true {
+//                schedule.data.append("Sorry, ETAs not available!")
+//            }
+//            schedule.data.append("") // two line buffer
+//            schedule.data.append("")
+//            self.present(schedule, animated: true, completion: nil)
+//        }
+//    }
+//
+//    func mapView(_ mapView: MGLMapView, rightCalloutAccessoryViewFor     annotation: MGLAnnotation) -> UIView? {
+//
+//        return UIButton(type: .detailDisclosure)
+//    }
 
-    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
-            return true
-        }
+//    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+//            return true
+//        }
     
     func updateBusLocationFeatures(){
         for bus in Map.busArray{
