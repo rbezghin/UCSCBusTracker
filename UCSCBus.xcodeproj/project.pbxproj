@@ -14,6 +14,7 @@
 		15657190246E0872001E012A /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1565718F246E0872001E012A /* SF-Pro-Display-Bold.otf */; };
 		159C5FD6246D107800D41D3F /* SymbolButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159C5FD5246D107800D41D3F /* SymbolButton.swift */; };
 		40AE3AFE8E184ED453352E32 /* Pods_UCSCBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 802A46633472885C25EB655B /* Pods_UCSCBus.framework */; };
+		460A5641247F0A900083CD87 /* NCRoute.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 460A563F247F0A590083CD87 /* NCRoute.geojson */; };
 		462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */ = {isa = PBXBuildFile; fileRef = 462FFF2923EBE441003848F4 /* bus_stop_data.csv */; };
 		467C91E3246D13F400CB8BD4 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467C91E2246D13F400CB8BD4 /* InfoViewController.swift */; };
 		46D7B3802455EE6700960A8D /* LoopRoute.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 46D7B37F2455EE6700960A8D /* LoopRoute.geojson */; };
@@ -38,6 +39,7 @@
 		1565718D246E0800001E012A /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
 		1565718F246E0872001E012A /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
 		159C5FD5246D107800D41D3F /* SymbolButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SymbolButton.swift; sourceTree = "<group>"; };
+		460A563F247F0A590083CD87 /* NCRoute.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = NCRoute.geojson; sourceTree = "<group>"; };
 		462FFF2923EBE441003848F4 /* bus_stop_data.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bus_stop_data.csv; sourceTree = "<group>"; };
 		467C91E2246D13F400CB8BD4 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		46D7B37F2455EE6700960A8D /* LoopRoute.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = LoopRoute.geojson; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				807B7B7123DFE5B300609EC8 /* Info.plist */,
 				46D7B37F2455EE6700960A8D /* LoopRoute.geojson */,
 				46D7B3812455F41A00960A8D /* UCRoute.geojson */,
+				460A563F247F0A590083CD87 /* NCRoute.geojson */,
 				807345CE2412063300D73EB4 /* Supporting Files */,
 				807345CD2412060100D73EB4 /* etc */,
 			);
@@ -228,6 +231,7 @@
 				807B7B6D23DFE5B300609EC8 /* Assets.xcassets in Resources */,
 				807B7B6B23DFE5B200609EC8 /* Main.storyboard in Resources */,
 				462FFF2A23EBE441003848F4 /* bus_stop_data.csv in Resources */,
+				460A5641247F0A900083CD87 /* NCRoute.geojson in Resources */,
 				1565718C246E07F2001E012A /* SF-Pro-Display-Medium.otf in Resources */,
 				1565718A246E07E9001E012A /* SF-Pro-Display-Light.otf in Resources */,
 				1565718E246E0800001E012A /* SF-Pro-Display-Regular.otf in Resources */,

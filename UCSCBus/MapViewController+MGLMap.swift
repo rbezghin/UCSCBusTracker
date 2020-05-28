@@ -130,13 +130,25 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         }
         else if (routetype == "UCRoute") {
             layer.lineColor = NSExpression(forConstantValue: UIColor.systemRed)
-
+        }
+        else if (routetype == "NCRoute") {
+            layer.lineColor = NSExpression(forConstantValue: UIColor.systemIndigo)
         }
 
         layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
                                        [14: 2, 18: 20])
         
-        style.insertLayer(layer, above: style.layer(withIdentifier: "com.mapbox.annotations.points")!) // insert route layer between annotation layer and bus layer
+        var routeIsDrawn = false
+        for x in style.layers {
+            if (x.identifier.contains("bus")) {
+                style.insertLayer(layer, below: x)
+                routeIsDrawn = true
+                break;
+            }
+        }
+        if (routeIsDrawn == false) {
+            style.insertLayer(layer, above: style.layer(withIdentifier: "com.mapbox.annotations.points")!)
+        }
     }
     
     func performTask(withSession: URLSession, withURL: URL,completion: @escaping ((()) -> Void)){
@@ -532,8 +544,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         nightCoreRouteButton?.setTitleColor(.systemBackground, for: .selected)
         nightCoreRouteButton?.setBackgroundColor(color: .systemIndigo, forState: .selected)
         nightCoreRouteButton?.titleLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 24)
-        // TODO: Change "#selector" to new function
-        nightCoreRouteButton?.addTarget(self, action: #selector(upperCampusRouteButtonWasPressed), for: .touchUpInside)
+        nightCoreRouteButton?.addTarget(self, action: #selector(nightCoreRouteButtonWasPressed), for: .touchUpInside)
         view.addSubview(nightCoreRouteButton!)
         nightCoreRouteButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -160).isActive = true
         nightCoreRouteButton?.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
@@ -558,6 +569,17 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         else {
             self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "UCRoute"))!)
             self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "UCRoute"))!)
+        }
+    }
+    
+    @objc func nightCoreRouteButtonWasPressed(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        if sender.isSelected == true {
+            loadGeoJson(routetype: "NCRoute")
+        }
+        else {
+            self.mapView.style?.removeLayer((mapView.style?.layer(withIdentifier: "NCRoute"))!)
+            self.mapView.style?.removeSource((mapView.style?.source(withIdentifier: "NCRoute"))!)
         }
     }
     
