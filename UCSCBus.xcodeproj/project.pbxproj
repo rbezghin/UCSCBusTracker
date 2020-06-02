@@ -30,6 +30,7 @@
 		80B7347323E51F07002A63E9 /* Bus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347223E51F07002A63E9 /* Bus.swift */; };
 		80B7347523E63FDB002A63E9 /* TabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347423E63FDB002A63E9 /* TabBarVC.swift */; };
 		80B7347723E644C1002A63E9 /* ScheduleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */; };
+		80E7881C2486D8FE00DAA959 /* BusETATableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E7881B2486D8FE00DAA959 /* BusETATableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		80B7347223E51F07002A63E9 /* Bus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bus.swift; sourceTree = "<group>"; };
 		80B7347423E63FDB002A63E9 /* TabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarVC.swift; sourceTree = "<group>"; };
 		80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewController.swift; sourceTree = "<group>"; };
+		80E7881B2486D8FE00DAA959 /* BusETATableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusETATableViewCell.swift; sourceTree = "<group>"; };
 		DA33ACE3930136C7E38E0F56 /* Pods-UCSCBus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UCSCBus.debug.xcconfig"; path = "Target Support Files/Pods-UCSCBus/Pods-UCSCBus.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,13 +107,13 @@
 		807345CE2412063300D73EB4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				462FFF2923EBE441003848F4 /* bus_stop_data.csv */,
 				15657186246DF80B001E012A /* SF-Pro-Display-Heavy.otf */,
 				1565718F246E0872001E012A /* SF-Pro-Display-Bold.otf */,
 				1565718B246E07F2001E012A /* SF-Pro-Display-Medium.otf */,
 				1565718D246E0800001E012A /* SF-Pro-Display-Regular.otf */,
 				15657189246E07E9001E012A /* SF-Pro-Display-Light.otf */,
 				807B7B6C23DFE5B300609EC8 /* Assets.xcassets */,
-				462FFF2923EBE441003848F4 /* bus_stop_data.csv */,
 				807B7B6E23DFE5B300609EC8 /* LaunchScreen.storyboard */,
 			);
 			path = "Supporting Files";
@@ -121,7 +123,6 @@
 			isa = PBXGroup;
 			children = (
 				807B7B6223DFE5B200609EC8 /* UCSCBus */,
-				807B7B6123DFE5B200609EC8 /* Products */,
 				9D441DA3EA0C4BAF7F3143BD /* Pods */,
 				17B5CA1169444CFD368274A2 /* Frameworks */,
 				159C5FD4246D101100D41D3F /* Recovered References */,
@@ -134,26 +135,53 @@
 				807B7B6023DFE5B200609EC8 /* UCSCBus.app */,
 			);
 			name = Products;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		807B7B6223DFE5B200609EC8 /* UCSCBus */ = {
 			isa = PBXGroup;
 			children = (
-				807B7B6723DFE5B200609EC8 /* MapViewController+MGLMap.swift */,
-				467C91E2246D13F400CB8BD4 /* InfoViewController.swift */,
-				80A7E796244E74870070C325 /* NoBussesAvailableUILabel.swift */,
-				80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */,
-				8063D89224046F63001FFA90 /* MapModel.swift */,
-				80B7347223E51F07002A63E9 /* Bus.swift */,
-				159C5FD5246D107800D41D3F /* SymbolButton.swift */,
+				80E7881D2486D91800DAA959 /* ScheduleTableViewController */,
+				80E7881E2486D93500DAA959 /* MapViewController */,
+				80E7881F2486D95500DAA959 /* InfoViewController */,
 				807B7B7123DFE5B300609EC8 /* Info.plist */,
-				46D7B37F2455EE6700960A8D /* LoopRoute.geojson */,
-				46D7B3812455F41A00960A8D /* UCRoute.geojson */,
-				460A563F247F0A590083CD87 /* NCRoute.geojson */,
 				807345CE2412063300D73EB4 /* Supporting Files */,
+				807B7B6123DFE5B200609EC8 /* Products */,
 				807345CD2412060100D73EB4 /* etc */,
 			);
 			path = UCSCBus;
+			sourceTree = "<group>";
+		};
+		80E7881D2486D91800DAA959 /* ScheduleTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */,
+				80E7881B2486D8FE00DAA959 /* BusETATableViewCell.swift */,
+			);
+			path = ScheduleTableViewController;
+			sourceTree = "<group>";
+		};
+		80E7881E2486D93500DAA959 /* MapViewController */ = {
+			isa = PBXGroup;
+			children = (
+				807B7B6723DFE5B200609EC8 /* MapViewController+MGLMap.swift */,
+				80A7E796244E74870070C325 /* NoBussesAvailableUILabel.swift */,
+				8063D89224046F63001FFA90 /* MapModel.swift */,
+				80B7347223E51F07002A63E9 /* Bus.swift */,
+				46D7B37F2455EE6700960A8D /* LoopRoute.geojson */,
+				46D7B3812455F41A00960A8D /* UCRoute.geojson */,
+				460A563F247F0A590083CD87 /* NCRoute.geojson */,
+			);
+			path = MapViewController;
+			sourceTree = "<group>";
+		};
+		80E7881F2486D95500DAA959 /* InfoViewController */ = {
+			isa = PBXGroup;
+			children = (
+				467C91E2246D13F400CB8BD4 /* InfoViewController.swift */,
+				159C5FD5246D107800D41D3F /* SymbolButton.swift */,
+			);
+			path = InfoViewController;
 			sourceTree = "<group>";
 		};
 		9D441DA3EA0C4BAF7F3143BD /* Pods */ = {
@@ -292,6 +320,7 @@
 				807B7B6823DFE5B200609EC8 /* MapViewController+MGLMap.swift in Sources */,
 				807B7B6423DFE5B200609EC8 /* AppDelegate.swift in Sources */,
 				80B7347323E51F07002A63E9 /* Bus.swift in Sources */,
+				80E7881C2486D8FE00DAA959 /* BusETATableViewCell.swift in Sources */,
 				80B7347523E63FDB002A63E9 /* TabBarVC.swift in Sources */,
 				467C91E3246D13F400CB8BD4 /* InfoViewController.swift in Sources */,
 				8063D89324046F63001FFA90 /* MapModel.swift in Sources */,
