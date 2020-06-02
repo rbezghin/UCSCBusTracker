@@ -8,9 +8,6 @@
 
 import Mapbox
 import Foundation
-//import MapboxCoreNavigation
-//import MapboxNavigation
-//import MapboxDirections
 
 class MapViewController: UIViewController, MGLMapViewDelegate {
     let SizesAndConstants = ConstantSizes()
@@ -24,7 +21,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     var upperCampusRouteButton: SymbolButton?
     var nightCoreRouteButton: SymbolButton?
     var label: NoBussesAvailableUILabel?
-    let durationAndDelay = 0.7 //how long animation works
+    let durationAndDelay = 0.5 //how long animation works
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +40,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         setupNightCoreRouteButton()
         setupInfoButton()
     }
-    
+    // =======================================================================
+    // MARK: - Mapbox
+    // =======================================================================
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
         if mapView.userLocation?.coordinate.latitude == -180 { // if user doesn't allow their location
             mapView.setCenter(CLLocationCoordinate2D(latitude: 36.988792, longitude: -122.059351), zoomLevel: 13.2, animated: false)
@@ -53,7 +52,46 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             mapView.userTrackingMode = .follow
         }
     }
-    
+    /// When screen was moved button must appear to give an option to set a tracking mode
+    func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
+        if let userLocationButton = userLocationButton {
+            updateArrowForTrackingMode(mode: mode, button: userLocationButton)
+        }
+    }
+    /// Bus stops are the only annotations on this map, when they are tapped, a ScheduleTableViewController() is peresented that displays bus schedule & ETA
+    func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
+        let schedule = ScheduleTableViewController()
+        if let optionalTitle = annotation.title, let title = optionalTitle{
+            schedule.busStopTitle = title
+            self.present(schedule, animated: true, completion: nil)
+        }
+
+    }
+    ///Add an image only to bus points
+    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        if let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName){
+            let annotationImage = MGLAnnotationImage(image: image, reuseIdentifier: SizesAndConstants.busStopIconReuseIdentifier)
+            return annotationImage
+        }
+        return nil
+    }
+    func mapViewRegionIsChanging(_ mapView: MGLMapView) {
+        let zoomLevel = mapView.zoomLevel
+        if let annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: SizesAndConstants.busStopIconReuseIdentifier){
+            if zoomLevel < 16 {
+                let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName)
+                if let image = image{
+                    annotationImage.image = image
+                }
+            }
+            else{
+                let image = createImage(withSize: SizesAndConstants.visibleBusIconSize, withName: SizesAndConstants.busStopImageName)
+                if let image = image{
+                    annotationImage.image = image
+                }
+            }
+        }
+    }
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         //**********busses info
         //
@@ -81,7 +119,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             let stop = MGLPointAnnotation()
             stops.append(stop)
         }
-        
         // Define annotated points using bus stop names and coordinates from CSV file
         for item in 0...csvRows.count-2 {
             stops[item].coordinate = CLLocationCoordinate2D(latitude: Double(csvRows[item][1])!, longitude: Double(csvRows[item][2])!)
@@ -90,55 +127,56 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             mapView.addAnnotation(stops[item])
         }
     }
-    
-    
-    
-    func loadGeoJson(routetype: String) {
-        DispatchQueue.global().async {
-            guard let jsonUrl = Bundle.main.url(forResource: routetype, withExtension: "geojson") else {
-                preconditionFailure("Failed to load local GeoJSON file")
+    /// Main function that updates how buses are displayed on a map by uploading coordinates into Map object
+    /// needs more explanation...
+    func updateBusLocationFeatures(){
+        for bus in Map.busArray{
+            let feature = bus.getBusFeature()
+            guard let style = mapView.style else { return }
+            let source: MGLShapeSource
+            //if there already exist source and layer with busses it must be removed and new one added
+            if let existingSource = style.source(withIdentifier: bus.sourceIdentifier) {
+                //convert features into shapes and add them to the existing source
+                let shapeSource = existingSource as! MGLShapeSource
+                let collection = MGLShapeCollectionFeature(shapes: [feature])
+                shapeSource.shape = collection
+                let busLayer = style.layer(withIdentifier: bus.busLayerIdentifier) as! MGLSymbolStyleLayer
+                let bearing = bus.getBearing()
+                if bearing != 0 {
+                    busLayer.iconRotation = NSExpression(forConstantValue: (bearing - 90))
+                }
             }
-            guard let jsonData = try? Data(contentsOf: jsonUrl) else {
-                preconditionFailure("Failed to parse GeoJSON file")
-            }
-            DispatchQueue.main.async {
-                self.drawPolyline(geoJson: jsonData, routetype: routetype)
+            else{
+                //new source
+                source = MGLShapeSource(identifier: bus.sourceIdentifier, features: [feature], options: nil)
+                style.addSource(source)
+                //CUSTOM BUS ICON
+                let busIconName = bus.busType
+                let busImage: UIImage = {
+                    let image = UIImage(named: busIconName)
+                    let size = CGSize(width: 25, height: 25)
+                    var newImage: UIImage
+                    let renderer = UIGraphicsImageRenderer(size: size)
+                    newImage = renderer.image { (context) in
+                        image?.draw(in: CGRect(origin: .zero, size: size))
+                    }
+                    return newImage
+                }()
+                
+                style.setImage(busImage, forName: bus.busImageName)
+                let busLayer = MGLSymbolStyleLayer(identifier: bus.busLayerIdentifier, source: source)
+                busLayer.iconImageName = NSExpression(forConstantValue: bus.busImageName)
+                busLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
+                busLayer.iconRotation = NSExpression(forConstantValue: 0)
+                busLayer.iconOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",[5.9: 0, 6: 1])
+                busLayer.iconScale = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [10:1.7, 14: 1.3, 15: 1.4, 16: 1.4, 18: 1.5, 19: 1.6   ])
+                style.addLayer(busLayer)
             }
         }
     }
-    
-    func drawPolyline(geoJson: Data, routetype: String) {
-        guard let style = self.mapView.style else { return }
-
-        guard let shapeFromGeoJSON = try? MGLShape(data: geoJson, encoding: String.Encoding.utf8.rawValue) else {
-            fatalError("Could not generate MGLShape")
-        }
-
-        let source = MGLShapeSource(identifier: routetype, shape: shapeFromGeoJSON, options: nil)
-        style.addSource(source)
-
-        // Create new layer for the line.
-        let layer = MGLLineStyleLayer(identifier: routetype, source: source)
-
-        // Set the line join and cap to a rounded end.
-        layer.lineJoin = NSExpression(forConstantValue: "round")
-        layer.lineCap = NSExpression(forConstantValue: "round")
-
-        // Set the line color to a constant blue color.
-        if (routetype == "LoopRoute") {
-            layer.lineColor = NSExpression(forConstantValue: UIColor.systemBlue)
-        }
-        else if (routetype == "UCRoute") {
-            layer.lineColor = NSExpression(forConstantValue: UIColor.systemRed)
-
-        }
-
-        layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-                                       [14: 2, 18: 20])
-        
-        style.insertLayer(layer, above: style.layer(withIdentifier: "com.mapbox.annotations.points")!) // insert route layer between annotation layer and bus layer
-    }
-    
+    // =======================================================================
+    // MARK: - Networking
+    // =======================================================================
     func performTask(withSession: URLSession, withURL: URL,completion: @escaping ((()) -> Void)){
         let task = withSession.dataTask(with: withURL) { (data, response, error) in
             if error != nil {
@@ -176,23 +214,30 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
                         Map.updateBusArray(newBus: bus)
                     }
                 }
-//                let testlocation = CLLocationCoordinate2D(latitude: 36.995699, longitude: -122.055357)
-//                let testbus = Bus(id: 488392, busType: "NIGHT CORE", coordinate: testlocation)
-//                Map.updateBusArray(newBus: testbus)
-//                let testlocation1 = CLLocationCoordinate2D(latitude: 36.992631, longitude: -122.059928)
-//                let testbus1 = Bus(id: 499282, busType: "LOOP", coordinate: testlocation1)
-//                Map.updateBusArray(newBus: testbus1)
-//                let testlocation2 = CLLocationCoordinate2D(latitude: 36.990631, longitude: -122.059928)
-//                let testbus2 = Bus(id: 1234123, busType: "LOOP OUT OF SERVICE AT THE BARN THEATER", coordinate: testlocation2)
-//                Map.updateBusArray(newBus: testbus2)
-//                let testlocation3 = CLLocationCoordinate2D(latitude: 36.988631, longitude: -122.059928)
-//                let testbus3 = Bus(id: 24594984, busType: "UPPER CAMPUS", coordinate: testlocation3)
-//                Map.updateBusArray(newBus: testbus3)
             }
         }catch let error {
             print(error.localizedDescription)
         }
     }
+    // =======================================================================
+    // MARK: - Utility functions
+    // =======================================================================
+    let csvToDatabase: Dictionary = ["Campus Entrance (Main)":"Main Entrance","Lower Campus (Outer)":"Lower Campus","Village and the Farm (Outer)":"Village/Farm",
+                              "East Remote Lot Interior":"East Remote Interior","East Remote Parking (Outer)":"East Remote","East Field House":"East Field House",
+                              "Cowell & Stevenson (Outer)":"Bookstore","Crown & Merrill":"Crown/Merrill","College 9 & 10 (Outer)":"Colleges 9&10/Health Center",
+                              "Science Hill (Outer)":"Science Hill","Kresge (Outer)":"Kresge","Rachel Carson & Porter (Outer)":"Porter/Rachel Carson",
+                              "Family Student Housing":"Family Student Housing","Oakes (Outer)":"Oakes/Family Student Housing","Arboretum (Outer)":"Arboretum",
+                              "High and Western (Outer)":"Western Drive","Lower Campus (Inner)":"Lower Campus","Village and the Farm (Inner)":"Village/Farm",
+                              "East Remote Parking (Inner)":"East Remote","Cowell & Stevenson (Inner)":"Cowell College/Bookstore",
+                              "College 9 & 10 (Inner)":"Colleges 9&10/Health Center","Science Hill (Inner)":"Science Hill","Kresge (Inner)":"Kresge",
+                              "Kerr Hall Bridge":"Kerr Hall","Rachel Carson & Porter (Inner)":"Porter/Rachel Carson",
+                              "Oakes (Inner)":"Oakes/Rachel Carson","West Remote Lot Interior":"West Remote Interior","Arboretum (Inner)":"Arboretum",
+                              "High and Western (Inner)":"Western Drive","Campus Entrance (Barn Theater)":"Barn Theatre",]
+     
+     let innerStops = ["Lower Campus (Inner)","Village and the Farm (Inner)","East Remote Parking (Inner)",
+                       "Cowell & Stevenson (Inner)","College 9 & 10 (Inner)","Science Hill (Inner)","Kresge (Inner)",
+                       "Kerr Hall Bridge","Rachel Carson & Porter (Inner)","Oakes (Inner)","West Remote Lot Interior",
+                       "Arboretum (Inner)","High and Western (Inner)","Campus Entrance (Barn Theater)"]
     
     func csv(data: String) -> [[String]] {
         var result: [[String]] = []
@@ -225,32 +270,50 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         return cleanFile
     }
         
-    let csvToDatabase: Dictionary = ["Campus Entrance (Main)":"Main Entrance","Lower Campus (Outer)":"Lower Campus","Village and the Farm (Outer)":"Village/Farm",
-                             "East Remote Lot Interior":"East Remote Interior","East Remote Parking (Outer)":"East Remote","East Field House":"East Field House",
-                             "Cowell & Stevenson (Outer)":"Bookstore","Crown & Merrill":"Crown/Merrill","College 9 & 10 (Outer)":"Colleges 9&10/Health Center",
-                             "Science Hill (Outer)":"Science Hill","Kresge (Outer)":"Kresge","Rachel Carson & Porter (Outer)":"Porter/Rachel Carson",
-                             "Family Student Housing":"Family Student Housing","Oakes (Outer)":"Oakes/Family Student Housing","Arboretum (Outer)":"Arboretum",
-                             "High and Western (Outer)":"Western Drive","Lower Campus (Inner)":"Lower Campus","Village and the Farm (Inner)":"Village/Farm",
-                             "East Remote Parking (Inner)":"East Remote","Cowell & Stevenson (Inner)":"Cowell College/Bookstore",
-                             "College 9 & 10 (Inner)":"Colleges 9&10/Health Center","Science Hill (Inner)":"Science Hill","Kresge (Inner)":"Kresge",
-                             "Kerr Hall Bridge":"Kerr Hall","Rachel Carson & Porter (Inner)":"Porter/Rachel Carson",
-                             "Oakes (Inner)":"Oakes/Rachel Carson","West Remote Lot Interior":"West Remote Interior","Arboretum (Inner)":"Arboretum",
-                             "High and Western (Inner)":"Western Drive","Campus Entrance (Barn Theater)":"Barn Theatre",]
-    
-    let innerStops = ["Lower Campus (Inner)","Village and the Farm (Inner)","East Remote Parking (Inner)",
-                      "Cowell & Stevenson (Inner)","College 9 & 10 (Inner)","Science Hill (Inner)","Kresge (Inner)",
-                      "Kerr Hall Bridge","Rachel Carson & Porter (Inner)","Oakes (Inner)","West Remote Lot Interior",
-                      "Arboretum (Inner)","High and Western (Inner)","Campus Entrance (Barn Theater)"]
-        
-    func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
-        let schedule = ScheduleTableViewController()
-        if let optionalTitle = annotation.title, let title = optionalTitle{
-            schedule.busStopTitle = title
-            self.present(schedule, animated: true, completion: nil)
+    func loadGeoJson(routetype: String) {
+        DispatchQueue.global().async {
+            guard let jsonUrl = Bundle.main.url(forResource: routetype, withExtension: "geojson") else {
+                preconditionFailure("Failed to load local GeoJSON file")
+            }
+            guard let jsonData = try? Data(contentsOf: jsonUrl) else {
+                preconditionFailure("Failed to parse GeoJSON file")
+            }
+            DispatchQueue.main.async {
+                self.drawPolyline(geoJson: jsonData, routetype: routetype)
+            }
+        }
+    }
+    func drawPolyline(geoJson: Data, routetype: String) {
+        guard let style = self.mapView.style else { return }
+
+        guard let shapeFromGeoJSON = try? MGLShape(data: geoJson, encoding: String.Encoding.utf8.rawValue) else {
+            fatalError("Could not generate MGLShape")
         }
 
+        let source = MGLShapeSource(identifier: routetype, shape: shapeFromGeoJSON, options: nil)
+        style.addSource(source)
+
+        // Create new layer for the line.
+        let layer = MGLLineStyleLayer(identifier: routetype, source: source)
+
+        // Set the line join and cap to a rounded end.
+        layer.lineJoin = NSExpression(forConstantValue: "round")
+        layer.lineCap = NSExpression(forConstantValue: "round")
+
+        // Set the line color to a constant blue color.
+        if (routetype == "LoopRoute") {
+            layer.lineColor = NSExpression(forConstantValue: UIColor.systemBlue)
+        }
+        else if (routetype == "UCRoute") {
+            layer.lineColor = NSExpression(forConstantValue: UIColor.systemRed)
+
+        }
+
+        layer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+                                       [14: 2, 18: 20])
+        
+        style.insertLayer(layer, above: style.layer(withIdentifier: "com.mapbox.annotations.points")!) // insert route layer between annotation layer and bus layer
     }
-    
 //    func mapView(_ mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {
 //        var etas = [String]()
 //        var noETA = false
@@ -266,7 +329,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
 //        guard let titleTitle = title else { print("error unwrapping in calloutAccessoryControlTapped"); return}
 //        let tryName = csvToDatabase[titleTitle] // use database name for request
 //        guard let name = tryName else { print("error receiving from DB in calloutAccessoryControlTapped"); return}
-//        let stopString = "bus_stop=" + name
+//        let stopString = "    =" + name
 //        var location = "outer_eta"
 //        for stop in innerStops {
 //            if annotation.title!! == stop {
@@ -340,103 +403,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
 //    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
 //            return true
 //        }
-    
-    func updateBusLocationFeatures(){
-        for bus in Map.busArray{
-            let feature = bus.getBusFeature()
-            guard let style = mapView.style else { return }
-            let source: MGLShapeSource
-            //if there already exist source and layer with busses it must be removed and new one added
-            if let existingSource = style.source(withIdentifier: bus.sourceIdentifier) {
-                //convert features into shapes and add them to the existing source
-                let shapeSource = existingSource as! MGLShapeSource
-                let collection = MGLShapeCollectionFeature(shapes: [feature])
-                shapeSource.shape = collection
-                let busLayer = style.layer(withIdentifier: bus.busLayerIdentifier) as! MGLSymbolStyleLayer
-                let bearing = bus.getBearing()
-                if bearing != 0 {
-                    busLayer.iconRotation = NSExpression(forConstantValue: (bearing - 90))
-                }
-            }
-            else{
-                //new source
-                source = MGLShapeSource(identifier: bus.sourceIdentifier, features: [feature], options: nil)
-                style.addSource(source)
-                //CUSTOM BUS ICON
-                let busIconName = bus.busType
-                let busImage: UIImage = {
-                    let image = UIImage(named: busIconName)
-                    let size = CGSize(width: 25, height: 25)
-                    var newImage: UIImage
-                    let renderer = UIGraphicsImageRenderer(size: size)
-                    newImage = renderer.image { (context) in
-                        image?.draw(in: CGRect(origin: .zero, size: size))
-                    }
-                    return newImage
-                }()
-                
-                style.setImage(busImage, forName: bus.busImageName)
-                let busLayer = MGLSymbolStyleLayer(identifier: bus.busLayerIdentifier, source: source)
-                busLayer.iconImageName = NSExpression(forConstantValue: bus.busImageName)
-                busLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
-                busLayer.iconRotation = NSExpression(forConstantValue: 0)
-                busLayer.iconOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",[5.9: 0, 6: 1])
-                busLayer.iconScale = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 1, %@)", [10:1.7, 14: 1.3, 15: 1.4, 16: 1.4, 18: 1.5, 19: 1.6   ])
-                style.addLayer(busLayer)
-            }
-        }
-    }
-    //adds an image to bus points
-    //TODO: resize image
-    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        
-        if let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName){
-            let annotationImage = MGLAnnotationImage(image: image, reuseIdentifier: SizesAndConstants.busStopIconReuseIdentifier)
-            return annotationImage
-        }
-        return nil
-    }
-    
-
-//for some reason this stopped working. used to work though
-    // regionDidChangeAnimated to change visibility of bus stop annotations
-//    func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
-//        print("regionView did change")
-//        let zoomLevel = mapView.zoomLevel
-//        if let annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: SizesAndConstants.busStopIconReuseIdentifier){
-//            if zoomLevel < 16 {
-//                print("changing visibility")
-//                let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName)
-//                if let image = image{
-//                    annotationImage.image = image
-//                }
-//            }
-//            else{
-//                let image = createImage(withSize: SizesAndConstants.visibleBusIconSize, withName: SizesAndConstants.busStopImageName)
-//                if let image = image{
-//                    annotationImage.image = image
-//                }
-//            }
-//        }
-//   }
-    //fix
-        func mapViewRegionIsChanging(_ mapView: MGLMapView) {
-            let zoomLevel = mapView.zoomLevel
-            if let annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: SizesAndConstants.busStopIconReuseIdentifier){
-                if zoomLevel < 16 {
-                    let image = createImage(withSize: SizesAndConstants.invisibleBusIconSize, withName: SizesAndConstants.busStopImageName)
-                    if let image = image{
-                        annotationImage.image = image
-                    }
-                }
-                else{
-                    let image = createImage(withSize: SizesAndConstants.visibleBusIconSize, withName: SizesAndConstants.busStopImageName)
-                    if let image = image{
-                        annotationImage.image = image
-                    }
-                }
-            }
-        }
     func createImage(withSize size: CGSize,withName name: String) -> UIImage?{
         guard  let image = UIImage(named: name) else {return nil}
         var newImage: UIImage
@@ -447,12 +413,13 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         return newImage
     }
 
-        
+    // =======================================================================
+    // MARK: - Notification Labels
+    // =======================================================================
     func setupBussesNotRunningLabel(){
         //busses running not running
         label = setupLabelConstraints()
         if let label = label{
-            let topAnchorConstaint = label.topAnchor
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
                 if(self.Map.busCount == 0 && label.labelWasDissmissed == false){  // show the no busses running label
                     label.text = label.textOffline
@@ -483,7 +450,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         }
 
     }
-    //FIXME: (Radomyr) constants must be not variable nubmers
     func setupLabelConstraints() -> NoBussesAvailableUILabel{
         let label = NoBussesAvailableUILabel(frame: CGRect(x: 0, y: -50, width: 0, height: 0))
         label.isHidden = true
@@ -589,14 +555,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
             userLocationButton?.updateSymbol(color: .label, symbolName: "location")
         }
     }
-    
-    //When screen was moved button must appear to give an option to set a tracking mode
-    func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        if let userLocationButton = userLocationButton {
-            updateArrowForTrackingMode(mode: mode, button: userLocationButton)
-        }
-    }
-    
     //This adds the circular "i" button to bring up the "Info & Settings" view
     func setupInfoButton() {
         let infoButton = SymbolButton(symbolName: "info.circle", symbolWeight: UIImage.SymbolWeight.medium, symbolColor: .label, backgroundColor: .systemBackground, size: 50, symbolScale: .large)
