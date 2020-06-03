@@ -12,7 +12,7 @@ import requests
 import json
 
 # User library/python file imports
-from FetchData import getETA
+from FetchData import getETA, getIntervals
 from BusStopDetermination import ApproachingBusStop
 from BusStopData import IndexToName, NameToIndex
 
@@ -26,8 +26,8 @@ from BusStopData import IndexToName, NameToIndex
 #     StopType: Type of bus stop (inner or outer)
 # Returns: json object containing every buses' ETA to all bus stops
 # ------------------------------------------------------------------------------------------------------
-def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType):
-      
+def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType, APIKeyNum):
+
   # Defines variable/array used to store all ETA data
   ETAs = []         # Array used to strictly store ETAs
   BusETAData = []   # json Array usd to store all bus ETA data (bus ID, ETA to each stop, etc.)
@@ -59,15 +59,15 @@ def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType):
     while BusStopETAsCalclated < MaxStopIndex:
     
       # Calculates ETA to all bus stops based on pre-calulated intervals betwen adjacent stops
-      if (FirstETACalculated == False):
+      if (FirstETACalculated == True):
         #Calculates ETA then stores it in the apropriate index of the pre-allocated json object
         TotalETA = TotalETA + BusStopIntervals['Intervals'][CurrBusStop]['ETA']
         ETAs[CurrBusStop] = TotalETA
         
       # Calculates first ETA of bus to the bus stop it's approaching
       else:
-        eta = getETA(fakeBusLocaitons['lat'], fakeBusLocaitons['lon'],
-          Outer_Stops['BusStops'][CurrBusStop]['lat'], Outer_Stops['BusStops'][CurrBusStop]['lon'])
+        eta = getETA(buses['lat'], buses['lon'],
+          Outer_Stops['BusStops'][CurrBusStop]['lat'], Outer_Stops['BusStops'][CurrBusStop]['lon'], APIKeyNum)
         ETAs[CurrBusStop] = eta
         FirstETACalculated = True
         TotalETA += eta
@@ -85,7 +85,6 @@ def CalculateETAs(Bus_Data, Outer_Stops, BusStopIntervals, StopType):
     
     else:
       BusETAData.append({'bus_id': buses['id'], 'bus_type': 'LOOP', 'Barn_Theater_ETA': ETAs[0], 'Western_Drive_ETA': ETAs[1], 'Arboretum_ETA': ETAs[2], 'West_Remote_Interior_ETA': ETAs[3], 'Oakes_RCC_ETA': ETAs[4], 'Porter_RCC_ETA': ETAs[5], 'Kerr_Hall_ETA': ETAs[6], 'Kresge_ETA': ETAs[7], 'Science_Hill_ETA': ETAs[8], 'Colleges9_10_ETA': ETAs[9], 'Cowell_College_Bookstore_ETA': ETAs[10], 'East_Remote_ETA': ETAs[11], 'Village_Farm_ETA': ETAs[12],'Lower_Campus_ETA': ETAs[13]})
-  
   
   return BusETAData
 
@@ -107,10 +106,10 @@ def NullETAs(Inactive_Buses, StopType):
   for busIDs in Inactive_Buses:
     # Once all ETAs from 1 bus to all bus stops are calculated, format it correctly
     if (StopType == "OuterBusStops"):
-      BusETAData.append({'bus_id': busIDs, 'bus_type': None, 'Main_Entrance_ETA': None, 'Lower_Campus_ETA': None, 'Village_Farm_ETA': None, 'East_Remote_Interior_ETA': None, 'East_Remote_ETA': None, 'East_Field_House_ETA': None, 'Bookstore_ETA': None, 'Crown_Merrill_ETA': None, 'Colleges9_10_ETA': None, 'Science_Hill_ETA': None, 'Kresge_ETA': None, 'Porter_RCC_ETA': None, 'Family_Student_Housing_ETA': None, 'Oakes_FSH_ETA': None, 'Arboretum_ETA': None,'Western_Drive_ETA': None})
+      BusETAData.append({'bus_id': busIDs, 'bus_type': -1, 'Main_Entrance_ETA': -1, 'Lower_Campus_ETA': -1, 'Village_Farm_ETA': -1, 'East_Remote_Interior_ETA': -1, 'East_Remote_ETA': -1, 'East_Field_House_ETA': -1, 'Bookstore_ETA': -1, 'Crown_Merrill_ETA': -1, 'Colleges9_10_ETA': -1, 'Science_Hill_ETA': -1, 'Kresge_ETA': -1, 'Porter_RCC_ETA': -1, 'Family_Student_Housing_ETA': -1, 'Oakes_FSH_ETA': -1, 'Arboretum_ETA': -1,'Western_Drive_ETA': -1})
     
     else:
-      BusETAData.append({'bus_id': busIDs, 'bus_type': None, 'Barn_Theater_ETA': None, 'Western_Drive_ETA': None, 'Arboretum_ETA': None, 'West_Remote_Interior_ETA': None, 'Oakes_RCC_ETA': None, 'Porter_RCC_ETA': None, 'Kerr_Hall_ETA': None, 'Kresge_ETA': None, 'Science_Hill_ETA': None, 'Colleges9_10_ETA': None, 'Cowell_College_Bookstore_ETA': None, 'East_Remote_ETA': None, 'Village_Farm_ETA': None,'Lower_Campus_ETA': None})
+      BusETAData.append({'bus_id': busIDs, 'bus_type': -1, 'Barn_Theater_ETA': -1, 'Western_Drive_ETA': -1, 'Arboretum_ETA': -1, 'West_Remote_Interior_ETA': -1, 'Oakes_RCC_ETA': -1, 'Porter_RCC_ETA': -1, 'Kerr_Hall_ETA': -1, 'Kresge_ETA': -1, 'Science_Hill_ETA': -1, 'Colleges9_10_ETA': -1, 'Cowell_College_Bookstore_ETA': -1, 'East_Remote_ETA': -1, 'Village_Farm_ETA': -1,'Lower_Campus_ETA': -1})
   
   
   return BusETAData
@@ -124,9 +123,10 @@ def NullETAs(Inactive_Buses, StopType):
 #     StopType: If Bus is either Outer or Inner Loop
 # Returns: ETA from point A to point B in minutes
 # ------------------------------------------------------------------------------------------------------
-def CalcStopIntervals(Stops, StopType):
+def CalcStopIntervals(Stops, StopType, APIKeyNum):
   
-  
+  print("ETA Interval Calculation API Key Used: " + str(APIKeyNum))
+
   # variable to keep track of the ETAs between all bus stops
   BusStopIntervals = {}
   BusStopIntervals['Intervals'] = []
@@ -146,7 +146,7 @@ def CalcStopIntervals(Stops, StopType):
   for stops in Stops['BusStops']:
   
     # Calculates the eta from the prevStop to Current Stop
-    eta = getETA(prevLat, prevLon, stops['lat'], stops['lon']) +.75  # + 0.75 to account for loading times
+    eta = getIntervals(prevLat, prevLon, stops['lat'], stops['lon'], APIKeyNum) +.75  # + 0.75 to account for loading times
     
     # Adds the new Data onto the interval JSON table
     BusStopIntervals['Intervals'].append({
