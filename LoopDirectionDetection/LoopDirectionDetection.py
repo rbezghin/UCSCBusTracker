@@ -9,6 +9,7 @@ Description: Main file for bus type detection
 # Import Python Libraries
 import json
 import requests
+import time
 
 #from DetectBusType import getBusData
 from FetchData import getBusData, getBusType, postNewData
@@ -31,6 +32,8 @@ def main():
 
   # Using previously calculated Data, Calculates the direction the bus is going (bus type: inner or outer loop)
   newbusDirData = DetermineBusType(liveBusData['rows'], busDirData['rows'])
+  
+  print(json.dumps(newbusDirData, indent=2))
 
   print("  =>  Calculating Bus Direction...")  # Progress alert
 
@@ -46,6 +49,12 @@ def main():
 
 while(1):
   main()
+  
+  print("\n**************************************")
+  print("*     Creating 10 Second Delay...    *")
+  print("**************************************\n")
+  
+  time.sleep(10)  # Puts the process to sleep (to avoid 'too many requests' return message)
 
 
 

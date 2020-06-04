@@ -22,7 +22,7 @@ def getBusData():
   request = "https://ucsc-bts3.soe.ucsc.edu/bus_table.php";
   
   # Puts the GET response into variable then converts it to json formatting
-  response = requests.get(request).json()
+  response = requests.get(request, verify=False).json()
   
   # returns the ETA by parsing the JSON response and dividing by 60 (ETA returned by server is in seconds)
   return response
@@ -35,7 +35,7 @@ def getBusData():
 # ------------------------------------------------------------------------------------------------------
 def getBusType():
   # Get request for bus direction data then returns result
-  return requests.get("https://ucsc-bts3.soe.ucsc.edu/direction.php").json()
+  return requests.get("https://ucsc-bts3.soe.ucsc.edu/direction.php", verify=False).json()
 
 
 # ------------------------------------------------------------------------------------------------------
@@ -45,4 +45,4 @@ def getBusType():
 # Returns: NOTHING
 # ------------------------------------------------------------------------------------------------------
 def postNewData(data):
-  ret_status = requests.post("https://ucsc-bts3.soe.ucsc.edu/update_direction.php", json=data)
+  ret_status = requests.post("https://ucsc-bts3.soe.ucsc.edu/update_direction.php", verify=False, json=data)

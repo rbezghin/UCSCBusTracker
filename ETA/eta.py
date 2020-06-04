@@ -28,10 +28,11 @@ def CalculateBusETAs(OuterBusStops, InnerBusStops, OuterBusStopIntervals, InnerB
   print("  =>  Fetching Real-Time Bus Data...")
 
   # Gets the bus data (id, location, type) of all active buses from BTS3 server
-  #busData = getBusData()
-  busData = {"rows":[{"id":"98","lat":"36.99805833","lon":"-122.06395333","type":"LOOP","basestation":"BASKIN","time_stamp":"2020-02-14 11:50:53"}]}
+  busData = getBusData()
+  #busData = {"rows":[{"id":"98","lat":"36.99805833","lon":"-122.06395333","type":"LOOP","basestation":"BASKIN","time_stamp":"2020-02-14 11:50:53"}]}
   
   print(json.dumps(busData, indent=2))
+  exit(1)
   
   # Finds which buses are active
   for BusIDs in Null_Buses:
@@ -50,8 +51,8 @@ def CalculateBusETAs(OuterBusStops, InnerBusStops, OuterBusStopIntervals, InnerB
   innerBusData = determineLoopDirection(busData, busDirectionData, "inner")
 
   # Calls function that returns bus ETA data
-  print("  =>  Calculating Outer Loop ETAs...")
-  outer_bus_data = CalculateETAs(busData, OuterBusStops, OuterBusStopIntervals, "OuterBusStops", APIKeyNum)
+  print("  =>  Calculating Outer Loop ETAs...") # ************CHANGE outer_bus_data parameter from "busData" to outerBusData
+  outer_bus_data = CalculateETAs(outerBusData, OuterBusStops, OuterBusStopIntervals, "OuterBusStops", APIKeyNum)
   print(json.dumps(outer_bus_data, indent=2))
   print("  =>  Calculating Inner Loop ETAs...")
   inner_bus_data = CalculateETAs(innerBusData, InnerBusStops, InnerBusStopIntervals, "InnerBusStops", APIKeyNum)

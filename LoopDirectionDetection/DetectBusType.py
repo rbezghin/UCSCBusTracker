@@ -1,7 +1,7 @@
 
 """
 File: DetectBusType.py
-Author: Rizzian Tuazon
+Author: Katelyn Young (Revised/Refactored by: Rizzian Tuazon)
 Project: UCSC Bus Tracking System 3 (BTS3)
 Description: Functions used to Determine what type of bus a bus is
 """
