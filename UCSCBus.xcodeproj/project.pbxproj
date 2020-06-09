@@ -19,6 +19,7 @@
 		467C91E3246D13F400CB8BD4 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467C91E2246D13F400CB8BD4 /* InfoViewController.swift */; };
 		46D7B3802455EE6700960A8D /* LoopRoute.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 46D7B37F2455EE6700960A8D /* LoopRoute.geojson */; };
 		46D7B3822455F41A00960A8D /* UCRoute.geojson in Resources */ = {isa = PBXBuildFile; fileRef = 46D7B3812455F41A00960A8D /* UCRoute.geojson */; };
+		8037BBE12486EC3100AF535D /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8037BBE02486EC3100AF535D /* PickerViewController.swift */; };
 		8063D89324046F63001FFA90 /* MapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8063D89224046F63001FFA90 /* MapModel.swift */; };
 		807B7B6423DFE5B200609EC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6323DFE5B200609EC8 /* AppDelegate.swift */; };
 		807B7B6623DFE5B200609EC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807B7B6523DFE5B200609EC8 /* SceneDelegate.swift */; };
@@ -30,7 +31,6 @@
 		80B7347323E51F07002A63E9 /* Bus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347223E51F07002A63E9 /* Bus.swift */; };
 		80B7347523E63FDB002A63E9 /* TabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347423E63FDB002A63E9 /* TabBarVC.swift */; };
 		80B7347723E644C1002A63E9 /* ScheduleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */; };
-		80E7881C2486D8FE00DAA959 /* BusETATableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E7881B2486D8FE00DAA959 /* BusETATableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +47,7 @@
 		46D7B3812455F41A00960A8D /* UCRoute.geojson */ = {isa = PBXFileReference; lastKnownFileType = text; path = UCRoute.geojson; sourceTree = "<group>"; };
 		4EB30620D92CFAA65B994934 /* Pods-UCSCBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UCSCBus.release.xcconfig"; path = "Target Support Files/Pods-UCSCBus/Pods-UCSCBus.release.xcconfig"; sourceTree = "<group>"; };
 		802A46633472885C25EB655B /* Pods_UCSCBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UCSCBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8037BBE02486EC3100AF535D /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 		8063D89224046F63001FFA90 /* MapModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapModel.swift; sourceTree = "<group>"; };
 		806D15362409BA190034B4E9 /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMobileEvents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		807B7B6023DFE5B200609EC8 /* UCSCBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UCSCBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,7 +62,6 @@
 		80B7347223E51F07002A63E9 /* Bus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bus.swift; sourceTree = "<group>"; };
 		80B7347423E63FDB002A63E9 /* TabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarVC.swift; sourceTree = "<group>"; };
 		80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewController.swift; sourceTree = "<group>"; };
-		80E7881B2486D8FE00DAA959 /* BusETATableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusETATableViewCell.swift; sourceTree = "<group>"; };
 		DA33ACE3930136C7E38E0F56 /* Pods-UCSCBus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UCSCBus.debug.xcconfig"; path = "Target Support Files/Pods-UCSCBus/Pods-UCSCBus.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -156,7 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				80B7347623E644C1002A63E9 /* ScheduleTableViewController.swift */,
-				80E7881B2486D8FE00DAA959 /* BusETATableViewCell.swift */,
+				8037BBE02486EC3100AF535D /* PickerViewController.swift */,
 			);
 			path = ScheduleTableViewController;
 			sourceTree = "<group>";
@@ -320,7 +320,7 @@
 				807B7B6823DFE5B200609EC8 /* MapViewController+MGLMap.swift in Sources */,
 				807B7B6423DFE5B200609EC8 /* AppDelegate.swift in Sources */,
 				80B7347323E51F07002A63E9 /* Bus.swift in Sources */,
-				80E7881C2486D8FE00DAA959 /* BusETATableViewCell.swift in Sources */,
+				8037BBE12486EC3100AF535D /* PickerViewController.swift in Sources */,
 				80B7347523E63FDB002A63E9 /* TabBarVC.swift in Sources */,
 				467C91E3246D13F400CB8BD4 /* InfoViewController.swift in Sources */,
 				8063D89324046F63001FFA90 /* MapModel.swift in Sources */,

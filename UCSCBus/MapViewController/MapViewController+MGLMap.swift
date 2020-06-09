@@ -61,6 +61,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
     /// Bus stops are the only annotations on this map, when they are tapped, a ScheduleTableViewController() is peresented that displays bus schedule & ETA
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
         let schedule = ScheduleTableViewController()
+        //schedule.modalPresentationStyle = .fullScreen
         if let optionalTitle = annotation.title, let title = optionalTitle{
             schedule.busStopTitle = title
             self.present(schedule, animated: true, completion: nil)

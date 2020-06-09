@@ -10,30 +10,39 @@ import UIKit
 class ScheduleTableViewController: UITableViewController {
     var busStopTitle: String? //assigned when bus stop is clicked
     //var busStopTitle = "Lower Campus (Outer)"
-    let Data = DataSource()
-    var BusETAs: [BusETA] = []
+    let Data = DataSource() //where all the busstops data is stored
+    var BusETAs: [BusETA] = [] //is filled with data after receiving it from the db
     
     let rowHeight: CGFloat = 80.0
     lazy var busImage = createImage(withSize: CGSize(width: 25, height: 25),withName: "stop_icon")
     
+    let picker : UIPickerView = {
+        let picker = UIPickerView()
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.backgroundColor = .green
+        picker.isUserInteractionEnabled = false
+        picker.isHidden = true
+        return picker
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        BusETAs.append(BusETA(id: "16", type: "Upper Campus", eta: 23))
         performDatabaseRequest {
             self.tableView.reloadData()
         }
-
     }
-
     // =======================================================================
     // MARK: - tableView
     // =======================================================================
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
         return BusETAs.count
     }
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         rowHeight
+    }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return  rowHeight;
     }
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.size.width, height: 100.0))
@@ -44,11 +53,6 @@ class ScheduleTableViewController: UITableViewController {
         headerView.addSubview(label)
         return headerView
     }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return  rowHeight;
-    }
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: "cell")
 
@@ -80,8 +84,23 @@ class ScheduleTableViewController: UITableViewController {
         textLabel.textAlignment = .center
         textLabel.lineBreakMode = .byWordWrapping
         cell.accessoryView?.addSubview(textLabel)
+        
         return cell
     }
+
+    // =======================================================================
+    // MARK: - pickerView
+    // =======================================================================
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let pickerVC = PickerViewController()
+        pickerVC.modalPresentationStyle = .fullScreen
+        pickerVC.modalPresentationStyle = .overCurrentContext
+        present(pickerVC, animated: true) {
+        }
+    }
+    
+  
     // =======================================================================
     // MARK: - Networking & parsing the data
     // =======================================================================
@@ -133,7 +152,7 @@ class ScheduleTableViewController: UITableViewController {
                         guard let busETAString = etaDictionary[busETAtitle] as? String else {return}
                         let busETA = Int(busETAString) ?? 0
                         let newBusETA = BusETA(id: busID, type: busType, eta: busETA)
-                        BusETAs.append(newBusETA)
+                        //BusETAs.append(newBusETA)
                     }
                 }
             }
