@@ -34,7 +34,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         mapView.attributionButton.isHidden = true
         view.addSubview(mapView)
         setupLocationButton()
-        setupBussesNotRunningLabel()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.setupBussesNotRunningLabel()
+        }
+        
         setupLoopRouteButton()
         setupUpperCampusRouteButton()
         setupNightCoreRouteButton()
@@ -333,6 +336,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate {
         //busses running not running
         label = setupLabelConstraints()
         if let label = label{
+            
             Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
                 if(self.Map.busCount == 0 && label.labelWasDissmissed == false){  // show the no busses running label
                     label.text = label.textOffline

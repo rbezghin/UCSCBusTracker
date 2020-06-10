@@ -176,7 +176,10 @@ class PickerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             }
             
         }
-        self.presentingViewController?.dismiss(animated: true)
+        DispatchQueue.main.async {
+            self.presentingViewController?.dismiss(animated: true)
+        }
+        
     }
 
 }

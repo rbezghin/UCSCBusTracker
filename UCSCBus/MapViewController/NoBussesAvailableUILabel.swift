@@ -12,7 +12,7 @@ class NoBussesAvailableUILabel: UILabel {
     
     //if label was tapped(dissmissed) once no need to show it again
     var labelWasDissmissed = false
-    var textOffline = "All busses are offline"
+    var textOffline = "All buses are offline"
     var textOnline = "Picking up some signal!"
     let durationAndDelay = 0.7 //used for animations
     let labelHeight: CGFloat = 50
