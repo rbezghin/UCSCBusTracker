@@ -27,7 +27,9 @@ class ScheduleTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        BusETAs.append(BusETA(id: "16", type: "Upper Campus", eta: 23))
+        BusETAs.append(BusETA(id: "16", type: "Upper Campus", eta: 12))
+        BusETAs.append(BusETA(id: "17", type: "Loop", eta: 23))
+        BusETAs.append(BusETA(id: "18", type: "Loop", eta: 31))
         performDatabaseRequest {
             self.tableView.reloadData()
         }
@@ -94,7 +96,7 @@ class ScheduleTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let pickerVC = PickerViewController()
-        pickerVC.modalPresentationStyle = .fullScreen
+        //pickerVC.modalPresentationStyle = .fullScreen
         pickerVC.modalPresentationStyle = .overCurrentContext
         present(pickerVC, animated: true) {
         }

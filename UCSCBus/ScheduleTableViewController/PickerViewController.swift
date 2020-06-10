@@ -150,18 +150,11 @@ class PickerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         let center = UNUserNotificationCenter.current()
 
         center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
-            if granted {
-                self.setupNotification()
-            } else {
-                print("D'oh")
-            }
         }
-    }
-    func setupNotification() {
-        
-        //let center = UNUserNotificationCenter.current()
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let date = Date().addingTimeInterval(10)
+        let dateComp = Calendar.current.dateComponents([.year, .month, .day,.hour,.minute,.second], from: date)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComp, repeats: false)
+
         let content = UNMutableNotificationContent()
         content.title = "BusTracker Alert"
         content.body = "It's time to get on the bus!"
@@ -169,16 +162,23 @@ class PickerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         content.userInfo = ["customData": "busReminder"]
         content.sound = UNNotificationSound.default
         
-        let request = UNNotificationRequest(identifier: "busAlert", content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) { (error) in
-            if (error != nil){
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        center.add(request) { error in
+            if error != nil {
                 print(error?.localizedDescription)
+                return
             }
-            
+            print("Noptification was scheduled")
         }
         DispatchQueue.main.async {
             self.presentingViewController?.dismiss(animated: true)
         }
+    }
+    func setupNotification() {
+        
+        //let center = UNUserNotificationCenter.current()
+        
+        
         
     }
 
