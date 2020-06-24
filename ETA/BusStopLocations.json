@@ -1,0 +1,39 @@
+{
+  "OuterBusStops": {
+    "BusStops": [
+      {"Stop_Name": "Main_Entrance_ETA", "lat": 36.977637, "lon":-122.053679},
+      {"Stop_Name": "Lower_Campus_ETA", "lat": 36.981474, "lon":-122.052015},
+      {"Stop_Name": "Village_Farm_ETA", "lat": 36.985881, "lon":-122.053608},
+      {"Stop_Name": "East_Remote_Interior_ETA", "lat": 36.990735, "lon":-122.052200},
+      {"Stop_Name": "East_Remote_ETA", "lat": 36.991293, "lon":-122.054782},
+      {"Stop_Name": "East_Field_House_ETA", "lat": 36.994240, "lon":-122.055608},
+      {"Stop_Name": "Bookstore_ETA", "lat": 36.997499, "lon":-122.055109},
+      {"Stop_Name": "Crown_Merrill_ETA", "lat": 36.998945, "lon":-122.055216},
+      {"Stop_Name": "Colleges9_10_ETA", "lat": 36.999847, "lon":-122.058311},
+      {"Stop_Name": "Science_Hill_ETA", "lat": 36.999896, "lon": -122.062235},
+      {"Stop_Name": "Kresge_ETA","lat": 36.999250,"lon":-122.064458},
+      {"Stop_Name": "Porter_RCC_ETA", "lat": 36.992912, "lon":-122.065204},
+      {"Stop_Name": "Family_Student_Housing_ETA", "lat": 36.991802, "lon":-122.066716},
+      {"Stop_Name": "Oakes_FSH_ETA", "lat": 36.989884, "lon":-122.067163},
+      {"Stop_Name": "Arboretum_ETA", "lat": 36.983719, "lon":-122.064912},
+      {"Stop_Name": "Western_Drive_ETA", "lat": 36.978685, "lon":-122.057785}
+    ]},
+  "InnerBusStops": {
+    "BusStops": [
+      {"Stop_Name": "Barn_Theater_ETA", "lat": 36.977267, "lon":-122.054309},
+      {"Stop_Name": "Western_Drive_ETA", "lat": 36.978685, "lon":-122.057785},
+      {"Stop_Name": "Arboretum_ETA", "lat": 36.982713, "lon":-122.062758},
+      {"Stop_Name": "West_Remote_Interior_ETA", "lat": 36.988497, "lon":-122.064781},
+      {"Stop_Name": "Oakes_RCC_ETA", "lat": 36.990615, "lon":-122.066203},
+      {"Stop_Name": "Porter_RCC_ETA", "lat": 36.992877, "lon":-122.064863},
+      {"Stop_Name": "Kerr_Hall_ETA", "lat": 36.996709, "lon":-122.063660},
+      {"Stop_Name": "Kresge_ETA", "lat": 36.999250, "lon":-122.064458},
+      {"Stop_Name": "Science_Hill_ETA", "lat": 36.999896, "lon": -122.062235},
+      {"Stop_Name": "Colleges9_10_ETA", "lat": 36.999847, "lon":-122.058311},
+      {"Stop_Name": "Cowell_College_Bookstore_ETA","lat": 36.996662,"lon":-122.055363},
+      {"Stop_Name": "East_Remote_ETA", "lat": 36.991293, "lon":-122.054782},
+      {"Stop_Name": "Village_Farm_ETA", "lat": 36.985568, "lon":-122.053450},
+      {"Stop_Name": "Lower_Campus_ETA", "lat": 36.981474, "lon":-122.052015}
+    ]
+  }
+}
