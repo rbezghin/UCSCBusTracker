@@ -2,9 +2,12 @@
 //  PickerViewController.swift
 //  UCSCBus
 //
-//  Created by Radomyr Bezghin on 6/2/20.
-//  Copyright © 2020 Radomyr Bezghin. All rights reserved.
-//
+// Developed by
+// Radomyr Bezghin
+// Nathan Lakritz
+// Brian Thyfault
+// Rizzian Ciprian Tuazon
+// Copyright © 2020 BusTrackerTeam. All rights reserved.
 
 import UIKit
 import UserNotifications
@@ -174,12 +177,6 @@ class PickerViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             self.presentingViewController?.dismiss(animated: true)
         }
     }
-    func setupNotification() {
-        
-        //let center = UNUserNotificationCenter.current()
-        
-        
-        
-    }
+
 
 }

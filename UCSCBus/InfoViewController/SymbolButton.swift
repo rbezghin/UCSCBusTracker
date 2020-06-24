@@ -2,9 +2,12 @@
 //  SymbolButton.swift
 //  UCSCBus
 //
-//  Created by Brian Thyfault on 4/29/20.
-//  Copyright © 2020 Radomyr Bezghin. All rights reserved.
-//
+// Developed by
+// Radomyr Bezghin
+// Nathan Lakritz
+// Brian Thyfault
+// Rizzian Ciprian Tuazon
+// Copyright © 2020 BusTrackerTeam. All rights reserved.
 
 import UIKit
 import Mapbox

@@ -2,9 +2,12 @@
 //  InfoViewController.swift
 //  UCSCBus
 //
-//  Created by Brian Thyfault on 5/4/20.
-//  Copyright © 2020 Radomyr Bezghin. All rights reserved.
-//
+// Developed by
+// Radomyr Bezghin
+// Nathan Lakritz
+// Brian Thyfault
+// Rizzian Ciprian Tuazon
+// Copyright © 2020 BusTrackerTeam. All rights reserved.    
 
 import UIKit
 
@@ -63,12 +66,7 @@ class InfoViewController: UIViewController {
         createTableTextView()
         addAcknowledgements()
         
-//        for family:String in UIFont.familyNames {
-//            print(family)
-//            for names:String in UIFont.fontNames(forFamilyName: family) {
-//                print("==\(names)")
-//            }
-//        }
+
     }
     
     func createTableTextView() {
@@ -122,8 +120,8 @@ class InfoViewController: UIViewController {
     }
     
     @objc func back() {
-        let mapview = MapViewController()
-        mapview.modalPresentationStyle = .fullScreen
+        //let mapview = MapViewController()
+        //mapview.modalPresentationStyle = .fullScreen
         self.dismiss(animated: true, completion: nil)
         //present(mapview, animated: true, completion: nil)
     }
@@ -257,10 +255,12 @@ class InfoViewController: UIViewController {
         sectionTitle.font = UIFont(name: "SFProDisplay-Bold", size: 18)
         view.addSubview(sectionTitle)
         sectionTitle.translatesAutoresizingMaskIntoConstraints = false
-        sectionTitle.topAnchor.constraint(equalTo: tableTextView.bottomAnchor, constant: 20).isActive = true
+        //sectionTitle.topAnchor.constraint(equalTo: tableTextView.bottomAnchor, constant: 20).isActive = true
         sectionTitle.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        sectionTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-        sectionTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        //sectionTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 35).isActive = true
+        //sectionTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        sectionTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
         
         
         
@@ -278,11 +278,13 @@ class InfoViewController: UIViewController {
         //softwareNamesTextView.font = UIFont(name: "SFProDisplay-Light", size: 24)
         view.addSubview(softwareNamesTextView)
         softwareNamesTextView.translatesAutoresizingMaskIntoConstraints = false
-        softwareNamesTextView.topAnchor.constraint(equalTo: sectionTitle.bottomAnchor, constant: 5).isActive = true
-        softwareNamesTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
+        //softwareNamesTextView.topAnchor.constraint(equalTo: sectionTitle.bottomAnchor, constant: 5).isActive = true
+        softwareNamesTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -35).isActive = true
         softwareNamesTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         softwareNamesTextView.trailingAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
+        /// has to be here...
+        sectionTitle.bottomAnchor.constraint(equalTo:softwareNamesTextView.topAnchor, constant: -10 ).isActive = true
         
         var hardwareNamesTextView = UITextView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
         hardwareNamesTextView.isEditable = false
@@ -296,28 +298,12 @@ class InfoViewController: UIViewController {
         //softwareNamesTextView.font = UIFont(name: "SFProDisplay-Light", size: 24)
         view.addSubview(hardwareNamesTextView)
         hardwareNamesTextView.translatesAutoresizingMaskIntoConstraints = false
-        hardwareNamesTextView.topAnchor.constraint(equalTo: sectionTitle.bottomAnchor, constant: 5).isActive = true
-        hardwareNamesTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
+        //hardwareNamesTextView.topAnchor.constraint(equalTo: sectionTitle.bottomAnchor, constant: 5).isActive = true
+        hardwareNamesTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -35).isActive = true
         hardwareNamesTextView.leadingAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         hardwareNamesTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         
     }
-    
-//    public override func draw(_ rect: CGRect) {
-//        let context = UIGraphicsGetCurrentContext()
-//        context!.setLineWidth(2.0)
-//        context!.setStrokeColor((UIColor.red.cgColor))
-//        context?.move(to: CGPoint(x: 0, y: 0))
-//        context?.addLine(to: CGPoint(x: 100, y: 100))
-//        context!.strokePath()
-//        let aPath = UIBezierPath()
-//        aPath.move(to: CGPoint(x: 20, y: 20))
-//        aPath.addLine(to: CGPoint(x: 50, y: 50))
-//        aPath.close()
-//        UIColor.black.set()
-//        aPath.stroke()
-//    }
-    
 }
 extension String {
     var htmlToAttributedString: NSMutableAttributedString? {

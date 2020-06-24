@@ -141,9 +141,9 @@
 		807B7B6223DFE5B200609EC8 /* UCSCBus */ = {
 			isa = PBXGroup;
 			children = (
-				80E7881D2486D91800DAA959 /* ScheduleTableViewController */,
 				80E7881E2486D93500DAA959 /* MapViewController */,
 				80E7881F2486D95500DAA959 /* InfoViewController */,
+				80E7881D2486D91800DAA959 /* ScheduleTableViewController */,
 				807B7B7123DFE5B300609EC8 /* Info.plist */,
 				807345CE2412063300D73EB4 /* Supporting Files */,
 				807B7B6123DFE5B200609EC8 /* Products */,

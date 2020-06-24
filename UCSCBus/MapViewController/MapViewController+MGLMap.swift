@@ -2,9 +2,12 @@
 //  ViewController.swift
 //  UCSCBus
 //
-//  Created by Radomyr Bezghin on 1/27/20.
-//  Copyright © 2020 Radomyr Bezghin. All rights reserved.
-//
+// Developed by
+// Radomyr Bezghin
+// Nathan Lakritz
+// Brian Thyfault
+// Rizzian Ciprian Tuazon
+// Copyright © 2020 BusTrackerTeam. All rights reserved.
 
 import Mapbox
 import Foundation

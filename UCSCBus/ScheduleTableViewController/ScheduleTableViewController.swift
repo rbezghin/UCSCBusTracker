@@ -2,8 +2,12 @@
 //  ScheduleVC.swift
 //  UCSCBus
 //
-//  Created by Radomyr Bezghin on 2/1/20.
-//  Copyright © 2020 Radomyr Bezghin. All rights reserved.
+// Developed by
+// Radomyr Bezghin
+// Nathan Lakritz
+// Brian Thyfault
+// Rizzian Ciprian Tuazon
+// Copyright © 2020 BusTrackerTeam. All rights reserved.
 
 import UIKit
 
@@ -27,6 +31,7 @@ class ScheduleTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        createBackButton()
         BusETAs.append(BusETA(id: "16", type: "Upper Campus", eta: 12))
         BusETAs.append(BusETA(id: "17", type: "Loop", eta: 23))
         BusETAs.append(BusETA(id: "18", type: "Loop", eta: 31))
@@ -101,7 +106,20 @@ class ScheduleTableViewController: UITableViewController {
         present(pickerVC, animated: true) {
         }
     }
+    func createBackButton() {
+        let closeButton = SymbolButton(symbolName: "xmark", symbolWeight: UIImage.SymbolWeight.regular, symbolColor: .label, backgroundColor: .systemGray4, size: 30, symbolScale: .medium)
+        closeButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+        self.view.addSubview(closeButton)
+        //closeButton.frame = CGRect(x: 40, y: 40, width: 20, height: 20)
     
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+        closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        
+    }
+    @objc func back() {
+        self.dismiss(animated: true, completion: nil)
+    }
   
     // =======================================================================
     // MARK: - Networking & parsing the data
